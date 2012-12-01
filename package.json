@@ -1,0 +1,21 @@
+{
+  "name": "node-notifier",
+  "version": "0.0.0",
+  "description": "A Node.js wrapper for the terminal-notifier application",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "notification center",
+    "mac os x 10.8",
+    "notify",
+    "terminal-notifier"
+  ],
+  "author": "Mikael Brevik",
+  "license": "MIT"
+}
