@@ -1,6 +1,6 @@
 {
   "name": "node-notifier",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A Node.js wrapper for the terminal-notifier application",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "",
+  "repository": "git@github.com:mikaelbr/node-notifier.git",
   "keywords": [
     "notification center",
     "mac os x 10.8",
