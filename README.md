@@ -46,6 +46,7 @@ notifier.notify({
 ## Plans for this module
 
 This module should eventually be a wrapper for both growlnotify and terminal-notifier and thus be able to
+
 1. Work on platforms where Growl is supported
 2. Use Notification Center if Mac OS >= 10.8, unless other is specified. 
 3. Work with both growlnotify options and terminal-notifier, in addition to have an interpolation between their options.
