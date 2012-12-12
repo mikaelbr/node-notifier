@@ -6,6 +6,12 @@ describe('node-notifier', function(){
 
   describe('#notify()', function(){
 
+    before(function (done) {
+      notifier.notify({
+        remove: "ALL"
+      }, function () { done(); });
+    });
+
     it('should notify with a message', function(done){
       
       notifier.notify({
