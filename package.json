@@ -7,7 +7,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha"
   },
   "repository": "git@github.com:mikaelbr/node-notifier.git",
   "keywords": [
@@ -17,5 +17,9 @@
     "terminal-notifier"
   ],
   "author": "Mikael Brevik",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "~1.7.4",
+    "should": "~1.2.1"
+  }
 }
