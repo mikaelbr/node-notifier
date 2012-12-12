@@ -1,1 +1,1 @@
-module.exports = require('./lib/node-notifier');
+module.exports = require('./lib/terminal-notifier');
