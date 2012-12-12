@@ -2,10 +2,8 @@
 
 A Node.js wrapper for the [terminal-notifier](https://github.com/alloy/terminal-notifier) application by [Eloy Durán](https://github.com/alloy). 
 
-_This module is experimental/in early stage (v0.0.2)._
-
 ## Requirements
-- Mac OS X (>= 10.8
+- Mac OS X (>= 10.8)
 
 ## Install
 ```
@@ -42,14 +40,45 @@ notifier.notify({
 });
 ```
 
+The response will be given as an object. E.g., when running ```notifier.notify({list: "ALL"})```, this could be the response:
 
-## Plans for this module
+```
+{ response: 
+   [ { GroupID: null,
+       Title: 'Terminal',
+       Subtitle: null,
+       Message: 'Another message',
+       'Delivered At': Wed Dec 12 2012 15:23:38 GMT+0100 (CET) },
+     { GroupID: null,
+       Title: 'Terminal',
+       Subtitle: null,
+       Message: 'Another message',
+       'Delivered At': Wed Dec 12 2012 15:23:31 GMT+0100 (CET) },
+     { GroupID: 2,
+       Title: 'Terminal',
+       Subtitle: null,
+       Message: 'Testing',
+       'Delivered At': Wed Dec 12 2012 15:22:41 GMT+0100 (CET) },
+     { GroupID: 1,
+       Title: 'Terminal',
+       Subtitle: null,
+       Message: 'Testing',
+       'Delivered At': Wed Dec 12 2012 15:22:29 GMT+0100 (CET) } ],
+  type: 'list' }
 
-This module should eventually be a wrapper for both growlnotify and terminal-notifier and thus be able to
+```
 
-1. Work on platforms where Growl is supported
-2. Use Notification Center if Mac OS >= 10.8, unless other is specified. 
-3. Work with both growlnotify options and terminal-notifier, in addition to have an interpolation between their options.
-4. Be robust and have tests.
+There are three different types:
+
+- ```deliviered``` when a message is delivered. 
+- ```removed``` when all or one message is removed. If all messages are removed, the response property will have several elements. 
+- ```list``` when a list is presented. Even when doing ```list: 1```.
+
+
+## Module TODO
+
+1. Be robust and have unit tests.
 
 When these criterias are met, the module will be versioned 1.0. 
+
+_NB:_ Previous plans of supporting both growlnotify and terminal-notifier, are abandoned. This module will only do terminal-notifier.
