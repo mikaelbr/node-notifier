@@ -1,9 +1,9 @@
 # node-notifier
 
-A Node.js wrapper for the [terminal-notifier](https://github.com/alloy/terminal-notifier) application by [Eloy Durán](https://github.com/alloy). 
+A Node.js wrapper for the [terminal-notifier](https://github.com/alloy/terminal-notifier) application by [Eloy Durán](https://github.com/alloy).
 
 ## Requirements
-- Mac OS X (>= 10.8)
+- Mac OS X (>= 10.8) or Linux with the notify-send module.
 
 ## Install
 ```
@@ -11,7 +11,7 @@ $ npm install node-notifier
 ```
 
 
-## Usage 
+## Usage
 Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/terminal-notifier).
 
 ### Example
@@ -43,7 +43,7 @@ notifier.notify({
 The response will be given as an object. E.g., when running ```notifier.notify({list: "ALL"})```, this could be the response:
 
 ```
-{ response: 
+{ response:
    [ { GroupID: null,
        Title: 'Terminal',
        Subtitle: null,
@@ -70,8 +70,8 @@ The response will be given as an object. E.g., when running ```notifier.notify({
 
 There are three different types:
 
-- ```deliviered``` when a message is delivered. 
-- ```removed``` when all or one message is removed. If all messages are removed, the response property will have several elements. 
+- ```deliviered``` when a message is delivered.
+- ```removed``` when all or one message is removed. If all messages are removed, the response property will have several elements.
 - ```list``` when a list is presented. Even when doing ```list: 1```.
 
 
@@ -79,6 +79,6 @@ There are three different types:
 
 1. Be robust and have unit tests.
 
-When these criterias are met, the module will be versioned 1.0. 
+When these criterias are met, the module will be versioned 1.0.
 
 _NB:_ Previous plans of supporting both growlnotify and terminal-notifier, are abandoned. This module will only do terminal-notifier.
