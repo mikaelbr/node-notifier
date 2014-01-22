@@ -1,4 +1,4 @@
-var notifier = require('../index')
+var notifier = require('../lib/terminal-notifier')
   , should = require('should')
   , assert = require('assert');
 
@@ -13,7 +13,7 @@ describe('node-notifier', function(){
     });
 
     it('should notify with a message', function(done){
-      
+
       notifier.notify({
         message: "Hello World"
       }, function (err, response) {
@@ -24,7 +24,7 @@ describe('node-notifier', function(){
     });
 
     it('should be chainable', function(done){
-      
+
       notifier.notify({
         message: "First test"
       }).notify({
