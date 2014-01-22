@@ -5,6 +5,10 @@ A Node.js wrapper for the [terminal-notifier](https://github.com/alloy/terminal-
 ## Requirements
 - Mac OS X (>= 10.8) or Linux with the notify-send module.
 
+If using Linux, `notify-send` must be installed on your system.
+However, [terminal-notifier](https://github.com/alloy/terminal-notifier), comes
+bundled in the module. So on Mac, not additional installations is necessary.
+
 ## Install
 ```
 $ npm install node-notifier
