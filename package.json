@@ -1,6 +1,6 @@
 {
   "name": "node-notifier",
-  "version": "1.1.2-0",
+  "version": "1.2.0",
   "description": "A Node.js wrapper for the terminal-notifier application",
   "main": "index.js",
   "directories": {
@@ -21,5 +21,8 @@
   "devDependencies": {
     "mocha": "~1.7.4",
     "should": "~1.2.1"
+  },
+  "dependencies": {
+    "which": "~1.0.5"
   }
 }
