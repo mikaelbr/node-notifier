@@ -1,4 +1,4 @@
-var notifier = require('../lib/terminal-notifier')
+var notifier = require('../')
   , should = require('should')
   , assert = require('assert');
 
