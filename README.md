@@ -3,19 +3,51 @@
 A Node.js wrapper for the [terminal-notifier](https://github.com/alloy/terminal-notifier) application by [Eloy Durán](https://github.com/alloy).
 
 ## Requirements
-- Mac OS X (>= 10.8) or Linux with the notify-send module.
+- Mac OS X (>= 10.8)
+- Linux with the notify-send module
+- Or Growl on Windows
 
 If using Linux, `notify-send` must be installed on your system.
 However, [terminal-notifier](https://github.com/alloy/terminal-notifier), comes
 bundled in the module. So on Mac, not additional installations is necessary.
+
+If using Windows/Growl, `growl` must be installed. For windows see
+[Growl for Windows](http://www.growlforwindows.com/gfw/). You can also use
+growl on mac, but you need to specify this manually (see API).
+
+By default Notification Center will be used on Mac, notify-send will be used
+on Linux, and Growl will be used if neither mac or linux.
 
 ## Install
 ```
 $ npm install node-notifier
 ```
 
+## Standard Usage
+```javascript
+var Notification = require('node-notifier');
 
-## Usage
+var notifier = new Notification();
+notifier.notify({
+	message: 'Hello World'
+});
+```
+
+`Notification` also has specifications for all types of notifications, to be used
+manually.
+
+Example:
+```javascript
+var nn = require('node-notifier');
+
+new nn.NotificationCenter().notify();
+new nn.NotifySend().notify();
+new nn.Growl().notify(options);
+```
+
+
+## Usage NotificationCenter
+
 Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/terminal-notifier).
 
 ### Example
@@ -23,8 +55,9 @@ Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/t
 Where [terminal-notifier](https://github.com/alloy/terminal-notifier) say to use the ```-message``` option, you can do this in node-notifier
 
 ```javascript
-var notifier = require('node-notifier');
+var Notification = require('node-notifier');
 
+var notifier = new Notification();
 notifier.notify({
 	message: 'Hello World'
 });
@@ -34,8 +67,9 @@ notifier.notify({
 You can specify the second argument as a callback for getting ```error``` and ```response```.
 
 ```javascript
-var notifier = require('node-notifier');
+var Notification = require('node-notifier');
 
+var notifier = new Notification();
 notifier.notify({
 	title: 'My application',
 	message: 'New notification'
@@ -78,11 +112,37 @@ There are three different types:
 - ```removed``` when all or one message is removed. If all messages are removed, the response property will have several elements.
 - ```list``` when a list is presented. Even when doing ```list: 1```.
 
+## Usage NotifySend
+
+```javascript
+var Notification = require('node-notifier');
+
+var notifier = new Notification();
+notifier.notify({
+	title: 'Foo',
+	message: 'Hello World'
+	// .. and other notify-send flags
+});
+```
+
+## Usage NotifySend
+
+```javascript
+var Notification = require('node-notifier');
+
+var notifier = new Notification({
+	// Options as passed to Growler
+});
+notifier.notify({
+	title: 'Foo',
+	message: 'Hello World'
+	// and other growl options like sticky etc.
+});
+```
+
+See more information for constructor options in
+[growler](https://github.com/betamos/Node-Growler/).
 
 ## Module TODO
 
-1. Be robust and have unit tests.
-
-When these criterias are met, the module will be versioned 1.0.
-
-_NB:_ Previous plans of supporting both growlnotify and terminal-notifier, are abandoned. This module will only do terminal-notifier.
+1. Add tests for notify-send and growl
