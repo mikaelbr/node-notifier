@@ -23,6 +23,7 @@
     "should": "~1.2.1"
   },
   "dependencies": {
-    "which": "~1.0.5"
+    "which": "~1.0.5",
+    "growler": "0.0.1"
   }
 }
