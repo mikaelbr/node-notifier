@@ -1,6 +1,11 @@
 # node-notifier
 
-A Node.js wrapper for the [terminal-notifier](https://github.com/alloy/terminal-notifier) application by [Eloy Durán](https://github.com/alloy).
+A node module for sending notification using node. Uses terminal-notifier on mac,
+notify-send for Linux and growl for others.
+
+For mac this is a wrapper for the
+[terminal-notifier](https://github.com/alloy/terminal-notifier) application by
+[Eloy Durán](https://github.com/alloy).
 
 ## Requirements
 - Mac OS X (>= 10.8)
