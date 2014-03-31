@@ -1,6 +1,7 @@
 var NotificationCenter = require('../').NotificationCenter
   , should = require('should')
   , os = require('os')
+  , utils = require('../lib/utils')
   , assert = require('assert');
 
 var notifier = new NotificationCenter();
@@ -8,7 +9,6 @@ var notifier = new NotificationCenter();
 (function () {
 
   if (os.type() !== 'Darwin') {
-    console.log('Only tests for Mac for now.');
     return;
   }
 
@@ -71,7 +71,61 @@ var notifier = new NotificationCenter();
           });
         });
       });
+    });
 
+    describe("arguments", function () {
+      before(function () {
+        this.original = utils.command;
+      });
+
+      after(function () {
+        utils.command = this.original;
+      });
+
+      it('should allow for non-sensical arguments (fail gracefully)', function (done) {
+        var expected = [ '-title', '"title"', '-message', '"body"', '-tullball', '"notValid"' ]
+
+        utils.command = function (notifier, argsList, callback) {
+          argsList.should.eql(expected);
+          done();
+        };
+
+        var notifier = new NotificationCenter();
+        notifier.isNotifyChecked = true;
+        notifier.hasNotifier = true;
+
+        notifier.notify({
+          title: "title",
+          message: "body",
+          tullball: "notValid"
+        }, function (err) {
+          should.not.exist(err);
+          done();
+        });
+      });
+
+      it('should escape all title andmessage', function (done) {
+        var expected = [ '-title', '"title \\"message\\""',
+        '-message', '"body \\"message\\""', '-tullball', '"notValid"' ]
+
+        utils.command = function (notifier, argsList, callback) {
+          argsList.should.eql(expected);
+          done();
+        };
+
+        var notifier = new NotificationCenter();
+        notifier.isNotifyChecked = true;
+        notifier.hasNotifier = true;
+
+        notifier.notify({
+          title: 'title "message"',
+          message: 'body "message"',
+          tullball: "notValid"
+        }, function (err) {
+          should.not.exist(err);
+          done();
+        });
+      });
     });
   });
 }());
