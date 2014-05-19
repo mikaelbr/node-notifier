@@ -83,7 +83,7 @@ var Notify = require('../').NotifySend
 
 
     it('should escape message input', function (done) {
-      var expected = [ '"Node Notification:"', '"some \\"message\\""' ];
+      var expected = [ '"Node Notification:"', '"some \\"mess\\`age\\`\\""' ];
 
       utils.command = function (notifier, argsList, callback) {
         argsList.should.eql(expected);
@@ -95,7 +95,7 @@ var Notify = require('../').NotifySend
       notifier.hasNotifier = true;
 
       notifier.notify({
-        message: 'some "message"'
+        message: 'some "mess`age`"'
       }, function (err) {
         should.not.exist(err);
         done();
