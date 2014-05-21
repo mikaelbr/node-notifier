@@ -17,6 +17,12 @@ var notifier = new NotificationCenter();
     describe('#notify()', function(){
 
       before(function (done) {
+        utils.commandPresent = function (command, callback) {
+          if (command == 'terminal-notifier') {
+            return callback(false);
+          }
+        };
+
         notifier.notify({
           remove: "ALL"
         }, function () { done(); });
@@ -70,6 +76,49 @@ var notifier = new NotificationCenter();
             done();
           });
         });
+      });
+    });
+
+    describe("terminal-notifier executable selection", function() {
+      before(function () {
+        this.original = utils.command;
+      });
+
+      after(function () {
+        utils.command = this.original;
+      });
+
+      it('should use the local terminal-notifier executable if available', function (done) {
+        utils.commandPresent = function (command, callback) {
+          if (command == 'terminal-notifier') {
+            return callback(true);
+          }
+        };
+
+        utils.command = function (notifier, argsList, callback) {
+          notifier.should.eql('terminal-notifier');
+          done();
+        };
+
+        var notifier = new NotificationCenter();
+        notifier.notify({message: "body"});
+      });
+
+      it('should use the vendored executable if a local executable is not available', function (done) {
+        utils.commandPresent = function (command, callback) {
+          if (command == 'terminal-notifier') {
+            return callback(false);
+          }
+        };
+
+        utils.command = function (notifier, argsList, callback) {
+          var using_vendored_executable = (notifier.indexOf('vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier') != -1);
+          using_vendored_executable.should.eql(true);
+          done();
+        };
+
+        var notifier = new NotificationCenter();
+        notifier.notify({message: "body"});
       });
     });
 
