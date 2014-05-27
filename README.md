@@ -1,4 +1,4 @@
-# node-notifier
+# node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 A node module for sending notification using node. Uses terminal-notifier on mac,
 notify-send for Linux and growl for others.
@@ -179,3 +179,23 @@ See more information for constructor options in
 ## Module TODO
 
 1. Add tests for growl
+
+
+## Changelog
+
+### `v3.0.0`
+1. Updates terminal-notifier to version 1.6.0; adding support for appIcon and contentImage
+2. Removes parsing of output sent from notifier (Notification Center)
+
+## License
+
+[MIT License](http://en.wikipedia.org/wiki/MIT_License)
+
+[npm-url]: https://npmjs.org/package/node-notifier
+[npm-image]: https://badge.fury.io/js/node-notifier.png
+
+[travis-url]: http://travis-ci.org/mikaelbr/node-notifier
+[travis-image]: https://secure.travis-ci.org/mikaelbr/node-notifier.png?branch=master
+
+[depstat-url]: https://david-dm.org/mikaelbr/node-notifier
+[depstat-image]: https://david-dm.org/mikaelbr/node-notifier.png
