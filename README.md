@@ -55,6 +55,16 @@ new nn.Growl().notify(options);
 
 Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/terminal-notifier).
 
+---
+
+### Note: Output parsing from Notification Center is deprecated as of `3.0.0`.
+
+**Parsing of output given by terminal-notifier is removed as of node-notifier `3.0.0`.**
+You can still use both `remove` and `list` but the output given will not be parsed into a object.
+
+---
+
+
 ### Example
 
 Where [terminal-notifier](https://github.com/alloy/terminal-notifier) say to use the ```-message``` option, you can do this in node-notifier
@@ -67,7 +77,6 @@ notifier.notify({
 	message: 'Hello World'
 });
 ```
-
 
 You can specify the second argument as a callback for getting ```error``` and ```response```.
 
@@ -83,7 +92,24 @@ notifier.notify({
 });
 ```
 
+As of version `3.0.0`, you can also specify image used as icon or content image.
+
+
+```javascript
+
+notifier.notify({
+  "title": "Phil Coulson",
+  "subtitle": "Agent of S.H.I.E.L.D.",
+  "message": "If I come out, will you shoot me? 'Cause then I won't come out.",
+  "sound": "Funk", // case sensitive
+  "contentImage": __dirname + "/coulson.jpg",
+  "open": "file://" + __dirname + "/coulson.jpg"
+});
+
+```
+
 The response will be given as an object. E.g., when running ```notifier.notify({list: "ALL"})```, this could be the response:
+**Note: Deprecated as of version `3.0.0`.**
 
 ```
 { response:
@@ -117,6 +143,8 @@ There are three different types:
 - ```removed``` when all or one message is removed. If all messages are removed, the response property will have several elements.
 - ```list``` when a list is presented. Even when doing ```list: 1```.
 
+
+
 ## Usage NotifySend
 
 ```javascript
@@ -130,7 +158,7 @@ notifier.notify({
 });
 ```
 
-## Usage NotifySend
+## Usage Growl
 
 ```javascript
 var Notification = require('node-notifier');
@@ -150,4 +178,4 @@ See more information for constructor options in
 
 ## Module TODO
 
-1. Add tests for notify-send and growl
+1. Add tests for growl
