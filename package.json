@@ -27,6 +27,6 @@
   "dependencies": {
     "which": "~1.0.5",
     "growler": "0.0.1",
-    "shellwords": "^0.1.0"
+    "shellwords": "~0.1.0"
   }
 }
