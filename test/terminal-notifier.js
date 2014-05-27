@@ -1,25 +1,27 @@
 var NotificationCenter = require('../').NotificationCenter
   , should = require('should')
   , os = require('os')
+  , fs = require('fs')
   , utils = require('../lib/utils')
   , assert = require('assert');
 
 var notifier = new NotificationCenter();
+var originalUtils = utils.command;
 
 (function () {
-
-  if (os.type() !== 'Darwin') {
-    return;
-  }
 
   describe('node-notifier', function(){
 
     describe('#notify()', function(){
 
-      before(function (done) {
-        notifier.notify({
-          remove: "ALL"
-        }, function () { done(); });
+      beforeEach(function () {
+        utils.command = function (n, o, cb) {
+          cb(null, "");
+        }
+      });
+
+      after(function () {
+        utils.command = originalUtils
       });
 
       it('should notify with a message', function(done){
@@ -27,7 +29,7 @@ var notifier = new NotificationCenter();
         notifier.notify({
           message: "Hello World"
         }, function (err, response) {
-          response.type.should.equal("delivered");
+          (err === null).should.be.true;
           done();
         });
 
@@ -40,33 +42,44 @@ var notifier = new NotificationCenter();
         }).notify({
           message: "Second test"
         }, function (err, response) {
-          response.type.should.equal("delivered");
-          response.response[0].should.equal("Notification delivered.");
+          (err === null).should.be.true;
           done();
         });
 
       });
 
       it('should be able to list all notifications', function(done){
+        utils.command = function (n, o, cb) {
+          cb(null, fs.readFileSync(__dirname + '/fixture/listAll.txt').toString());
+        }
+
         notifier.notify({
             list: "ALL"
           }, function (err, response) {
-            response.response.length.should.equal(3);
+            response.should.be.ok;
             done();
           });
       });
 
 
       it('should be able to remove all messages', function(done){
+        utils.command = function (n, o, cb) {
+          cb(null, fs.readFileSync(__dirname + '/fixture/removeAll.txt').toString());
+        }
+
         notifier.notify({
           remove: "ALL"
         }, function (err, response) {
-          response.type.should.equal("removed");
+          response.should.be.ok;
+
+          utils.command = function (n, o, cb) {
+            cb(null, "");
+          }
 
           notifier.notify({
             list: "ALL"
           }, function (err, response) {
-            assert(!response);
+            response.should.not.be.ok;
             done();
           });
         });
@@ -104,7 +117,7 @@ var notifier = new NotificationCenter();
         });
       });
 
-      it('should escape all title andmessage', function (done) {
+      it('should escape all title and message', function (done) {
         var expected = [ '-title', '"title \\"message\\""',
         '-message', '"body \\"message\\""', '-tullball', '"notValid"' ]
 

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>BuildMachineOSBuild</key>
-	<string>12A269</string>
+	<string>13D65</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -19,31 +19,31 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.2</string>
+	<string>1.6.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>7</string>
+	<string>11</string>
 	<key>DTCompiler</key>
-	<string></string>
+	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
-	<string>4F243</string>
+	<string>5B1008</string>
 	<key>DTPlatformVersion</key>
 	<string>GM</string>
 	<key>DTSDKBuild</key>
-	<string>12A264</string>
+	<string>13C64</string>
 	<key>DTSDKName</key>
-	<string>macosx10.8</string>
+	<string>macosx10.9</string>
 	<key>DTXcode</key>
-	<string>0440</string>
+	<string>0511</string>
 	<key>DTXcodeBuild</key>
-	<string>4F243</string>
+	<string>5B1008</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.8</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2012 Eloy Durán. All rights reserved.</string>
+	<string>Copyright © 2012 Eloy Durán. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

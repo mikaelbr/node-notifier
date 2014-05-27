@@ -1,0 +1,3 @@
+GroupID Title Subtitle  Message Delivered At
+(null)  Terminal  (null)  Hello World 2014-05-27 15:23:11 +0000
+(null)  Terminal  (null)    2014-05-27 14:42:24 +0000
