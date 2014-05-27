@@ -12,6 +12,16 @@ var originalUtils = utils.command;
 
   describe('node-notifier', function(){
 
+    before(function () {
+      os.type = function () {
+        return "Linux";
+      };
+
+      utils.isMacOSX = function (cb) {
+        cb(false);
+      };
+    })
+
     describe('#notify()', function(){
 
       beforeEach(function () {
