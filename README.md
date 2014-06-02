@@ -92,7 +92,7 @@ notifier.notify({
 });
 ```
 
-As of version `3.0.0`, you can also specify image used as icon or content image.
+As of version `3.0.0`, you can also specify image used as icon or content image. **For Mac OS notifications, requires 10.9.**
 
 
 ```javascript
