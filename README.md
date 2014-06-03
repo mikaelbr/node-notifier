@@ -183,6 +183,9 @@ See more information for constructor options in
 
 ## Changelog
 
+### `v3.0.1`
+1. Fixes version check for Mac OS X Yosemite
+
 ### `v3.0.0`
 1. Updates terminal-notifier to version 1.6.0; adding support for appIcon and contentImage
 2. Removes parsing of output sent from notifier (Notification Center)
