@@ -1,5 +1,4 @@
 var should = require('should')
-  , cp = require('child_process')
   , assert = require('assert');
 
 var _ = require('../lib/utils');
@@ -9,7 +8,7 @@ var originalVersion = _.getOSXVersion;
 
 describe('utils', function(){
 
-  before(function () {
+  beforeEach(function () {
     process.platform = "darwin";
   });
 
