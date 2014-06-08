@@ -7,6 +7,8 @@ var NotificationCenter = require('../').NotificationCenter
 
 var notifier = new NotificationCenter();
 var originalUtils = utils.command;
+var originalIsMacOsX = utils.isMacOSX;
+var originalType = os.type;
 
 (function () {
 
@@ -20,7 +22,12 @@ var originalUtils = utils.command;
       utils.isMacOSX = function (cb) {
         cb(false);
       };
-    })
+    });
+
+    after(function () {
+      os.type = originalType;
+      utils.isMacOSX = originalIsMacOsX;
+    });
 
     describe('#notify()', function(){
 
