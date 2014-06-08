@@ -19,45 +19,48 @@ describe('utils', function(){
 
   it('should support mac 10.8', function (done) {
     _.getOSXVersion = function (cb) {
-      cb(null, "10.8", "");
+      cb(null, "10.8");
     };
-
 
     _.isMacOSX(function (error, msg) {
       error.should.be.false;
+      (msg === void 0).should.be.true;
       done();
     });
   });
 
   it('should support not mac 10.7', function (done) {
     _.getOSXVersion = function (cb) {
-      cb(null, "10.7", "");
+      cb(null, "10.7");
     };
 
     _.isMacOSX(function (error, msg) {
       error.should.be.true;
+      (msg === void 0).should.be.false;
       done();
     });
   });
 
   it('should support 10.10', function (done) {
     _.getOSXVersion = function (cb) {
-      cb(null, "10.10", "");
+      cb(null, "10.10");
     };
 
     _.isMacOSX(function (error, msg) {
       error.should.be.false;
+      (msg === void 0).should.be.true;
       done();
     });
   });
 
   it('should sopport 10.10 with newline', function (done) {
     _.getOSXVersion = function (cb) {
-      cb(null, "10.10\n", "");
+      cb(null, "10.10\n");
     };
 
     _.isMacOSX(function (error, msg) {
       error.should.be.false;
+      (msg === void 0).should.be.true;
       done();
     });
   });
