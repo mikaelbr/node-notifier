@@ -23,6 +23,7 @@ describe('utils', function(){
     };
 
     _.isMacOSX(function (error, msg) {
+      console.log(error, msg);
       error.should.be.false;
       (msg === void 0).should.be.true;
       done();
