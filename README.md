@@ -176,29 +176,29 @@ notifier.notify({
 See more information for constructor options in
 [growler](https://github.com/betamos/Node-Growler/).
 
-## Module TODO
-
-1. Add tests for growl
-
 
 ## Changelog
 
-### `v3.0.1`
+### `v3.0.2`
 1. Fixes version check for Mac OS X Yosemite
 
 ### `v3.0.0`
 1. Updates terminal-notifier to version 1.6.0; adding support for appIcon and contentImage
 2. Removes parsing of output sent from notifier (Notification Center)
 
+[![NPM downloads][npm-downloads]][npm-url]
+
+
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
 
 [npm-url]: https://npmjs.org/package/node-notifier
-[npm-image]: https://badge.fury.io/js/node-notifier.png
+[npm-image]: http://img.shields.io/npm/v/node-notifier.svg?style=flat
+[npm-downloads]: http://img.shields.io/npm/dm/node-notifier.svg?style=flat
 
 [travis-url]: http://travis-ci.org/mikaelbr/node-notifier
-[travis-image]: https://secure.travis-ci.org/mikaelbr/node-notifier.png?branch=master
+[travis-image]: http://img.shields.io/travis/mikaelbr/node-notifier.svg?style=flat
 
-[depstat-url]: https://david-dm.org/mikaelbr/node-notifier
-[depstat-image]: https://david-dm.org/mikaelbr/node-notifier.png
+[depstat-url]: https://gemnasium.com/mikaelbr/node-notifier
+[depstat-image]: http://img.shields.io/gemnasium/mikaelbr/node-notifier.svg?style=flat
