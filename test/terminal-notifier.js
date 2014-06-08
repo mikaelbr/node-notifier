@@ -16,7 +16,7 @@ var originalType = os.type;
 
     before(function () {
       os.type = function () {
-        return "Linux";
+        return "Darwin";
       };
 
       utils.isMacOSX = function (cb) {

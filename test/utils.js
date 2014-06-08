@@ -1,19 +1,23 @@
 var should = require('should')
-  , assert = require('assert');
+  , assert = require('assert')
+  , os = require('os')
+  ;
 
 var _ = require('../lib/utils');
 
-var originalPlatform = process.platform;
+var originalType = os.type;
 var originalVersion = _.getOSXVersion;
 
 describe('utils', function(){
 
-  beforeEach(function () {
-    process.platform = "darwin";
+  before(function () {
+    os.type = function () {
+        return "Darwin";
+      };
   });
 
   after(function () {
-    process.platform = originalPlatform;
+    os.type = originalType;
     _.getOSXVersion = originalVersion;
   });
 
@@ -23,7 +27,6 @@ describe('utils', function(){
     };
 
     _.isMacOSX(function (error, msg) {
-      console.log(error, msg);
       error.should.be.false;
       (msg === void 0).should.be.true;
       done();
