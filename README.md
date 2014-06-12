@@ -146,7 +146,7 @@ See more information for constructor options in
 
 ## Changelog
 
-### `v3.0.3`
+### `v3.0.4`
 1. Fixes expires for notify-send (Issue #13)
 
 ### `v3.0.2`
