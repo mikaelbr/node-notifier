@@ -144,6 +144,9 @@ See more information for constructor options in
 
 ## Changelog
 
+### `v3.0.3`
+1. Fixes expires for notify-send (Issue #13)
+
 ### `v3.0.2`
 1. Fixes version check for Mac OS X Yosemite
 
