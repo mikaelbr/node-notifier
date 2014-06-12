@@ -123,6 +123,8 @@ notifier.notify({
 });
 ```
 
+See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gutsy/man1/notify-send.1.html)
+
 ## Usage Growl
 
 ```javascript
