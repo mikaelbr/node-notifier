@@ -105,10 +105,13 @@ notifier.notify({
   "message": "If I come out, will you shoot me? 'Cause then I won't come out.",
   "sound": "Funk", // case sensitive
   "contentImage": __dirname + "/coulson.jpg",
+  "appIcon": __dirname + "/coulson.jpg",
   "open": "file://" + __dirname + "/coulson.jpg"
 });
 
 ```
+
+See [terminal-notifier](https://github.com/alloy/terminal-notifier) for more options.
 
 ## Usage NotifySend
 
