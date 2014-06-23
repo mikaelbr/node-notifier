@@ -1,5 +1,5 @@
-var NotificationCenter = require('../').NotificationCenter
-var notifier = new NotificationCenter();
+var Notify = require('../');
+var notifier = new Notify();
 
 notifier.notify({
   "title": "Phil Coulson",
