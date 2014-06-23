@@ -156,6 +156,9 @@ See more information for constructor options in
 
 ## Changelog
 
+### `v3.0.6`
+1. Fixes typo: Changes Growl app name from `Gulp` to `Node`.
+
 ### `v3.0.5`
 1. Maps common options between the different notifiers. Allowing for common usage with different notifiers.
 
