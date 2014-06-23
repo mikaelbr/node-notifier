@@ -21,7 +21,7 @@ If using Windows/Growl, `growl` must be installed. For windows see
 growl on mac, but you need to specify this manually (see API).
 
 By default Notification Center will be used on Mac, notify-send will be used
-on Linux, and Growl will be used if neither mac or linux.
+on Linux, and Growl will be used if neither Mac 10.8 or Linux.
 
 ## Install
 ```
@@ -49,6 +49,11 @@ new nn.NotificationCenter().notify();
 new nn.NotifySend().notify();
 new nn.Growl().notify(options);
 ```
+
+### Mapping between notifiers
+Common options between the modules (i.e. `icon`) is mapped. This means,
+if you are using a Mac and someone on your project is using Linux, you
+can both see icons.
 
 
 ## Usage NotificationCenter
@@ -121,7 +126,8 @@ var Notification = require('node-notifier');
 var notifier = new Notification();
 notifier.notify({
 	title: 'Foo',
-	message: 'Hello World'
+	message: 'Hello World',
+  icon: __dirname + "/coulson.jpg",
 	// .. and other notify-send flags
 });
 ```
@@ -138,7 +144,8 @@ var notifier = new Notification({
 });
 notifier.notify({
 	title: 'Foo',
-	message: 'Hello World'
+	message: 'Hello World',
+  icon: fs.readFileSync(__dirname + "/coulson.jpg")
 	// and other growl options like sticky etc.
 });
 ```
@@ -148,6 +155,9 @@ See more information for constructor options in
 
 
 ## Changelog
+
+### `v3.0.5`
+1. Maps common options between the different notifiers. Allowing for common usage with different notifiers.
 
 ### `v3.0.4`
 1. Fixes expires for notify-send (Issue #13)
