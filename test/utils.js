@@ -39,7 +39,7 @@ describe('utils', function(){
     };
 
     _.isMacOSX(function (error, msg) {
-      error.should.be.true;
+      error.should.equal('old');
       (msg === void 0).should.be.false;
       done();
     });
