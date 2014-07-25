@@ -7,34 +7,51 @@ var nn = require('../')
   , utils = require('../lib/utils')
   , assert = require('assert');
 
-var _ = require('../lib/utils');
-
 var notifier = null;
 var originalUtils = utils.command;
-var originalIsMacOsX = utils.isMacOSX;
+var originalMacVersion = utils.getOSXVersion;
 var originalType = os.type;
-var originalVersion = _.getOSXVersion;
 
-describe('node-notifier', function(){
+describe('Mac fallback', function () {
+  var original = utils.isMacOSX;
+
+  after(function () {
+    utils.isMacOSX = original;
+  })
+
+  it('should default to Growl notification if older Mac OSX than 10.8', function(done){
+    utils.isMacOSX = function (cb) {
+      cb('old');
+    };
+    var n = new NotificationCenter();
+    n.notify({
+      message: "Hello World"
+    }, function (err, response) {
+      (this instanceof Growl).should.be.true;
+      done();
+    });
+
+  });
+});
+
+describe('terminal-notifier', function(){
 
   before(function () {
     os.type = function () {
       return "Darwin";
     };
 
-    utils.isMacOSX = function (cb) {
-      cb(false);
-    };
+    utils.getOSXVersion = function (cb) {
+      return cb(null, "10.8");
+    }
   });
 
   beforeEach(function () {
     notifier = new NotificationCenter();
   });
 
-  afterEach(function () {
+  after(function () {
     os.type = originalType;
-    utils.isMacOSX = originalIsMacOsX;
-    _.getOSXVersion = originalVersion;
   });
 
   describe('#notify()', function(){
@@ -46,7 +63,7 @@ describe('node-notifier', function(){
     });
 
     after(function () {
-      utils.command = originalUtils
+      utils.command = originalUtils;
     });
 
     it('should notify with a message', function(done){
@@ -60,18 +77,6 @@ describe('node-notifier', function(){
 
     });
 
-    it('should default to Growl notification if older Mac OSX than 10.8', function(done){
-      _.getOSXVersion = function (cb) {
-        cb(null, "10.7");
-      };
-      notifier.notify({
-        message: "Hello World"
-      }, function (err, response) {
-        (this instanceof Growl).should.be.true;
-        done();
-      });
-
-    });
 
     it('should be chainable', function(done){
 
