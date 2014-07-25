@@ -8,7 +8,7 @@ For mac this is a wrapper for the
 [Eloy Durán](https://github.com/alloy).
 
 ## Requirements
-- Mac OS X (>= 10.8)
+- Mac OS X (>= 10.8. If earlier versions, Growl is used as fallback)
 - Linux with the notify-send module
 - Or Growl on Windows
 
@@ -59,6 +59,10 @@ can both see icons.
 ## Usage NotificationCenter
 
 Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/terminal-notifier).
+
+Native Notification Center requires Mac OS X version 10.8 or higher. If you have
+earlier versions, Growl will be the fallback. If Growl isn't installed, an error
+will be thrown.
 
 ---
 
@@ -155,6 +159,9 @@ See more information for constructor options in
 
 
 ## Changelog
+
+### `v3.1.0`
+1. Adds Growl as fallback for Mac OS X pre 10.8.
 
 ### `v3.0.6`
 1. Fixes typo: Changes Growl app name from `Gulp` to `Node`.
