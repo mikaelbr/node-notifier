@@ -1,7 +1,7 @@
 {
   "name": "node-notifier",
   "version": "3.2.1",
-  "description": "A Node.js module for sending notifications on native mac, windows and linux (or Growl as fallback)",
+  "description": "A Node.js module for sending notifications on native Mac, Windows and Linux (or Growl as fallback)",
   "main": "index.js",
   "directories": {
     "example": "example"
@@ -16,7 +16,10 @@
     "notify",
     "terminal-notifier",
     "notify-send",
-    "growl"
+    "growl",
+    "windows 8 notification",
+    "toaster",
+    "notification"
   ],
   "author": "Mikael Brevik",
   "license": "MIT",
