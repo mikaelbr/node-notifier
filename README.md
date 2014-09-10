@@ -3,6 +3,10 @@
 A node module for sending notification using node. Uses terminal-notifier on mac,
 notify-send for Linux, toaster for Windows 8 and Growl for others.
 
+![Mac Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/mac.png)
+![Native Windows Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/windows.png)
+![Growl Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/growl.png)
+
 ## Requirements
 - Mac OS X >= 10.8.
 - Linux with the notify-osd/notify-send module
@@ -186,7 +190,6 @@ See more information for constructor options in
 
 ### `v3.2.1`
 1. Fixes support for notifications from folders with spaces on Windows.
-
 
 ### `v3.2.0`
 1. Adds native Windows 8 support.
