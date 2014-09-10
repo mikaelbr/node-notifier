@@ -20,5 +20,5 @@ switch(os.type()) {
 
 module.exports.NotifySend = send;
 module.exports.NotificationCenter = mac;
-module.exports.Toaster = win;
+module.exports.WindowsToaster = win;
 module.exports.Growl = growl;
