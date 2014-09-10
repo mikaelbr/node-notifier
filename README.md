@@ -1,19 +1,19 @@
 # node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 A node module for sending notification using node. Uses terminal-notifier on mac,
-notify-send for Linux, toaster for Windows 8.1 and Growl for others.
+notify-send for Linux, toaster for Windows 8 and Growl for others.
 
 ## Requirements
 - Mac OS X >= 10.8.
 - Linux with the notify-osd/notify-send module
-- Windows >= 8.1.
+- Windows >= 8.
 - Or if no of the above requirements are met, Growl is used.
 
 If using Linux, `notify-osd` must be installed on your system.
 For Mac, [terminal-notifier](https://github.com/alloy/terminal-notifier), comes
 bundled in the module. So on Mac, not additional installations is necessary.
 
-This also goes for native Windows (version >=8.1) as well, where
+This also goes for native Windows (version >=8) as well, where
 [toaster.exe](https://github.com/nels-o/toaster) is bundled. Note, for native
 Windows notifications [a toast must have a shortcut installed (though not
 necessarily pinned) to the Start screen or in the Apps
@@ -184,8 +184,12 @@ See more information for constructor options in
 
 ## Changelog
 
+### `v3.2.1`
+1. Fixes support for notifications from folders with spaces on Windows.
+
+
 ### `v3.2.0`
-1. Adds native Windows 8.1 support.
+1. Adds native Windows 8 support.
 
 ### `v3.1.0`
 1. Adds Growl as fallback for Mac OS X pre 10.8.
