@@ -21,13 +21,13 @@
   "author": "Mikael Brevik",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.7.4",
-    "should": "~1.2.1"
+    "mocha": "^1.21.4",
+    "should": "^4.0.4"
   },
   "dependencies": {
-    "growler": "0.0.1",
+    "growler": "^0.0.1",
     "semver": "^3.0.1",
-    "shellwords": "~0.1.0",
-    "which": "~1.0.5"
+    "shellwords": "^0.1.0",
+    "which": "^1.0.5"
   }
 }
