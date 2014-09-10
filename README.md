@@ -35,7 +35,8 @@ var Notification = require('node-notifier');
 
 var notifier = new Notification();
 notifier.notify({
-	message: 'Hello World'
+  title: 'My awesome title',
+  message: 'Hello from node, Mr. User!'
 });
 ```
 
@@ -48,6 +49,7 @@ var nn = require('node-notifier');
 
 new nn.NotificationCenter().notify();
 new nn.NotifySend().notify();
+new nn.WindowsToaster().notify(options);
 new nn.Growl().notify(options);
 ```
 
@@ -86,7 +88,7 @@ var Notification = require('node-notifier');
 
 var notifier = new Notification();
 notifier.notify({
-	message: 'Hello World'
+  message: 'Hello World'
 });
 ```
 
@@ -95,12 +97,15 @@ You can specify the second argument as a callback for getting ```error``` and ``
 ```javascript
 var Notification = require('node-notifier');
 
-var notifier = new Notification();
+var notifier = new Notification({
+  // Options passed to Growl if fallback
+});
+
 notifier.notify({
-	title: 'My application',
-	message: 'New notification'
+  title: 'My application',
+  message: 'New notification'
 }, function(error, response) {
-	console.log(response);
+  console.log(response);
 });
 ```
 
@@ -128,16 +133,34 @@ See [terminal-notifier](https://github.com/alloy/terminal-notifier) for more opt
 ```javascript
 var Notification = require('node-notifier');
 
-var notifier = new Notification();
+var notifier = new Notification({
+  // Options passed to Growl if fallback
+});
 notifier.notify({
-	title: 'Foo',
-	message: 'Hello World',
+  title: 'Foo',
+  message: 'Hello World',
   icon: __dirname + "/coulson.jpg",
-	// .. and other notify-send flags
+  // .. and other notify-send flags
 });
 ```
 
 See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gutsy/man1/notify-send.1.html)
+
+## Usage Native Windows
+
+```javascript
+var Notification = require('node-notifier');
+
+var notifier = new Notification({
+  // Options passed to Growl if fallback
+});
+notifier.notify({
+  title: 'Foo',
+  message: 'Hello World',
+  icon: __dirname + "/coulson.jpg"
+});
+```
+
 
 ## Usage Growl
 
@@ -145,15 +168,19 @@ See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gut
 var Notification = require('node-notifier');
 
 var notifier = new Notification({
-	// Options as passed to Growler
+  // Options as passed to Growler
 });
 notifier.notify({
-	title: 'Foo',
-	message: 'Hello World',
+  title: 'Foo',
+  message: 'Hello World',
   icon: fs.readFileSync(__dirname + "/coulson.jpg")
-	// and other growl options like sticky etc.
+  // and other growl options like sticky etc.
 });
 ```
+
+See more information for constructor options in
+[growler](https://github.com/betamos/Node-Growler/).
+
 
 See more information for constructor options in
 [growler](https://github.com/betamos/Node-Growler/).
