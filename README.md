@@ -182,10 +182,6 @@ See more information for constructor options in
 [growler](https://github.com/betamos/Node-Growler/).
 
 
-See more information for constructor options in
-[growler](https://github.com/betamos/Node-Growler/).
-
-
 ## Changelog
 
 ### `v3.2.0`
