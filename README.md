@@ -1,27 +1,28 @@
 # node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 A node module for sending notification using node. Uses terminal-notifier on mac,
-notify-send for Linux and growl for others.
-
-For mac this is a wrapper for the
-[terminal-notifier](https://github.com/alloy/terminal-notifier) application by
-[Eloy Durán](https://github.com/alloy).
+notify-send for Linux, toaster for Windows 8.1 and Growl for others.
 
 ## Requirements
-- Mac OS X (>= 10.8. If earlier versions, Growl is used as fallback)
-- Linux with the notify-send module
-- Or Growl on Windows
+- Mac OS X >= 10.8.
+- Linux with the notify-osd/notify-send module
+- Windows >= 8.1.
+- Or if no of the above requirements are met, Growl is used.
 
-If using Linux, `notify-send` must be installed on your system.
-However, [terminal-notifier](https://github.com/alloy/terminal-notifier), comes
+If using Linux, `notify-osd` must be installed on your system.
+For Mac, [terminal-notifier](https://github.com/alloy/terminal-notifier), comes
 bundled in the module. So on Mac, not additional installations is necessary.
 
-If using Windows/Growl, `growl` must be installed. For windows see
-[Growl for Windows](http://www.growlforwindows.com/gfw/). You can also use
-growl on mac, but you need to specify this manually (see API).
+This also goes for native Windows (version >=8.1) as well, where
+[toaster.exe](https://github.com/nels-o/toaster) is bundled. Note, for native
+Windows notifications [a toast must have a shortcut installed (though not
+necessarily pinned) to the Start screen or in the Apps
+view](http://msdn.microsoft.com/en-in/library/windows/apps/hh779727.aspx)
 
-By default Notification Center will be used on Mac, notify-send will be used
-on Linux, and Growl will be used if neither Mac 10.8 or Linux.
+If no of the other requirements are met, node-notifier will use Growl.
+You have to have Growl installed on your system. See
+[Growl for Windows](http://www.growlforwindows.com/gfw/) or
+[Growl for Mac](http://growl.info/).
 
 ## Install
 ```
@@ -159,6 +160,9 @@ See more information for constructor options in
 
 
 ## Changelog
+
+### `v3.2.0`
+1. Adds native Windows 8.1 support.
 
 ### `v3.1.0`
 1. Adds Growl as fallback for Mac OS X pre 10.8.
