@@ -19,9 +19,9 @@ bundled in the module. So on Mac, not additional installations is necessary.
 
 This also goes for native Windows (version >=8) as well, where
 [toaster.exe](https://github.com/nels-o/toaster) is bundled. Note, for native
-Windows notifications [a toast must have a shortcut installed (though not
-necessarily pinned) to the Start screen or in the Apps
-view](http://msdn.microsoft.com/en-in/library/windows/apps/hh779727.aspx)
+Windows notifications [a toast must have a shortcut installed](http://msdn.microsoft.com/en-in/library/windows/apps/hh779727.aspx)
+(though not necessarily pinned) to the Start screen or in the Apps view, but
+this happens automatically.
 
 If no of the other requirements are met, node-notifier will use Growl.
 You have to have Growl installed on your system. See
