@@ -1,7 +1,7 @@
 {
   "name": "node-notifier",
   "version": "3.3.0",
-  "description": "A Node.js module for sending notifications on native Mac, Windows and Linux (or Growl as fallback)",
+  "description": "A Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
   "main": "index.js",
   "directories": {
     "example": "example"

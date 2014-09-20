@@ -1,7 +1,7 @@
 # node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 A node module for sending notification using node. Uses terminal-notifier on mac,
-notify-send for Linux, toaster for Windows 8 and Growl for others.
+notify-send for Linux, toaster for Windows 8, balloons for Windows pre 8 or Growl for others.
 
 ![Mac Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/mac.png)
 ![Native Windows Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/windows.png)
@@ -10,7 +10,7 @@ notify-send for Linux, toaster for Windows 8 and Growl for others.
 ## Requirements
 - Mac OS X >= 10.8.
 - Linux with the notify-osd/notify-send module
-- Windows >= 8.
+- Windows. Using "toasters" for Win8, Balloons for pre Win8.
 - Or if no of the above requirements are met, Growl is used.
 
 If using Linux, `notify-osd` must be installed on your system.
@@ -54,6 +54,7 @@ var nn = require('node-notifier');
 new nn.NotificationCenter().notify();
 new nn.NotifySend().notify();
 new nn.WindowsToaster().notify(options);
+new nn.WindowsBalloon().notify(options);
 new nn.Growl().notify(options);
 ```
 
@@ -150,7 +151,7 @@ notifier.notify({
 
 See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gutsy/man1/notify-send.1.html)
 
-## Usage Native Windows
+## Usage Native Windows 8
 
 ```javascript
 var Notification = require('node-notifier');
@@ -165,6 +166,27 @@ notifier.notify({
 });
 ```
 
+## Usage Native Windows Version 7 and below
+
+For earlier Windows versions, the taskbar balloons are used.
+For balloons a great project called
+[notifu](http://www.paralint.com/projects/notifu/) is used.
+
+```javascript
+var Notification = require('node-notifier');
+
+var notifier = new Notification({
+  // Options passed to Growl if fallback
+});
+notifier.notify({
+  title: 'Foo',
+  message: 'Hello World',
+  icon: __dirname + "/coulson.jpg"
+});
+```
+
+See full usage on the [project homepage:
+notifu](http://www.paralint.com/projects/notifu/).
 
 ## Usage Growl
 
@@ -172,8 +194,9 @@ notifier.notify({
 var Notification = require('node-notifier');
 
 var notifier = new Notification({
-  // Options as passed to Growler
+  name: 'Growl Name Used' // Defaults as 'Node'
 });
+
 notifier.notify({
   title: 'Foo',
   message: 'Hello World',
@@ -183,7 +206,7 @@ notifier.notify({
 ```
 
 See more information for constructor options in
-[growler](https://github.com/betamos/Node-Growler/).
+[growler](https://github.com/theabraham/growly/).
 
 
 [![NPM downloads][npm-downloads]][npm-url]

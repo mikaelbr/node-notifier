@@ -1,6 +1,10 @@
 Changelog
 ===
 
+### `v3.3.0`
+1. Adds support for native Windows 7 and earlier (through task bar balloons)
+2. Changes growl implementation. Adds better support for GNTP
+
 ### `v3.2.1`
 1. Fixes support for notifications from folders with spaces on Windows.
 
