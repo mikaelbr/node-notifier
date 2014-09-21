@@ -1,6 +1,9 @@
 Changelog
 ===
 
+### `v3.4.0`
+1. Adds Growl as priority over Balloons
+
 ### `v3.3.0`
 1. Adds support for native Windows 7 and earlier (through task bar balloons)
 2. Changes growl implementation. Adds better support for GNTP
