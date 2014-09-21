@@ -10,7 +10,7 @@ notify-send for Linux, toaster for Windows 8, balloons for Windows pre 8 or Grow
 ## Requirements
 - Mac OS X >= 10.8.
 - Linux with the notify-osd/notify-send module
-- Windows. Using "toasters" for Win8, Balloons for pre Win8.
+- Windows. Using "toasters" for Win8, Balloons for pre Win8 (if Growl isn't found).
 - Or if no of the above requirements are met, Growl is used.
 
 If using Linux, `notify-osd` must be installed on your system.
@@ -23,10 +23,15 @@ Windows notifications [a toast must have a shortcut installed](http://msdn.micro
 (though not necessarily pinned) to the Start screen or in the Apps view, but
 this happens automatically.
 
+Growl takes precidence over Windows balloons. So if Growl is active,
+growl is used, if not, balloons are shown.
+
 If no of the other requirements are met, node-notifier will use Growl.
 You have to have Growl installed on your system. See
 [Growl for Windows](http://www.growlforwindows.com/gfw/) or
 [Growl for Mac](http://growl.info/).
+
+See [documentation and flow chart for reporters](./DECISION_FLOW.md)
 
 ## Install
 ```
@@ -179,9 +184,9 @@ var notifier = new Notification({
   // Options passed to Growl if fallback
 });
 notifier.notify({
-  title: 'Foo',
-  message: 'Hello World',
-  icon: __dirname + "/coulson.jpg"
+  p: 'Foo', // Title (can use title:)
+  m: 'Hello World', // Message (can use message:)
+  d: 1000 // Show for 1000 ms
 });
 ```
 
