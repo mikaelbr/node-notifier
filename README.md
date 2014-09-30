@@ -148,10 +148,10 @@ See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gut
 ## Usage Native Windows 8
 
 **Note:** There are some limitations for images in native Windows 8 notifications:
-The image cannot be over 1024x1024 px, or over over 200Kb. You also need to
-specify the image by using absolute path. These limitations are due to the Toast
-notification system. A good tip is to use something like `path.join` or
-`path.delimiter` to have cross-platform pathing.
+The image must be a PNG image, and cannot be over 1024x1024 px, or over over 200Kb.
+You also need to specify the image by using absolute path. These limitations are
+due to the Toast notification system. A good tip is to use something like
+`path.join` or `path.delimiter` to have cross-platform pathing.
 
 ```javascript
 var Notification = require('node-notifier');
