@@ -77,17 +77,6 @@ Native Notification Center requires Mac OS X version 10.8 or higher. If you have
 earlier versions, Growl will be the fallback. If Growl isn't installed, an error
 will be thrown.
 
----
-
-### Note: Output parsing from Notification Center is deprecated as of `3.0.0`.
-
-**Parsing of output given by terminal-notifier is removed as of node-notifier `3.0.0`.**
-You can still use both `remove` and `list` but the output given will not be parsed into a object.
-
-See removed documentation for pre version `3.0.0` in [Deprecated documentation](DEPRECATED.md)
-
----
-
 
 ### Example
 
