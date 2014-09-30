@@ -45,7 +45,8 @@ var Notification = require('node-notifier');
 var notifier = new Notification();
 notifier.notify({
   title: 'My awesome title',
-  message: 'Hello from node, Mr. User!'
+  message: 'Hello from node, Mr. User!',
+  icon: path.join(__dirname, 'coulson.jpg') // absolute path
 });
 ```
 
@@ -65,9 +66,8 @@ new nn.Growl().notify(options);
 
 ### Mapping between notifiers
 Common options between the modules (i.e. `icon`) is mapped. This means,
-if you are using a Mac and someone on your project is using Linux, you
+if you are using a Mac and someone on your project is using Linux or Windows, you
 can both see icons.
-
 
 ## Usage NotificationCenter
 
@@ -147,6 +147,12 @@ See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gut
 
 ## Usage Native Windows 8
 
+**Note:** There are some limitations for images in native Windows 8 notifications:
+The image cannot be over 1024x1024 px, or over over 200Kb. You also need to
+specify the image by using absolute path. These limitations are due to the Toast
+notification system. A good tip is to use something like `path.join` or
+`path.delimiter` to have cross-platform pathing.
+
 ```javascript
 var Notification = require('node-notifier');
 
@@ -156,7 +162,7 @@ var notifier = new Notification({
 notifier.notify({
   title: 'Foo',
   message: 'Hello World',
-  icon: __dirname + "/coulson.jpg"
+  icon: path.join(__dirname, 'coulson.jpg') // absolute path
 });
 ```
 
