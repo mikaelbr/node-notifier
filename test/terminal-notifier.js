@@ -13,17 +13,22 @@ var originalMacVersion = utils.getOSXVersion;
 var originalType = os.type;
 
 describe('Mac fallback', function () {
-  var original = utils.isMacOSX;
+  var original = utils.isMountainLion;
+  var originalMac = utils.isMac;
 
   after(function () {
-    utils.isMacOSX = original;
+    utils.isMountainLion = original;
+    utils.isMac = originalMac;
   })
 
   it('should default to Growl notification if older Mac OSX than 10.8', function(done){
-    utils.isMacOSX = function (cb) {
-      cb('old');
+    utils.isMountainLion = function () {
+      return false;
     };
-    var n = new NotificationCenter();
+    utils.isMac = function () {
+      return true;
+    };
+    var n = new NotificationCenter({ withFallback: true });
     n.notify({
       message: "Hello World"
     }, function (err, response) {
@@ -94,7 +99,7 @@ describe('terminal-notifier', function(){
     it('should be able to list all notifications', function(done){
       utils.command = function (n, o, cb) {
         cb(null, fs.readFileSync(__dirname + '/fixture/listAll.txt').toString());
-      }
+      };
 
       notifier.notify({
           list: "ALL"
