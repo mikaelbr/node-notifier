@@ -9,7 +9,7 @@ var nn = require('../')
 
 var notifier = null;
 var originalUtils = utils.command;
-var originalMacVersion = utils.getOSXVersion;
+var originalMacVersion = utils.isMountainLion;
 var originalType = os.type;
 
 describe('Mac fallback', function () {
@@ -65,8 +65,8 @@ describe('terminal-notifier', function(){
       return "Darwin";
     };
 
-    utils.getOSXVersion = function (cb) {
-      return cb(null, "10.8");
+    utils.isMountainLion = function () {
+      return true;
     }
   });
 
@@ -76,6 +76,7 @@ describe('terminal-notifier', function(){
 
   after(function () {
     os.type = originalType;
+    utils.isMountainLion = originalMacVersion;
   });
 
   describe('#notify()', function(){
