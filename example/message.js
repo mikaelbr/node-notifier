@@ -1,5 +1,4 @@
-var Notify = require('../index');
-var notifier = new Notify();
+var notifier = require('../index');
 
 notifier
   .notify({
