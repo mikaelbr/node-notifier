@@ -37,6 +37,24 @@ describe('Mac fallback', function () {
     });
 
   });
+
+  it('should not fallback to Growl notification if withFallback is false', function(done){
+    utils.isMountainLion = function () {
+      return false;
+    };
+    utils.isMac = function () {
+      return true;
+    };
+    var n = new NotificationCenter();
+    n.notify({
+      message: "Hello World"
+    }, function (err, response) {
+      err.should.be.ok;
+      (this instanceof Growl).should.be.false;
+      done();
+    });
+
+  });
 });
 
 describe('terminal-notifier', function(){
