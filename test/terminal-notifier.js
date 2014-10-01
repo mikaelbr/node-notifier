@@ -29,6 +29,7 @@ describe('Mac fallback', function () {
       return true;
     };
     var n = new NotificationCenter({ withFallback: true });
+
     n.notify({
       message: "Hello World"
     }, function (err, response) {
