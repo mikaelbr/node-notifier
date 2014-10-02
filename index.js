@@ -1,31 +1,36 @@
 var os = require('os');
-var send = require('./lib/notifiers/notify-send');
-var mac = require('./lib/notifiers/terminal-notifier');
-var win8 = require('./lib/notifiers/toaster');
-var growl =  require('./lib/notifiers/growl');
-var balloon =  require('./lib/notifiers/balloon');
 var utils =  require('./lib/utils');
+
+// All notifiers
+var NotifySend = require('./lib/notifiers/notify-send');
+var NotificationCenter = require('./lib/notifiers/terminal-notifier');
+var WindowsToaster = require('./lib/notifiers/toaster');
+var Growl =  require('./lib/notifiers/growl');
+var WindowsBalloon =  require('./lib/notifiers/balloon');
+
+var options = { withFallback: true };
 
 switch(os.type()) {
   case 'Linux':
-    module.exports = send;
+    module.exports = new NotifySend(options);
     break;
   case 'Darwin':
-    module.exports = mac;
+    module.exports = new NotificationCenter(options);
     break;
   case 'Windows_NT':
     if (utils.isLessThanWin8()) {
-      module.exports = balloon;
+      module.exports = new WindowsBalloon(options);
     } else {
-      module.exports = win8;
+      module.exports = new WindowsToaster(options);
     }
     break;
   default:
-    module.exports = growl;
+    module.exports = new Growl(options);
 }
 
-module.exports.NotifySend = send;
-module.exports.NotificationCenter = mac;
-module.exports.WindowsToaster = win8;
-module.exports.WindowsBalloon = balloon;
-module.exports.Growl = growl;
+// Expose notifiers to give full control.
+module.exports.NotifySend = NotifySend;
+module.exports.NotificationCenter = NotificationCenter;
+module.exports.WindowsToaster = WindowsToaster;
+module.exports.WindowsBalloon = WindowsBalloon;
+module.exports.Growl = Growl;

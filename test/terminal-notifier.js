@@ -9,25 +9,49 @@ var nn = require('../')
 
 var notifier = null;
 var originalUtils = utils.command;
-var originalMacVersion = utils.getOSXVersion;
+var originalMacVersion = utils.isMountainLion;
 var originalType = os.type;
 
 describe('Mac fallback', function () {
-  var original = utils.isMacOSX;
+  var original = utils.isMountainLion;
+  var originalMac = utils.isMac;
 
   after(function () {
-    utils.isMacOSX = original;
+    utils.isMountainLion = original;
+    utils.isMac = originalMac;
   })
 
   it('should default to Growl notification if older Mac OSX than 10.8', function(done){
-    utils.isMacOSX = function (cb) {
-      cb('old');
+    utils.isMountainLion = function () {
+      return false;
+    };
+    utils.isMac = function () {
+      return true;
+    };
+    var n = new NotificationCenter({ withFallback: true });
+
+    n.notify({
+      message: "Hello World"
+    }, function (err, response) {
+      (this instanceof Growl).should.be.true;
+      done();
+    });
+
+  });
+
+  it('should not fallback to Growl notification if withFallback is false', function(done){
+    utils.isMountainLion = function () {
+      return false;
+    };
+    utils.isMac = function () {
+      return true;
     };
     var n = new NotificationCenter();
     n.notify({
       message: "Hello World"
     }, function (err, response) {
-      (this instanceof Growl).should.be.true;
+      err.should.be.ok;
+      (this instanceof Growl).should.be.false;
       done();
     });
 
@@ -41,8 +65,8 @@ describe('terminal-notifier', function(){
       return "Darwin";
     };
 
-    utils.getOSXVersion = function (cb) {
-      return cb(null, "10.8");
+    utils.isMountainLion = function () {
+      return true;
     }
   });
 
@@ -52,6 +76,7 @@ describe('terminal-notifier', function(){
 
   after(function () {
     os.type = originalType;
+    utils.isMountainLion = originalMacVersion;
   });
 
   describe('#notify()', function(){
@@ -94,7 +119,7 @@ describe('terminal-notifier', function(){
     it('should be able to list all notifications', function(done){
       utils.command = function (n, o, cb) {
         cb(null, fs.readFileSync(__dirname + '/fixture/listAll.txt').toString());
-      }
+      };
 
       notifier.notify({
           list: "ALL"

@@ -1,18 +1,14 @@
-var Notify = require("../index");
-var notifier = new Notify();
+var notifier = require('../index');
 
-notifier.notify({
-  "message": "Hello"
-}
-, function (err, data) {
-  if (err) {
-    return console.error("Error: ", err);
-  }
-
-  console.log(data);
-});
-
-
-setTimeout(function() {
-  console.log("Done");
-}, 5000);
+notifier
+  .notify({
+    'message': 'Hello',
+    'wait': true
+  }, function (err, data) {
+    // Will also wait until notification is closed.
+    console.log('Waited');
+    console.log(err, data);
+  })
+  .on('click', function () {
+    console.log(arguments);
+  });

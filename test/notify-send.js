@@ -27,9 +27,7 @@ describe('notify-send', function(){
       done();
     };
 
-    var notifier = new Notify();
-    notifier.isNotifyChecked = true;
-    notifier.hasNotifier = true;
+    var notifier = new Notify({ suppressOsdCheck: true });
 
     notifier.notify({
       title: "title",
@@ -48,9 +46,7 @@ describe('notify-send', function(){
       done();
     };
 
-    var notifier = new Notify();
-    notifier.isNotifyChecked = true;
-    notifier.hasNotifier = true;
+    var notifier = new Notify({ suppressOsdCheck: true });
 
     notifier.notify({
       message: "body"
@@ -68,9 +64,7 @@ describe('notify-send', function(){
       done();
     };
 
-    var notifier = new Notify();
-    notifier.isNotifyChecked = true;
-    notifier.hasNotifier = true;
+    var notifier = new Notify({ suppressOsdCheck: true });
 
     notifier.notify({
     }, function (err) {
@@ -88,9 +82,7 @@ describe('notify-send', function(){
       done();
     };
 
-    var notifier = new Notify();
-    notifier.isNotifyChecked = true;
-    notifier.hasNotifier = true;
+    var notifier = new Notify({ suppressOsdCheck: true });
 
     notifier.notify({
       message: 'some "me\'ss`age`"'
@@ -108,9 +100,7 @@ describe('notify-send', function(){
       done();
     };
 
-    var notifier = new Notify();
-    notifier.isNotifyChecked = true;
-    notifier.hasNotifier = true;
+    var notifier = new Notify({ suppressOsdCheck: true });
 
     notifier.notify({
       title: "title",
@@ -130,9 +120,7 @@ describe('notify-send', function(){
       done();
     };
 
-    var notifier = new Notify();
-    notifier.isNotifyChecked = true;
-    notifier.hasNotifier = true;
+    var notifier = new Notify({ suppressOsdCheck: true });
 
     notifier.notify({
       title: "title",
