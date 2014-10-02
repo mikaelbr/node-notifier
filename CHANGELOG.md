@@ -1,6 +1,42 @@
 Changelog
 ===
 
+### `v4.0.0`
+Major changes and breaking API.
+1. require('node-notifier') now returns an instance with fallbackable notifications.
+```js
+var notifier = require('node-notifier');
+notifier.notify();
+```
+2. Introduced a `wait` property (default `false`), to get user input for
+Notification Center, Windows Toaster, Windows Balloons and Growl. Sadly not
+for notify-send.
+```js
+var notifier = require('node-notifier');
+notifier.notify({ wait: true }, function (err, response) {
+     // response is response after user have interacted
+     // with the notification or the notification has timed out.
+});
+```
+3. All notification instances are now event emitters, emitting events
+`click` or `timeout`. This is only applicable if `{ wait: true }`.
+```js
+var notifier = require('node-notifier');
+notifier.on('click', function (notificationObject, options) {
+     // options.someArbitraryData === 'foo'
+});
+notifier.notify({ wait: true, someArbitraryData: 'foo' });
+```
+4. WindowsToaster and NotificationCenter now can have sounds by doing `{ sound: true }`.
+Default NotificationCenter sound is Bottle. Can still use define sound on
+Mac:
+```js
+var notifier = require('node-notifier');
+notifier.notify({ sound: true });
+// For mac (same as sound: true on Windows 8)
+notifier.notify({ sound: 'Morse' });
+```
+
 ### `v3.4.0`
 1. Adds Growl as priority over Balloons
 

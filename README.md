@@ -1,8 +1,8 @@
 # node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
-A cross platform Node.js module for sending system notification. Using
-native Notification Center for Mac, notify-osd for Linux, Toasters for
-Windows 8, or lovely Balloons for earlier Windows versions. If none of
+A Node.js module for sending cross platform system notification. Using
+Notification Center for Mac, notify-osd for Linux, Toasters for
+Windows 8, or lovely taskbar Balloons for earlier Windows versions. If none of
 these requirements are met, be it older version of Windows or OS X,
 Growl is used.
 
@@ -10,6 +10,17 @@ Growl is used.
 ![Native Windows Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/windows.png)
 ![Growl Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/growl.png)
 
+## Easy Usage
+
+Show native notifications on Mac, Windows, Linux or using Growl!
+
+```javascript
+var notifier = require('node-notifier');
+notifier.notify({
+  'title': 'My notification'
+  'message': 'Hello, there!'
+});
+```
 
 ## Requirements
 - **Mac OS X**: >= 10.8 or Growl if earlier.
@@ -24,15 +35,6 @@ See [documentation and flow chart for reporter choice](./DECISION_FLOW.md)
 ## Install
 ```
 $ npm install --save node-notifier
-```
-
-## Easy Usage
-
-```javascript
-var notifier = require('node-notifier');
-notifier.notify({
-  'message': 'Hello, world!'
-});
 ```
 
 ## Cross-Platform Advanced Usage
