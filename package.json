@@ -28,7 +28,7 @@
     "should": "^4.0.4"
   },
   "dependencies": {
-    "semver": "^3.0.1",
+    "semver": "^4.0.3",
     "shellwords": "^0.1.0",
     "which": "^1.0.5",
     "growly": "^1.1.1",
