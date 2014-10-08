@@ -1,6 +1,14 @@
 Changelog
 ===
 
+### `v4.0.2`
+1. Fixes issue with immidiate notifu notifications (with `wait : false`)
+2. Fixes issue with boolean flags for notifu.
+3. Restructures directories. Making it easier to require notifiers directly.
+
+### `v4.0.1`
+1. Fixes issue with optional callback for notify-send
+
 ### `v4.0.0`
 Major changes and breaking API.
 1. require('node-notifier') now returns an instance with fallbackable notifications.
