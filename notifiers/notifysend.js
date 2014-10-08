@@ -3,7 +3,7 @@
  */
 var os = require('os'),
     which = require('which'),
-    utils = require('../utils');
+    utils = require('../lib/utils');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');

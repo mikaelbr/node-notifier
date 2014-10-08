@@ -70,6 +70,27 @@ See documentation for each reporter below.
 
 Example:
 ```javascript
+var NotificationCenter = require('node-notifier/notifiers/notificationcenter');
+new NotificationCenter(options).notify();
+
+var NotifySend = require('node-notifier/notifiers/notifysend');
+new NotifySend(options).notify();
+
+var WindowsToaster = require('node-notifier/notifiers/toaster');
+new WindowsToaster(options).notify();
+
+var Growl = require('node-notifier/notifiers/growl');
+new Growl(options).notify();
+
+var WindowsBalloon = require('node-notifier/notifiers/balloon');
+new WindowsBalloon(options).notify();
+
+```
+
+
+Or if you are using several (or you are lazy):
+
+```javascript
 var nn = require('node-notifier');
 
 new nn.NotificationCenter(options).notify();
@@ -78,6 +99,7 @@ new nn.WindowsToaster(options).notify(options);
 new nn.WindowsBalloon(options).notify(options);
 new nn.Growl(options).notify(options);
 ```
+
 
 ## Documentation
 

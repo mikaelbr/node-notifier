@@ -2,11 +2,11 @@ var os = require('os');
 var utils =  require('./lib/utils');
 
 // All notifiers
-var NotifySend = require('./lib/notifiers/notify-send');
-var NotificationCenter = require('./lib/notifiers/terminal-notifier');
-var WindowsToaster = require('./lib/notifiers/toaster');
-var Growl =  require('./lib/notifiers/growl');
-var WindowsBalloon =  require('./lib/notifiers/balloon');
+var NotifySend = require('./notifiers/notifysend');
+var NotificationCenter = require('./notifiers/notificationcenter');
+var WindowsToaster = require('./notifiers/toaster');
+var Growl =  require('./notifiers/growl');
+var WindowsBalloon =  require('./notifiers/balloon');
 
 var options = { withFallback: true };
 

@@ -2,8 +2,8 @@
  * A Node.js wrapper for terminal-notify (with fallback).
  */
 var path = require('path'),
-    notifier = path.join(__dirname, '../../vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier'),
-    utils = require('../utils'),
+    notifier = path.join(__dirname, '../vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier'),
+    utils = require('../lib/utils'),
     Growl = require('./growl');
 
 var EventEmitter = require('events').EventEmitter;

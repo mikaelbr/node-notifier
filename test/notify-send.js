@@ -1,4 +1,4 @@
-var Notify = require('../').NotifySend
+var Notify = require('../notifiers/notifysend')
   , should = require('should')
   , utils = require('../lib/utils')
   , os = require('os')

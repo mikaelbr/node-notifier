@@ -1,8 +1,8 @@
 /**
  * Wrapper for the growly module
  */
-var utils = require('../utils'),
-    checkGrowl = require('../checkGrowl');
+var utils = require('../lib/utils'),
+    checkGrowl = require('../lib/checkGrowl');
     growly = require('growly');
 
 var EventEmitter = require('events').EventEmitter;

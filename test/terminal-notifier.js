@@ -1,6 +1,5 @@
-var nn = require('../')
-  , NotificationCenter = nn.NotificationCenter
-  , Growl = nn.Growl
+var NotificationCenter = require('../notifiers/notificationcenter')
+  , Growl = require('../notifiers/growl')
   , should = require('should')
   , os = require('os')
   , fs = require('fs')

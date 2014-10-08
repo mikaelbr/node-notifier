@@ -1,4 +1,4 @@
-var Notify = require('../lib/notifiers/balloon')
+var Notify = require('../notifiers/balloon')
   , should = require('should')
   , utils = require('../lib/utils')
   , os = require('os')
