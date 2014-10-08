@@ -89,6 +89,7 @@ new WindowsBalloon(options).notify();
 
 
 Or if you are using several (or you are lazy):
+(note: technically, this takes longer to require)
 
 ```javascript
 var nn = require('node-notifier');
