@@ -54,12 +54,12 @@ NotificationCenter.prototype.notify = function (options, callback) {
   var argsList = utils.constructArgumentList(options);
 
   if(utils.isMountainLion()) {
-    utils.command(this.options.customPath || notifier, argsList, actionJackedCallback);
+    utils.command(options.customPath || notifier, argsList, actionJackedCallback);
     return this;
   }
 
-  if (fallbackNotifier || !!this.options.withFallback) {
-    fallbackNotifier = fallbackNotifier || new Growl(this.options);
+  if (fallbackNotifier || !!options.withFallback) {
+    fallbackNotifier = fallbackNotifier || new Growl(options);
     return fallbackNotifier.notify(options, callback);
   }
 
