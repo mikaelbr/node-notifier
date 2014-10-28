@@ -17,7 +17,7 @@ Show native notifications on Mac, Windows, Linux or using Growl!
 ```javascript
 var notifier = require('node-notifier');
 notifier.notify({
-  'title': 'My notification'
+  'title': 'My notification',
   'message': 'Hello, there!'
 });
 ```
