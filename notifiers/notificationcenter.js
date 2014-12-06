@@ -24,13 +24,17 @@ function NotificationCenter (options) {
   EventEmitter.call(this);
 }
 util.inherits(NotificationCenter, EventEmitter);
+var activeId = null;
 
 NotificationCenter.prototype.notify = function (options, callback) {
-  var fallbackNotifier = null;
+  var fallbackNotifier = null, id = identificator();
   options = options || {};
+  activeId = id;
 
   callback = callback || function () {};
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
+    if (activeId !== id) return false;
+
     var cleaned = data.toLowerCase().trim();
     if (cleaned === 'activate') {
       return 'click';
@@ -66,3 +70,7 @@ NotificationCenter.prototype.notify = function (options, callback) {
   callback(new Error(errorMessageOsX));
   return this;
 };
+
+function identificator () {
+  return { _ref: 'val' };
+}
