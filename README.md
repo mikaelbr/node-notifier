@@ -45,6 +45,8 @@ below will work in a way or another on all platforms.
 
 ```javascript
 var notifier = require('node-notifier');
+var path = require('path');
+
 notifier.notify({
   title: 'My awesome title',
   message: 'Hello from node, Mr. User!',
