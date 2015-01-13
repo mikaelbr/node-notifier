@@ -28,10 +28,10 @@
     "should": "^4.0.4"
   },
   "dependencies": {
+    "clone": "^0.1.18",
+    "growly": "^1.2.0",
     "semver": "^4.0.3",
     "shellwords": "^0.1.0",
-    "which": "^1.0.5",
-    "growly": "^1.1.1",
-    "clone": "^0.1.18"
+    "which": "^1.0.5"
   }
 }
