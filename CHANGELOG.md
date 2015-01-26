@@ -1,6 +1,13 @@
 Changelog
 ===
 
+### `v4.1.0`
+1. Adds support for changing host and port for Growl.
+
+### `v4.0.3`
+1. Fixes Notification center issue with multiple callback events.
+2. Fixes error in source code: Fixes long-spaces to proper spaces
+
 ### `v4.0.2`
 1. Fixes issue with immidiate notifu notifications (with `wait : false`)
 2. Fixes issue with boolean flags for notifu.
