@@ -198,7 +198,9 @@ notifier.notify({
 var Growl = require('node-notifier').Growl;
 
 var notifier = new Growl({
-  name: 'Growl Name Used' // Defaults as 'Node'
+  name: 'Growl Name Used', // Defaults as 'Node'
+  host: 'localhost',
+  port: 23053
 });
 
 notifier.notify({
