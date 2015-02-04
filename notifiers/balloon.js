@@ -123,14 +123,16 @@ function doNotification (options, notifierOptions, callback) {
 }
 
 function fromErrorCodeToAction (errorCode) {
-  if (errorCode === 2) {
-    return 'timeout';
+  switch (errorCode) {
+    case 2:
+      return 'timeout';
+    case 3:
+    case 6:
+    case 7:
+      return 'activate';
+    case 4:
+      return 'close';
+    default:
+      return 'error';
   }
-  if (errorCode === 3 || errorCode === 6 || errorCode === 7) {
-    return 'activate';
-  }
-  if (errorCode === 4) {
-    return 'close';
-  }
-  return 'error';
 }
