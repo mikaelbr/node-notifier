@@ -126,7 +126,7 @@ function fromErrorCodeToAction (errorCode) {
   if (errorCode === 2) {
     return 'timeout';
   }
-  if (errorCode === 3) {
+  if (errorCode === 3 || errorCode === 6 || errorCode === 7) {
     return 'activate';
   }
   if (errorCode === 4) {
