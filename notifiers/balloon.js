@@ -19,6 +19,7 @@ Usage
 // Kill codes:
   2 = Timeout
   3 = Clicked
+  4 = Closed or faded out
 
  */
 var path = require('path'),
@@ -122,11 +123,16 @@ function doNotification (options, notifierOptions, callback) {
 }
 
 function fromErrorCodeToAction (errorCode) {
-  if (errorCode === 2) {
-    return 'timeout';
+  switch (errorCode) {
+    case 2:
+      return 'timeout';
+    case 3:
+    case 6:
+    case 7:
+      return 'activate';
+    case 4:
+      return 'close';
+    default:
+      return 'error';
   }
-  if (errorCode === 3) {
-    return 'activate';
-  }
-  return 'error';
 }
