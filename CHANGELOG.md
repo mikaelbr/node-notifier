@@ -1,6 +1,12 @@
 Changelog
 ===
 
+### `v4.1.1`
+1. Fixes proper error codes for balloon: #42
+2. Removes unused debug files: #41
+3. Patches differences between subtitle for notify-send: #43
+4. Updates terminal-notifier dependency (removing black borders) #44 #18
+
 ### `v4.1.0`
 1. Adds support for changing host and port for Growl.
 
