@@ -1,6 +1,10 @@
 Changelog
 ===
 
+### `v4.1.2`
+1. Fixes correct terminal-notifier (own fork https://github.com/mikaelbr/terminal-notifier)
+   to support activate / click.
+
 ### `v4.1.1`
 1. Fixes proper error codes for balloon: #42
 2. Removes unused debug files: #41
