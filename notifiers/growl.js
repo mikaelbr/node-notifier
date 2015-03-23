@@ -32,6 +32,10 @@ Growl.prototype.notify = function (options, callback) {
 
   growly.setHost(this.options.host, this.options.port);
 
+  if (typeof options === 'string') {
+    options = { message: options };
+  }
+  
   options = options || {};
   callback = utils.actionJackerDecorator(this, options, callback, function (data) {
     var cleaned = data.toLowerCase().trim();

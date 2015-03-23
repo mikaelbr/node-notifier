@@ -21,6 +21,12 @@ notifier.notify({
   'message': 'Hello, there!'
 });
 ```
+or simply:
+```javascript
+var notifier = require('node-notifier');
+notifier.notify('Hello, there!');
+```
+which will use the default title 'Node Notification'.
 
 ## Requirements
 - **Mac OS X**: >= 10.8 or Growl if earlier.
