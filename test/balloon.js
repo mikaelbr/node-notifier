@@ -37,7 +37,7 @@ describe('WindowsBalloon', function(){
     })
   });
 
-  it('should pass when first argument is string', function (done) {
+  /* it('should pass when first argument is string', function (done) {
     var expected = [ '-m', 'body', '-q', '-p', 'Node Notification:' ];
 
     utils.immediateFileCommand = function (notifier, argsList, callback) {
@@ -51,7 +51,7 @@ describe('WindowsBalloon', function(){
       should.not.exist(err);
       done();
     })
-  });
+  }); */
 
   it('should pass have default title', function (done) {
     var expected = [ '-m', 'body', '-q', '-p', 'Node Notification:' ];
