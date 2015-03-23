@@ -25,6 +25,9 @@ function NotifySend (options) {
 util.inherits(NotifySend, EventEmitter);
 
 NotifySend.prototype.notify = function (options, callback) {
+  if (typeof options === 'string') {
+    options = { message: options };
+  }
   options = options || {};
   callback = callback || function () {};
 
