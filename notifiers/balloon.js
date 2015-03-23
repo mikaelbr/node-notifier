@@ -95,9 +95,7 @@ var allowedArguments = ["t", "d", "p", "m", "i", "e", "q", "w", "xp"];
 
 function doNotification (options, notifierOptions, callback) {
   options = options || {};
-  options = utils.mapT  if (typeof options === 'string') {
-    options = { message: options };
-  }oNotifu(options);
+  options = utils.mapToNotifu(options);
   options.p = options.p || 'Node Notification:';
   var localNotifier = notifierOptions.customPath || notifier;
 
