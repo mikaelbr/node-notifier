@@ -14,7 +14,9 @@ var fallback = void 0;
 module.exports = WindowsToaster;
 
 function WindowsToaster (options) {
+
   options = options || {};
+
   if (!(this instanceof WindowsToaster)) {
     return new WindowsToaster(options);
   }
@@ -26,6 +28,10 @@ function WindowsToaster (options) {
 util.inherits(WindowsToaster, EventEmitter);
 
 WindowsToaster.prototype.notify = function (options, callback) {
+
+  if (typeof options === 'string') {
+    options = { message: options }
+  }
   options = options || {};
 
   callback = callback || function () {};

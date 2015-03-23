@@ -38,7 +38,7 @@ describe('notify-send', function(){
     })
   });
 
-  it('should pass when first parameter is string', function(done) {
+  it('should pass when first argument is string', function(done) {
     var expected = [ '"Node Notification:"', '"body"' ];
 
     utils.command = function (notifier, argsList, callback) {

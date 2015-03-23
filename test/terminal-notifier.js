@@ -101,6 +101,14 @@ describe('terminal-notifier', function(){
 
     });
 
+    it('should notify the first argument if it is a string', function(done){
+
+      notifier.notify('Hello World', function(err, response) {
+        (err === null).should.be.true;
+        done();
+      });
+
+    });
 
     it('should be chainable', function(done){
 
