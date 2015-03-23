@@ -37,9 +37,7 @@ var hasGrowl = void 0;
 module.exports = WindowsBalloon;
 
 function WindowsBalloon (options) {
-
   options = options || {};
-
   if (!(this instanceof WindowsBalloon)) {
     return new WindowsBalloon(options);
   }
@@ -52,7 +50,6 @@ util.inherits(WindowsBalloon, EventEmitter);
 
 WindowsBalloon.prototype.notify = function (options, callback) {
   var fallback, notifierOptions = this.options;
-
   callback = callback || function () {};
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
     var cleaned = data.toLowerCase().trim();
@@ -97,11 +94,10 @@ WindowsBalloon.prototype.notify = function (options, callback) {
 var allowedArguments = ["t", "d", "p", "m", "i", "e", "q", "w", "xp"];
 
 function doNotification (options, notifierOptions, callback) {
-  if (typeof options === 'string') {
-    options = { message: options };
-  }
   options = options || {};
-  options = utils.mapToNotifu(options);
+  options = utils.mapT  if (typeof options === 'string') {
+    options = { message: options };
+  }oNotifu(options);
   options.p = options.p || 'Node Notification:';
   var localNotifier = notifierOptions.customPath || notifier;
 
