@@ -30,8 +30,12 @@
   "dependencies": {
     "clone": "^0.1.18",
     "growly": "^1.2.0",
+    "minimist": "^1.1.1",
     "semver": "^4.0.3",
     "shellwords": "^0.1.0",
     "which": "^1.0.5"
+  },
+  "bin": {
+    "notify": "./bin.js"
   }
 }
