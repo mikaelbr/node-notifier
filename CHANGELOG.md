@@ -1,6 +1,10 @@
 Changelog
 ===
 
+### `v4.2.0`
+1. Adds CLI support.
+2. Fixes Debug "HRESULT : 0xC00CE508" exception on Win8. PR [#49](https://github.com/mikaelbr/node-notifier/pull/49)
+
 ### `v4.1.2`
 1. Fixes correct terminal-notifier (own fork https://github.com/mikaelbr/terminal-notifier)
    to support activate / click.

@@ -271,6 +271,29 @@ notifier.notify({
 
 See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gutsy/man1/notify-send.1.html)
 
+## CLI
+
+You can also use node-notifier as a CLI (as of `v4.2.0`).
+
+```shell
+$ node-notifier -h
+
+# node-notifier
+## Options
+   * --help (alias -h)
+   * --title (alias -t)
+   * --subtitle (alias -st)
+   * --message (alias -m)
+   * --icon (alias -i)
+   * --sound (alias -s)
+   * --open (alias -o)
+
+## Example
+
+   $ node-notifier -t "Hello" -m "My Message" -s --open http://github.com
+   $ node-notifier -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg
+   $ node-notifier -m "My Message" -s Glass
+```
 
 ## Thanks to OSS
 
