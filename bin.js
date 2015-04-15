@@ -2,15 +2,57 @@
 
 var notifier = require('./');
 var minimist = require('minimist');
+var usage = require('cli-usage');
+
+var aliases = {
+  'help': 'h',
+  'title': 't',
+  'subtitle': 'st',
+  'message': 'm',
+  'icon': 'i',
+  'sound': 's',
+  'open': 'o'
+};
 
 var argv = minimist(process.argv.slice(2), {
-  alias:  {
-    'title': 't',
-    'message': 'm'
-  }
+  alias: aliases
 });
 
-notifier.notify({
-  title: argv.title,
-  message: argv.message
+readme(aliases);
+
+var options = getOptionsIfExists(Object.keys(aliases), argv);
+notifier.notify(options, function (err, msg) {
+  if (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+
+  if (!msg) return;
+  console.log(msg);
+  process.exit(0);
 });
+
+function getOptionsIfExists(optionTypes, argv) {
+  var options = {};
+  optionTypes.forEach(function (key) {
+    if (key && argv[key]) {
+      options[key] = argv[key];
+    }
+  });
+  return options;
+}
+
+function readme(input) {
+  var str = '# node-notifier\n \n## Options\n' + params(input) + '\n\n';
+  str += '## Example\n```shell\n';
+  str += '$ node-notifier -t "Hello" -m "My Message" -s --open http://github.com\n';
+  str += '$ node-notifier -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg \n';
+  str += '$ node-notifier -m "My Message" -s Glass```\n\n';
+  usage(str);
+}
+
+function params(input) {
+  return Object.keys(input).reduce(function (acc, key) {
+    return acc + ' * --' + key + ' (alias -' + input[key] + ')\n';
+  }, '');
+}

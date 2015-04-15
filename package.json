@@ -28,6 +28,7 @@
     "should": "^4.0.4"
   },
   "dependencies": {
+    "cli-usage": "^0.1.1",
     "clone": "^0.1.18",
     "growly": "^1.2.0",
     "minimist": "^1.1.1",
