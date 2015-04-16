@@ -276,9 +276,9 @@ See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gut
 You can also use node-notifier as a CLI (as of `v4.2.0`).
 
 ```shell
-$ node-notifier -h
+$ notify -h
 
-# node-notifier
+# notify
 ## Options
    * --help (alias -h)
    * --title (alias -t)
@@ -290,9 +290,9 @@ $ node-notifier -h
 
 ## Example
 
-   $ node-notifier -t "Hello" -m "My Message" -s --open http://github.com
-   $ node-notifier -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg
-   $ node-notifier -m "My Message" -s Glass
+   $ notify -t "Hello" -m "My Message" -s --open http://github.com
+   $ notify -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg
+   $ notify -m "My Message" -s Glass
 ```
 
 ## Thanks to OSS

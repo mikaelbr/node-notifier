@@ -43,11 +43,11 @@ function getOptionsIfExists(optionTypes, argv) {
 }
 
 function readme(input) {
-  var str = '# node-notifier\n \n## Options\n' + params(input) + '\n\n';
+  var str = '# notify\n \n## Options\n' + params(input) + '\n\n';
   str += '## Example\n```shell\n';
-  str += '$ node-notifier -t "Hello" -m "My Message" -s --open http://github.com\n';
-  str += '$ node-notifier -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg \n';
-  str += '$ node-notifier -m "My Message" -s Glass```\n\n';
+  str += '$ notify -t "Hello" -m "My Message" -s --open http://github.com\n';
+  str += '$ notify -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg \n';
+  str += '$ notify -m "My Message" -s Glass```\n\n';
   usage(str);
 }
 
