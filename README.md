@@ -21,6 +21,12 @@ notifier.notify({
   'message': 'Hello, there!'
 });
 ```
+or simply:
+```javascript
+var notifier = require('node-notifier');
+notifier.notify('Hello, there!');
+```
+which will use the default title 'Node Notification'.
 
 ## Requirements
 - **Mac OS X**: >= 10.8 or Growl if earlier.
@@ -88,7 +94,6 @@ var WindowsBalloon = require('node-notifier/notifiers/balloon');
 new WindowsBalloon(options).notify();
 
 ```
-
 
 Or if you are using several (or you are lazy):
 (note: technically, this takes longer to require)

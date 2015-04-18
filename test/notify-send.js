@@ -38,6 +38,22 @@ describe('notify-send', function(){
     })
   });
 
+  it('should pass when first argument is string', function(done) {
+    var expected = [ '"Node Notification:"', '"body"' ];
+
+    utils.command = function (notifier, argsList, callback) {
+      argsList.should.eql(expected);
+      done();
+    };
+
+    var notifier = new Notify({ suppressOsdCheck: true });
+
+    notifier.notify("body", function (err) {
+      should.not.exist(err);
+      done();
+    });
+  });
+
   it('should pass have default title', function (done) {
     var expected = [ '"Node Notification:"', '"body"' ];
 
@@ -72,7 +88,6 @@ describe('notify-send', function(){
       done();
     })
   });
-
 
   it('should escape message input', function (done) {
     var expected = [ '"Node Notification:"', '"some \\"me\'ss\\`age\\`\\""' ];

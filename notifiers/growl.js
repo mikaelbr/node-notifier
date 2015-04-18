@@ -15,7 +15,9 @@ module.exports = Growl;
 var hasGrowl = void 0;
 
 function Growl (options) {
+
   options = options || {};
+
   if (!(this instanceof Growl)) {
     return new Growl(options);
   }
@@ -32,7 +34,11 @@ Growl.prototype.notify = function (options, callback) {
 
   growly.setHost(this.options.host, this.options.port);
 
+  if (typeof options === 'string') {
+    options = { message: options };
+  }
   options = options || {};
+
   callback = utils.actionJackerDecorator(this, options, callback, function (data) {
     var cleaned = data.toLowerCase().trim();
     if (cleaned === 'click') {

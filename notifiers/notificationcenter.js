@@ -15,7 +15,9 @@ var errorMessageOsX = 'You need Mac OS X 10.8 or above to use NotificationCenter
 module.exports = NotificationCenter;
 
 function NotificationCenter (options) {
+
   options = options || {};
+
   if (!(this instanceof NotificationCenter)) {
     return new NotificationCenter(options);
   }
@@ -28,7 +30,12 @@ var activeId = null;
 
 NotificationCenter.prototype.notify = function (options, callback) {
   var fallbackNotifier = null, id = identificator();
+
+  if (typeof options === 'string') {
+    options = { message: options };
+  }
   options = options || {};
+
   activeId = id;
 
   callback = callback || function () {};
