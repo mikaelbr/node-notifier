@@ -48,15 +48,14 @@ NotifySend.prototype.notify = function (options, callback) {
     return this;
   }
 
-  which(notifier, function (err) {
-    hasNotifier = !err;
-
-    if (err) {
-      return callback(err);
-    }
-
+  try {
+    hasNotifier = !!which.sync(notifier);
     doNotification(options, callback);
-  });
+  } catch (err) {
+    hasNotifier = false;
+    return callback(err);
+  };
+  
   return this;
 };
 
