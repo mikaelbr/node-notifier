@@ -27,7 +27,8 @@ var path = require('path'),
     utils = require('../lib/utils'),
     checkGrowl = require('../lib/checkGrowl'),
     Toaster = require('./toaster'),
-    Growl = require('./growl');
+    Growl = require('./growl'),
+    cloneDeep = require('lodash.clonedeep');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -37,7 +38,7 @@ var hasGrowl = void 0;
 module.exports = WindowsBalloon;
 
 function WindowsBalloon (options) {
-  options = options || {};
+  options = cloneDeep(options || {});
   if (!(this instanceof WindowsBalloon)) {
     return new WindowsBalloon(options);
   }

@@ -4,7 +4,8 @@
 var path = require('path'),
     notifier = path.resolve(__dirname, '../vendor/toaster/toast.exe'),
     utils = require('../lib/utils'),
-    Balloon = require('./balloon');
+    Balloon = require('./balloon'),
+    cloneDeep = require('lodash.clonedeep');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -14,7 +15,7 @@ var fallback = void 0;
 module.exports = WindowsToaster;
 
 function WindowsToaster (options) {
-  options = options || {};
+  options = cloneDeep(options || {});
   if (!(this instanceof WindowsToaster)) {
     return new WindowsToaster(options);
   }

@@ -4,7 +4,8 @@
 var path = require('path'),
     notifier = path.join(__dirname, '../vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier'),
     utils = require('../lib/utils'),
-    Growl = require('./growl');
+    Growl = require('./growl'),
+    cloneDeep = require('lodash.clonedeep');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -15,7 +16,7 @@ var errorMessageOsX = 'You need Mac OS X 10.8 or above to use NotificationCenter
 module.exports = NotificationCenter;
 
 function NotificationCenter (options) {
-  options = options || {};
+  options = cloneDeep(options || {});
   if (!(this instanceof NotificationCenter)) {
     return new NotificationCenter(options);
   }

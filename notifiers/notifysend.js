@@ -3,7 +3,8 @@
  */
 var os = require('os'),
     which = require('which'),
-    utils = require('../lib/utils');
+    utils = require('../lib/utils'),
+    cloneDeep = require('lodash.clonedeep');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -13,7 +14,7 @@ var notifier = 'notify-send', hasNotifier = void 0;
 module.exports = NotifySend;
 
 function NotifySend (options) {
-  options = options || {};
+  options = cloneDeep(options || {});
   if (!(this instanceof NotifySend)) {
     return new NotifySend(options);
   }

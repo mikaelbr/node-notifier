@@ -3,7 +3,8 @@
  */
 var utils = require('../lib/utils'),
     checkGrowl = require('../lib/checkGrowl');
-    growly = require('growly');
+    growly = require('growly'),
+    cloneDeep = require('lodash.clonedeep');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -15,7 +16,7 @@ module.exports = Growl;
 var hasGrowl = void 0;
 
 function Growl (options) {
-  options = options || {};
+  options = cloneDeep(options || {});
   if (!(this instanceof Growl)) {
     return new Growl(options);
   }

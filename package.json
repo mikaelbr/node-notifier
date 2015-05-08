@@ -31,6 +31,7 @@
     "cli-usage": "^0.1.1",
     "clone": "^0.1.18",
     "growly": "^1.2.0",
+    "lodash.clonedeep": "^3.0.0",
     "minimist": "^1.1.1",
     "semver": "^4.0.3",
     "shellwords": "^0.1.0",
