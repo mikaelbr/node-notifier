@@ -30,10 +30,9 @@ util.inherits(Growl, EventEmitter);
 
 
 Growl.prototype.notify = function (options, callback) {
-
   growly.setHost(this.options.host, this.options.port);
+  options = cloneDeep(options || {});
 
-  options = options || {};
   callback = utils.actionJackerDecorator(this, options, callback, function (data) {
     var cleaned = data.toLowerCase().trim();
     if (cleaned === 'click') {

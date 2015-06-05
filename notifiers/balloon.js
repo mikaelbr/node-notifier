@@ -51,6 +51,7 @@ util.inherits(WindowsBalloon, EventEmitter);
 
 WindowsBalloon.prototype.notify = function (options, callback) {
   var fallback, notifierOptions = this.options;
+  options = cloneDeep(options || {});
   callback = callback || function () {};
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
     var cleaned = data.toLowerCase().trim();

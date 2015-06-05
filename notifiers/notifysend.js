@@ -26,7 +26,7 @@ function NotifySend (options) {
 util.inherits(NotifySend, EventEmitter);
 
 NotifySend.prototype.notify = function (options, callback) {
-  options = options || {};
+  options = cloneDeep(options || {});
   callback = callback || function () {};
 
   if (!options.message) {
@@ -56,7 +56,7 @@ NotifySend.prototype.notify = function (options, callback) {
     hasNotifier = false;
     return callback(err);
   };
-  
+
   return this;
 };
 

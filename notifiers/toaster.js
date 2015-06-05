@@ -27,7 +27,7 @@ function WindowsToaster (options) {
 util.inherits(WindowsToaster, EventEmitter);
 
 WindowsToaster.prototype.notify = function (options, callback) {
-  options = options || {};
+  options = cloneDeep(options || {});
 
   callback = callback || function () {};
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {

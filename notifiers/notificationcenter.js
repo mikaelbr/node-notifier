@@ -29,7 +29,7 @@ var activeId = null;
 
 NotificationCenter.prototype.notify = function (options, callback) {
   var fallbackNotifier = null, id = identificator();
-  options = options || {};
+  options = cloneDeep(options || {});
   activeId = id;
 
   callback = callback || function () {};
