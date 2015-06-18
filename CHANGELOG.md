@@ -1,6 +1,13 @@
 Changelog
 ===
 
+### `v4.2.2`
+1. Fixed no notification when no message for the CLI. [#58](https://github.com/mikaelbr/node-notifier/pull/58)
+2. Changes `which` test to be sync, avoiding some edge cases with multiple notifications.
+
+### `v4.2.1`
+1. Minor fix for docs in CLI usage
+
 ### `v4.2.0`
 1. Adds CLI support.
 2. Fixes Debug "HRESULT : 0xC00CE508" exception on Win8. PR [#49](https://github.com/mikaelbr/node-notifier/pull/49)
