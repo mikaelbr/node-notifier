@@ -1,6 +1,9 @@
 Changelog
 ===
 
+### `v4.2.3`
+1. Fixed input arguments to CLI to be strings where they should be strings.
+
 ### `v4.2.2`
 1. Fixed no notification when no message for the CLI. [#58](https://github.com/mikaelbr/node-notifier/pull/58)
 2. Changes `which` test to be sync, avoiding some edge cases with multiple notifications.
