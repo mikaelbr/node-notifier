@@ -21,6 +21,10 @@ var argv = minimist(process.argv.slice(2), {
 readme(aliases);
 
 var options = getOptionsIfExists(Object.keys(aliases), argv);
+if (!options.message) {
+  // Do not show an empty message
+  process.exit(0);
+}
 notifier.notify(options, function (err, msg) {
   if (err) {
     console.error(err.message);
