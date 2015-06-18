@@ -15,7 +15,8 @@ var aliases = {
 };
 
 var argv = minimist(process.argv.slice(2), {
-  alias: aliases
+  alias: aliases,
+  string: ['icon', 'message', 'open', 'subtitle', 'title']
 });
 
 readme(aliases);
