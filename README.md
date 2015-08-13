@@ -173,7 +173,7 @@ due to the Toast notification system. A good tip is to use something like
 
 **Windows 10 Note:** You might have to activate banner notification for the toast to show.
 
-From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify/issues/90#issuecomment-129333034
+From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify/issues/90#issuecomment-129333034)
 > You can make it work by going to System > Notifications & Actions. The 'toast' app needs to have Banners enabled. (You can activate banners by clicking on the 'toast' app and setting the 'Show notification banners' to On)
 
 [toaster](https://github.com/nels-o/toaster) is used to get native Windows Toasts!
