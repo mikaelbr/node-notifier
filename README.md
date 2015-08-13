@@ -2,7 +2,7 @@
 
 A Node.js module for sending cross platform system notification. Using
 Notification Center for Mac, notify-osd for Linux, Toasters for
-Windows 8, or lovely taskbar Balloons for earlier Windows versions. If none of
+Windows 8/10, or lovely taskbar Balloons for earlier Windows versions. If none of
 these requirements are met, be it older version of Windows or OS X,
 Growl is used.
 
@@ -170,6 +170,11 @@ The image must be a PNG image, and cannot be over 1024x1024 px, or over over 200
 You also need to specify the image by using absolute path. These limitations are
 due to the Toast notification system. A good tip is to use something like
 `path.join` or `path.delimiter` to have cross-platform pathing.
+
+**Windows 10 Note:** You might have to activate banner notification for the toast to show.
+
+From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify/issues/90#issuecomment-129333034
+> You can make it work by going to System > Notifications & Actions. The 'toast' app needs to have Banners enabled. (You can activate banners by clicking on the 'toast' app and setting the 'Show notification banners' to On)
 
 [toaster](https://github.com/nels-o/toaster) is used to get native Windows Toasts!
 
