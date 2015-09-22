@@ -1,6 +1,15 @@
 Changelog
 ===
 
+### `v4.3.0`
+1. Adds support for piping messages in to CLI.
+
+```shell
+➜ echo "Message" | ./bin.js
+➜ echo "Message" | ./bin.js -t "My Title"
+➜ echo "Some message" | ./bin.js -t "My Title" -s
+```
+
 ### `v4.2.3`
 1. Fixed input arguments to CLI to be strings where they should be strings.
 
