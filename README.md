@@ -298,6 +298,17 @@ $ notify -h
    $ notify -t "Hello" -m "My Message" -s --open http://github.com
    $ notify -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg -m "Well, that's new. "
    $ notify -m "My Message" -s Glass
+   $ echo "My Message" | notify -t "Hello"
+```
+
+You can also pass message in as `stdin`:
+
+```js
+➜ echo "Message" | notify
+
+# Works with existing arguments
+➜ echo "Message" | notify -t "My Title"
+➜ echo "Some message" | notify -t "My Title" -s
 ```
 
 ## Thanks to OSS

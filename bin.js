@@ -76,7 +76,8 @@ function readme(input) {
   str += '## Example\n```shell\n';
   str += '$ notify -t "Hello" -m "My Message" -s --open http://github.com\n';
   str += '$ notify -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg \n';
-  str += '$ notify -m "My Message" -s Glass```\n\n';
+  str += '$ notify -m "My Message" -s Glass\n';
+  str += '$ echo "My Message" | notify -t "Hello"```\n\n';
   usage(str);
 }
 
