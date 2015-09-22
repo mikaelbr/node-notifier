@@ -21,21 +21,45 @@ var argv = minimist(process.argv.slice(2), {
 
 readme(aliases);
 
-var options = getOptionsIfExists(Object.keys(aliases), argv);
-if (!options.message) {
-  // Do not show an empty message
-  process.exit(0);
-}
-notifier.notify(options, function (err, msg) {
-  if (err) {
-    console.error(err.message);
-    process.exit(1);
-  }
+var passedOptions = getOptionsIfExists(Object.keys(aliases), argv);
+var stdinMessage = '';
 
-  if (!msg) return;
-  console.log(msg);
-  process.exit(0);
+process.stdin.on('readable', function(){
+  var chunk = this.read();
+  if (!chunk && !stdinMessage) {
+    doNotification(passedOptions);
+    this.end();
+    return;
+  }
+  if (!chunk) return;
+  stdinMessage += chunk.toString();
 });
+
+process.stdin.on('end', function(){
+  if (stdinMessage) {
+    passedOptions.message = stdinMessage;
+  }
+  doNotification(passedOptions);
+});
+
+function doNotification (options) {
+
+  if (!options.message) {
+    // Do not show an empty message
+    process.exit(0);
+  }
+  notifier.notify(options, function (err, msg) {
+    if (err) {
+      console.error(err.message);
+      process.exit(1);
+    }
+
+    if (!msg) return;
+    console.log(msg);
+    process.exit(0);
+  });
+
+}
 
 function getOptionsIfExists(optionTypes, argv) {
   var options = {};
