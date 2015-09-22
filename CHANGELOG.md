@@ -1,6 +1,10 @@
 Changelog
 ===
 
+### `v4.3.1`
+Obligatory patch fix:
+1. Adds new stdin CLI options to docs
+
 ### `v4.3.0`
 1. Adds support for piping messages in to CLI.
 (With `node-notifier` installed as a CLI `npm i -g node-notifier`)
