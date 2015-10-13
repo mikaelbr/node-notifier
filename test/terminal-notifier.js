@@ -7,7 +7,7 @@ var NotificationCenter = require('../notifiers/notificationcenter')
   , assert = require('assert');
 
 var notifier = null;
-var originalUtils = utils.command;
+var originalUtils = utils.fileCommand;
 var originalMacVersion = utils.isMountainLion;
 var originalType = os.type;
 
@@ -81,13 +81,13 @@ describe('terminal-notifier', function(){
   describe('#notify()', function(){
 
     beforeEach(function () {
-      utils.command = function (n, o, cb) {
+      utils.fileCommand = function (n, o, cb) {
         cb(null, "");
       }
     });
 
     after(function () {
-      utils.command = originalUtils;
+      utils.fileCommand = originalUtils;
     });
 
     it('should notify with a message', function(done){
@@ -116,7 +116,7 @@ describe('terminal-notifier', function(){
     });
 
     it('should be able to list all notifications', function(done){
-      utils.command = function (n, o, cb) {
+      utils.fileCommand = function (n, o, cb) {
         cb(null, fs.readFileSync(__dirname + '/fixture/listAll.txt').toString());
       };
 
@@ -130,7 +130,7 @@ describe('terminal-notifier', function(){
 
 
     it('should be able to remove all messages', function(done){
-      utils.command = function (n, o, cb) {
+      utils.fileCommand = function (n, o, cb) {
         cb(null, fs.readFileSync(__dirname + '/fixture/removeAll.txt').toString());
       }
 
@@ -139,7 +139,7 @@ describe('terminal-notifier', function(){
       }, function (err, response) {
         response.should.be.ok;
 
-        utils.command = function (n, o, cb) {
+        utils.fileCommand = function (n, o, cb) {
           cb(null, "");
         }
 
@@ -155,17 +155,17 @@ describe('terminal-notifier', function(){
 
   describe("arguments", function () {
     before(function () {
-      this.original = utils.command;
+      this.original = utils.fileCommand;
     });
 
     after(function () {
-      utils.command = this.original;
+      utils.fileCommand = this.original;
     });
 
     it('should allow for non-sensical arguments (fail gracefully)', function (done) {
       var expected = [ '-title', '"title"', '-message', '"body"', '-tullball', '"notValid"' ]
 
-      utils.command = function (notifier, argsList, callback) {
+      utils.fileCommand = function (notifier, argsList, callback) {
         argsList.should.eql(expected);
         done();
       };
@@ -188,7 +188,7 @@ describe('terminal-notifier', function(){
       var expected = [ '-title', '"title \\"message\\""',
       '-message', '"body \\"message\\""', '-tullball', '"notValid"' ]
 
-      utils.command = function (notifier, argsList, callback) {
+      utils.fileCommand = function (notifier, argsList, callback) {
         argsList.should.eql(expected);
         done();
       };

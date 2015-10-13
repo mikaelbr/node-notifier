@@ -59,7 +59,7 @@ NotificationCenter.prototype.notify = function (options, callback) {
   var argsList = utils.constructArgumentList(options);
 
   if(utils.isMountainLion()) {
-    utils.command(this.options.customPath || notifier, argsList, actionJackedCallback);
+    utils.fileCommand(this.options.customPath || notifier, argsList, actionJackedCallback);
     return this;
   }
 
