@@ -103,6 +103,13 @@ new nn.WindowsBalloon(options).notify(options);
 new nn.Growl(options).notify(options);
 ```
 
+## Electron Packaging
+
+If packaging your Electron app as an asar, you will find that node-notifier will fail to load. Due to the way asar works, you cannot execute a binary from within asar. As a simple solution, when packaging the app into an asar please make sure you --unpack the vendor folder of node-notifier so the module still has access to the notification binaries. To do this, you can do so by using the following command:
+
+```bash
+asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
+```
 
 ## Documentation
 
