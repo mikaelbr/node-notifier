@@ -60,7 +60,7 @@ Growl.prototype.notify = function (options, callback) {
     return this;
   }
 
-  checkGrowl(function (didHaveGrowl) {
+  checkGrowl(growly, function (didHaveGrowl) {
     hasGrowl = didHaveGrowl;
     if (!didHaveGrowl) return callback(new Error(errorMessageNotFound));
     growly.notify(options.message, options);
