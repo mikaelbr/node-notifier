@@ -79,7 +79,7 @@ WindowsBalloon.prototype.notify = function (options, callback) {
     return this;
   }
 
-  checkGrowl(function (hasGrowlResult) {
+  checkGrowl(notifierOptions, function (hasGrowlResult) {
     hasGrowl = hasGrowlResult;
 
     if (hasGrowl) {
