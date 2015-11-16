@@ -2,7 +2,7 @@
  * Wrapper for the growly module
  */
 var utils = require('../lib/utils'),
-    checkGrowl = require('../lib/checkGrowl');
+    checkGrowl = require('../lib/checkGrowl'),
     growly = require('growly'),
     cloneDeep = require('lodash.clonedeep');
 
