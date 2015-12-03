@@ -28,6 +28,7 @@ var path = require('path'),
     checkGrowl = require('../lib/checkGrowl'),
     Toaster = require('./toaster'),
     Growl = require('./growl'),
+    os = require('os'),
     cloneDeep = require('lodash.clonedeep');
 
 var EventEmitter = require('events').EventEmitter;
@@ -96,10 +97,13 @@ WindowsBalloon.prototype.notify = function (options, callback) {
 var allowedArguments = ["t", "d", "p", "m", "i", "e", "q", "w", "xp"];
 
 function doNotification (options, notifierOptions, callback) {
+  var is64Bit = os.arch() === 'x64';
   options = options || {};
   options = utils.mapToNotifu(options);
   options.p = options.p || 'Node Notification:';
-  var localNotifier = notifierOptions.customPath || notifier;
+
+  var fullNotifierPath = notifier + (is64Bit ? '64' : '') + '.exe';
+  var localNotifier = notifierOptions.customPath || fullNotifierPath;
 
   if (!options.m) {
     callback(new Error('Message is required.'));

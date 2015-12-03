@@ -9,6 +9,7 @@ describe('WindowsBalloon', function(){
   before(function () {
     this.original = utils.immediateFileCommand;
     this.originalType = os.type;
+    this.originalArch = os.arch;
     os.type = function () {
       return "Windows_NT";
     };
@@ -17,6 +18,49 @@ describe('WindowsBalloon', function(){
   after(function () {
     utils.immediateFileCommand = this.original;
     os.type = this.originalType;
+    os.arch = this.originalArch;
+  });
+
+  it('should use 64 bit notifu', function (done) {
+    os.arch = function () {
+      return "x64";
+    };
+    var expected = 'notifu64.exe';
+
+    utils.immediateFileCommand = function (notifier, argsList, callback) {
+      notifier.should.endWith(expected);
+      done();
+    };
+
+    var notifier = new Notify();
+
+    notifier.notify({
+      title: "title",
+      message: "body"
+    }, function (err) {
+      should.not.exist(err);
+    })
+  });
+
+  it('should use 32 bit notifu if 32 arch', function (done) {
+    os.arch = function () {
+      return "ia32";
+    };
+    var expected = 'notifu.exe';
+
+    utils.immediateFileCommand = function (notifier, argsList, callback) {
+      notifier.should.endWith(expected);
+      done();
+    };
+
+    var notifier = new Notify();
+
+    notifier.notify({
+      title: "title",
+      message: "body"
+    }, function (err) {
+      should.not.exist(err);
+    })
   });
 
   it('should pass on title and body', function (done) {
