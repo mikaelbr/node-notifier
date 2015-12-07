@@ -1,6 +1,12 @@
 Changelog
 ===
 
+### `v4.4.0`
+
+1. Changes to exec terminal-notifier through execFile to allow for asar-packages
+2. Adds support for remote growl server
+3. Adds support for win7 with electron asar-package
+
 ### `v4.3.1`
 Obligatory patch fix:
 1. Adds new stdin CLI options to docs
