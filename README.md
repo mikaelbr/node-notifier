@@ -6,9 +6,9 @@ Windows 8/10, or lovely taskbar Balloons for earlier Windows versions. If none o
 these requirements are met, be it older version of Windows or OS X,
 Growl is used.
 
-![Mac Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/mac.png)
-![Native Windows Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/windows.png)
-![Growl Screenshot](https://github.com/mikaelbr/node-notifier/blob/master/example/growl.png)
+![Mac Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/mac.png)
+![Native Windows Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows.png)
+![Growl Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/growl.png)
 
 ## Easy Usage
 
