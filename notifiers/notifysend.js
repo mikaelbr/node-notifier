@@ -29,6 +29,11 @@ NotifySend.prototype.notify = function (options, callback) {
   options = cloneDeep(options || {});
   callback = callback || function () {};
 
+  if (typeof options === 'string') options = {
+      title: 'node-notifier',
+      message: options
+  };
+
   if (!options.message) {
     callback(new Error('Message is required.'));
     return this;
