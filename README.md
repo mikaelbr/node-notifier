@@ -103,14 +103,6 @@ new nn.WindowsBalloon(options).notify(options);
 new nn.Growl(options).notify(options);
 ```
 
-## Electron Packaging
-
-If packaging your Electron app as an asar, you will find that node-notifier will fail to load. Due to the way asar works, you cannot execute a binary from within asar. As a simple solution, when packaging the app into an asar please make sure you --unpack the vendor folder of node-notifier so the module still has access to the notification binaries. To do this, you can do so by using the following command:
-
-```bash
-asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
-```
-
 ## Documentation
 
 * [Notification Center documentation](#usage-notificationcenter)
@@ -327,6 +319,24 @@ A very special thanks to all the modules `node-notifier` uses.
 * [growly](https://github.com/theabraham/growly/)
 
 [![NPM downloads][npm-downloads]][npm-url]
+
+## Common Issues
+
+### Use inside tmux session
+
+When using node-notifier within a tmux session, it can cause a hang in the system. This can be solved by follwing the steps described in this comment: https://github.com/julienXX/terminal-notifier/issues/115#issuecomment-104214742
+
+See more info here: https://github.com/mikaelbr/node-notifier/issues/61#issuecomment-163560801
+
+
+### Within Electron Packaging
+
+If packaging your Electron app as an asar, you will find that node-notifier will fail to load. Due to the way asar works, you cannot execute a binary from within asar. As a simple solution, when packaging the app into an asar please make sure you --unpack the vendor folder of node-notifier so the module still has access to the notification binaries. To do this, you can do so by using the following command:
+
+```bash
+asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
+```
+
 
 ## License
 
