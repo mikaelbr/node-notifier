@@ -24,7 +24,7 @@ notifier.notify({
 
 ## Requirements
 - **Mac OS X**: >= 10.8 or Growl if earlier.
-- **Linux**: notify-osd installed (Ubuntu should have this by default)
+- **Linux**: `notify-osd` or `libnotify-bin` installed (Ubuntu should have this by default, not KDE)
 - **Windows**: >= 8, task bar balloon if earlier or Growl if that is installed.
 - **General Fallback**: Growl
 
