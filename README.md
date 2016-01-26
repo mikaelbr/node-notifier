@@ -11,7 +11,7 @@ these requirements are met, Growl is used.
 
 ## Quick Usage
 
-Show native notifications on Mac, Windows, Linux or using Growl!
+Show a native notification on Mac, Windows, Linux:
 
 ```javascript
 const notifier = require('node-notifier');
@@ -105,7 +105,7 @@ new nn.WindowsBalloon(options).notify(options);
 new nn.Growl(options).notify(options);
 ```
 
-## Documentation
+## Contents
 
 * [Notification Center documentation](#usage-notificationcenter)
 * [Windows Toaster documentation](#usage-windowstoaster)
