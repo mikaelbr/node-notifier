@@ -54,6 +54,12 @@ WindowsBalloon.prototype.notify = function (options, callback) {
   var fallback, notifierOptions = this.options;
   options = cloneDeep(options || {});
   callback = callback || function () {};
+
+  if (typeof options === 'string') options = {
+      title: 'node-notifier',
+      message: options
+  };
+  
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
     var cleaned = data.toLowerCase().trim();
     if (cleaned === 'activate') {

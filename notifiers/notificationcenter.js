@@ -32,6 +32,11 @@ NotificationCenter.prototype.notify = function (options, callback) {
   options = cloneDeep(options || {});
   activeId = id;
 
+  if (typeof options === 'string') options = {
+      title: 'node-notifier',
+      message: options
+  };
+
   callback = callback || function () {};
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
     if (activeId !== id) return false;

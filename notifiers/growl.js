@@ -33,6 +33,11 @@ Growl.prototype.notify = function (options, callback) {
   growly.setHost(this.options.host, this.options.port);
   options = cloneDeep(options || {});
 
+  if (typeof options === 'string') options = {
+      title: 'node-notifier',
+      message: options
+  };
+
   callback = utils.actionJackerDecorator(this, options, callback, function (data) {
     var cleaned = data.toLowerCase().trim();
     if (cleaned === 'click') {
