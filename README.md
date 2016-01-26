@@ -1,21 +1,24 @@
 # node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
-A Node.js module for sending cross platform system notification. Using
-Notification Center for Mac, notify-osd for Linux, Toasters for
-Windows 8/10, or lovely taskbar Balloons for earlier Windows versions. If none of
-these requirements are met, be it older version of Windows or OS X,
-Growl is used.
+A Node.js module for sending cross platform system notifications. Using
+Notification Center for Mac, notify-osd/libnotify-bin for Linux, Toasters for
+Windows 8/10, or taskbar Balloons for earlier Windows versions. If none of
+these requirements are met, Growl is used.
 
 ![Mac Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/mac.png)
 ![Native Windows Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows.png)
 ![Growl Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/growl.png)
 
-## Easy Usage
+## Quick Usage
 
 Show native notifications on Mac, Windows, Linux or using Growl!
 
 ```javascript
-var notifier = require('node-notifier');
+const notifier = require('node-notifier');
+// String
+notifier.notify('Title', 'Message');
+
+// Object
 notifier.notify({
   'title': 'My notification',
   'message': 'Hello, there!'
@@ -44,25 +47,25 @@ Standard usage, with cross-platform fallbacks as defined in the
 below will work in a way or another on all platforms.
 
 ```javascript
-var notifier = require('node-notifier');
-var path = require('path');
+const notifier = require('node-notifier');
+const path = require('path');
 
 notifier.notify({
   title: 'My awesome title',
   message: 'Hello from node, Mr. User!',
-  icon: path.join(__dirname, 'coulson.jpg'), // absolute path (not balloons)
+  icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
   sound: true, // Only Notification Center or Windows Toasters
-  wait: true // wait with callback until user action is taken on notification
+  wait: true // Wait with callback, until user action is taken against notification
 }, function (err, response) {
-  // response is response from notification
+  // Response is response from notification
 });
 
 notifier.on('click', function (notifierObject, options) {
-  // Happens if `wait: true` and user clicks notification
+  // Triggers if `wait: true` and user clicks notification
 });
 
 notifier.on('timeout', function (notifierObject, options) {
-  // Happens if `wait: true` and notification closes
+  // Triggers if `wait: true` and notification closes
 });
 ```
 
@@ -72,29 +75,28 @@ See documentation for each reporter below.
 
 Example:
 ```javascript
-var NotificationCenter = require('node-notifier/notifiers/notificationcenter');
+const NotificationCenter = require('node-notifier/notifiers/notificationcenter');
 new NotificationCenter(options).notify();
 
-var NotifySend = require('node-notifier/notifiers/notifysend');
+const NotifySend = require('node-notifier/notifiers/notifysend');
 new NotifySend(options).notify();
 
-var WindowsToaster = require('node-notifier/notifiers/toaster');
+const WindowsToaster = require('node-notifier/notifiers/toaster');
 new WindowsToaster(options).notify();
 
-var Growl = require('node-notifier/notifiers/growl');
+const Growl = require('node-notifier/notifiers/growl');
 new Growl(options).notify();
 
-var WindowsBalloon = require('node-notifier/notifiers/balloon');
+const WindowsBalloon = require('node-notifier/notifiers/balloon');
 new WindowsBalloon(options).notify();
 
 ```
-
 
 Or if you are using several (or you are lazy):
 (note: technically, this takes longer to require)
 
 ```javascript
-var nn = require('node-notifier');
+const nn = require('node-notifier');
 
 new nn.NotificationCenter(options).notify();
 new nn.NotifySend(options).notify();
@@ -117,26 +119,26 @@ new nn.Growl(options).notify(options);
 Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/terminal-notifier).
 
 Native Notification Center requires Mac OS X version 10.8 or higher. If you have
-earlier versions, Growl will be the fallback. If Growl isn't installed, an error
-will be returned in the callback.
+an earlier version, Growl will be the fallback. If Growl isn't installed, an 
+error will be returned in the callback.
 
 
 #### Example
 
-It is a wrapper around [terminal-notifier](https://github.com/alloy/terminal-notifier), and you can
+Wrapping around [terminal-notifier](https://github.com/alloy/terminal-notifier), you can
 do all terminal-notifier can do through properties to the `notify` method. E.g.
-if `terminal-notifier` say `-message`, you can do `{message: 'Foo'}`, or
-if `terminal-notifier` say `-list ALL` you can do `{list: 'ALL'}`. Notification
+if `terminal-notifier` says `-message`, you can do `{message: 'Foo'}`, or
+if `terminal-notifier` says `-list ALL`, you can do `{list: 'ALL'}`. Notification
 is the primary focus for this module, so listing and activating do work,
 but isn't documented.
 
 ### All notification options with their defaults:
 
 ```javascript
-var NotificationCenter = require('node-notifier').NotificationCenter;
+const NotificationCenter = require('node-notifier').NotificationCenter;
 
 var notifier = new Notification({
-  withFallback: false, // use Growl if <= 10.8?
+  withFallback: false, // Use Growl Fallback if <= 10.8
   customPath: void 0 // Relative path if you want to use your fork of terminal-notifier
 });
 
@@ -144,11 +146,11 @@ notifier.notify({
   'title': void 0,
   'subtitle': void 0,
   'message': void 0,
-  'sound': false, // Case Sensitive string of sound file (see below)
-  'icon': 'Terminal Icon', // Set icon? (Absolute path to image)
-  'contentImage': void 0, // Attach image? (Absolute path)
-  'open': void 0, // URL to open on click
-  'wait': false // if wait for notification to end
+  'sound': false, // Case Sensitive string for location of sound file, or use one of OS X's native sounds (see below)
+  'icon': 'Terminal Icon', // Absolute Path to Triggering Icon
+  'contentImage': void 0, // Absolute Path to Attached Image (Content Image)
+  'open': void 0, // URL to open on Click
+  'wait': false // Wait for User Action against Notification
 }, function(error, response) {
   console.log(response);
 });
@@ -157,8 +159,8 @@ notifier.notify({
 **For Mac OS notifications, icon and contentImage requires OS X 10.9.**
 
 Sound can be one of these: `Basso`, `Blow`, `Bottle`, `Frog`, `Funk`, `Glass`,
-`Hero`, `Morse`, `Ping`, `Pop`, `Purr`, `Sosumi`, `Submarine`, `Tink`. If
-sound is simply `true`, `Bottle` is used.
+`Hero`, `Morse`, `Ping`, `Pop`, `Purr`, `Sosumi`, `Submarine`, `Tink`. 
+If sound is simply `true`, `Bottle` is used.
 
 See [specific Notification Center example](./example/advanced.js).
 
@@ -166,7 +168,7 @@ See [specific Notification Center example](./example/advanced.js).
 
 **Note:** There are some limitations for images in native Windows 8 notifications:
 The image must be a PNG image, and cannot be over 1024x1024 px, or over over 200Kb.
-You also need to specify the image by using absolute path. These limitations are
+You also need to specify the image by using an absolute path. These limitations are
 due to the Toast notification system. A good tip is to use something like
 `path.join` or `path.delimiter` to have cross-platform pathing.
 
@@ -178,7 +180,7 @@ From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify
 [toaster](https://github.com/nels-o/toaster) is used to get native Windows Toasts!
 
 ```javascript
-var WindowsToaster = require('node-notifier').WindowsToaster;
+const WindowsToaster = require('node-notifier').WindowsToaster;
 
 var notifier = new WindowsToaster({
   withFallback: false, // Fallback to Growl or Balloons?
@@ -188,9 +190,9 @@ var notifier = new WindowsToaster({
 notifier.notify({
   title: void 0,
   message: void 0,
-  icon: void 0, // absolute path to an icon
+  icon: void 0, // Absolute path to Icon
   sound: false, // true | false.
-  wait: false, // if wait for notification to end
+  wait: false, // Wait for User Action against Notification
 }, function(error, response) {
   console.log(response);
 });
@@ -199,7 +201,7 @@ notifier.notify({
 ### Usage Growl
 
 ```javascript
-var Growl = require('node-notifier').Growl;
+const Growl = require('node-notifier').Growl;
 
 var notifier = new Growl({
   name: 'Growl Name Used', // Defaults as 'Node'
@@ -211,7 +213,7 @@ notifier.notify({
   title: 'Foo',
   message: 'Hello World',
   icon: fs.readFileSync(__dirname + "/coulson.jpg"),
-  wait: false, // if wait for user interaction
+  wait: false, // Wait for User Action against Notification
 
   // and other growl options like sticky etc.
   sticky: false,
@@ -226,14 +228,14 @@ See more information about using
 ### Usage WindowsBalloon
 
 For earlier Windows versions, the taskbar balloons are used (unless
-fallback is activated and Growl is running). For balloons a great
+fallback is activated and Growl is running). For balloons, a great
 project called [notifu](http://www.paralint.com/projects/notifu/) is used.
 
 ```javascript
-var WindowsBalloon = require('node-notifier').WindowsBalloon;
+const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 var notifier = new WindowsBalloon({
-  withFallback: false, // Try Windows 8 and Growl first?
+  withFallback: false, // Try Windows Toast and Growl first?
   customPath: void 0 // Relative path if you want to use your fork of notifu
 });
 
@@ -241,8 +243,8 @@ notifier.notify({
   title: void 0,
   message: void 0,
   sound: false, // true | false.
-  time: 5000, // How long to show balloons in ms
-  wait: false, // if wait for notification to end
+  time: 5000, // How long to show balloon in ms
+  wait: false, // Wait for User Action against Notification
 }, function(error, response) {
   console.log(response);
 });
@@ -256,7 +258,7 @@ notifu](http://www.paralint.com/projects/notifu/).
 Note: notify-send doesn't support the wait flag.
 
 ```javascript
-var NotifySend = require('node-notifier').NotifySend;
+const NotifySend = require('node-notifier').NotifySend;
 
 var notifier = new NotifySend();
 
@@ -312,7 +314,7 @@ You can also pass message in as `stdin`:
 
 ## Thanks to OSS
 
-A very special thanks to all the modules `node-notifier` uses.
+`node-notifier` is made possible through Open Source Software. A very special thanks to all the modules `node-notifier` uses.
 * [terminal-notifier](https://github.com/alloy/terminal-notifier)
 * [toaster](https://github.com/nels-o/toaster)
 * [notifu](http://www.paralint.com/projects/notifu/)
@@ -331,7 +333,7 @@ See more info here: https://github.com/mikaelbr/node-notifier/issues/61#issuecom
 
 ### Within Electron Packaging
 
-If packaging your Electron app as an asar, you will find that node-notifier will fail to load. Due to the way asar works, you cannot execute a binary from within asar. As a simple solution, when packaging the app into an asar please make sure you --unpack the vendor folder of node-notifier so the module still has access to the notification binaries. To do this, you can do so by using the following command:
+If packaging your Electron app as an `asar`, you will find node-notifier will fail to load. Due to the way asar works, you cannot execute a binary from within an asar. As a simple solution, when packaging the app into an asar please make sure you `--unpack` the vendor folder of node-notifier, so the module still has access to the notification binaries. To do this, you can do so by using the following command:
 
 ```bash
 asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
