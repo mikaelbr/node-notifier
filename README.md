@@ -326,7 +326,7 @@ You can also pass message in as `stdin`:
 
 ### Use inside tmux session
 
-When using node-notifier within a tmux session, it can cause a hang in the system. This can be solved by follwing the steps described in this comment: https://github.com/julienXX/terminal-notifier/issues/115#issuecomment-104214742
+When using node-notifier within a tmux session, it can cause a hang in the system. This can be solved by following the steps described in this comment: https://github.com/julienXX/terminal-notifier/issues/115#issuecomment-104214742
 
 See more info here: https://github.com/mikaelbr/node-notifier/issues/61#issuecomment-163560801
 
