@@ -137,7 +137,7 @@ but isn't documented.
 ```javascript
 const NotificationCenter = require('node-notifier').NotificationCenter;
 
-var notifier = new Notification({
+var notifier = new NotificationCenter({
   withFallback: false, // Use Growl Fallback if <= 10.8
   customPath: void 0 // Relative path if you want to use your fork of terminal-notifier
 });
