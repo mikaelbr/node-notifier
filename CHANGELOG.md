@@ -1,6 +1,20 @@
 Changelog
 ===
 
+### `v4.5.0`
+
+#### Additions
+1. Adds syntactic sugar for `notify`. Now able to just pass message:
+```js
+notifier.notify('My message');
+```
+
+See [#45](https://github.com/mikaelbr/node-notifier/issues/45) for more info.
+
+#### Fixes
+1. Improvements to docs and examples
+2. Updates `semver` dependency to support Webpacking with Electron.
+
 ### `v4.4.0`
 
 1. Changes to exec terminal-notifier through execFile to allow for asar-packages
