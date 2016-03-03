@@ -16,7 +16,7 @@ Show a native notification on Mac, Windows, Linux:
 ```javascript
 const notifier = require('node-notifier');
 // String
-notifier.notify('Title', 'Message');
+notifier.notify('Message');
 
 // Object
 notifier.notify({
