@@ -39,11 +39,10 @@ Growl.prototype.notify = function (options, callback) {
   };
 
   callback = utils.actionJackerDecorator(this, options, callback, function (data) {
-    var cleaned = data.toLowerCase().trim();
-    if (cleaned === 'click') {
+    if (data === 'click') {
       return 'click';
     }
-    if (cleaned === 'timedout') {
+    if (data === 'timedout') {
       return 'timeout';
     }
     return false;

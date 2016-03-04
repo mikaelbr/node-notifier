@@ -41,11 +41,10 @@ NotificationCenter.prototype.notify = function (options, callback) {
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
     if (activeId !== id) return false;
 
-    var cleaned = data.toLowerCase().trim();
-    if (cleaned === 'activate') {
+    if (data === 'activate') {
       return 'click';
     }
-    if (cleaned === 'timeout') {
+    if (data === 'timeout') {
       return 'timeout';
     }
     return false;

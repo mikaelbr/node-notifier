@@ -34,13 +34,12 @@ WindowsToaster.prototype.notify = function (options, callback) {
       title: 'node-notifier',
       message: options
   };
-  
+
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
-    var cleaned = data.toLowerCase().trim();
-    if (cleaned === 'activated') {
+    if (data === 'activate') {
       return 'click';
     }
-    if (cleaned === 'timeout') {
+    if (data === 'timeout') {
       return 'timeout';
     }
     return false;
