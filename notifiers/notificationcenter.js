@@ -27,15 +27,31 @@ function NotificationCenter (options) {
 util.inherits(NotificationCenter, EventEmitter);
 var activeId = null;
 
-NotificationCenter.prototype.notify = function (options, callback) {
+NotificationCenter.prototype.notify = function (title, message, callback) {
   var fallbackNotifier = null, id = identificator();
-  options = cloneDeep(options || {});
+  var options = {};
   activeId = id;
 
-  if (typeof options === 'string') options = {
-      title: 'node-notifier',
-      message: options
-  };
+  if (typeof title === 'object') {
+    options = cloneDeep(title || {});
+
+    if (typeof message === 'function') {
+      callback = message;
+    }
+  } else if (typeof title === 'string') {
+    if (typeof message === 'function') {
+      callback = message;
+      options = {
+        title: 'node-notifier',
+        message: title
+      };
+    } else {
+      options = {
+        title: title,
+        message: message || 'node-notifier'
+      };
+    }
+  }
 
   callback = callback || function () {};
   var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
