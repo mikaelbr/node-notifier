@@ -96,6 +96,28 @@ describe('utils', function(){
       (Buffer.isBuffer(obj.icon)).should.be.true;
     });
 
+    it('should not map icon url for growl', function () {
+      var icon = 'http://hostname.com/logo.png';
+
+      var expected = {
+        title: 'Foo',
+        message: 'Bar',
+        icon: icon
+      };
+
+      _.mapToGrowl({
+        title: 'Foo',
+        message: 'Bar',
+        icon: icon
+      }).should.eql(expected);
+
+      _.mapToGrowl({
+        title: 'Foo',
+        message: 'Bar',
+        appIcon: icon
+      }).should.eql(expected);
+    });
+
   });
 
 });

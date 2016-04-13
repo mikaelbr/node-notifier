@@ -75,7 +75,7 @@ describe('notify-send', function(){
 
 
   it('should escape message input', function (done) {
-    var expected = [ '"Node Notification:"', '"some \\"me\'ss\\`age\\`\\""' ];
+    var expected = [ '"Node Notification:"', '"some\\n \\"me\'ss\\`age\\`\\""' ];
 
     utils.command = function (notifier, argsList, callback) {
       argsList.should.eql(expected);
@@ -85,7 +85,7 @@ describe('notify-send', function(){
     var notifier = new Notify({ suppressOsdCheck: true });
 
     notifier.notify({
-      message: 'some "me\'ss`age`"'
+      message: 'some\n "me\'ss`age`"'
     }, function (err) {
       should.not.exist(err);
       done();
