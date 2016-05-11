@@ -29,7 +29,7 @@ describe('WindowsToaster', function(){
 
   it('should parse file protocol URL', function (done) {
     utils.fileCommand = function (notifier, argsList, callback) {
-      argsList[1].should.eql(path.resolve("C:\\node-notifier\\test\\fixture\\coulson.jpg"));
+      argsList[1].should.eql("C:\\node-notifier\\test\\fixture\\coulson.jpg");
       done();
     };
 
