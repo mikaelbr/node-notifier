@@ -27,9 +27,9 @@ describe('WindowsToaster', function(){
     os.release = this.originalRelease;
   });
 
-  it('should parse file protocol URL', function (done) {
+  it('should parse file protocol URL of icon', function (done) {
     utils.fileCommand = function (notifier, argsList, callback) {
-      argsList[1].should.eql("C:\\node-notifier\\test\\fixture\\coulson.jpg");
+      argsList[1].should.eql('C:\\node-notifier\\test\\fixture\\coulson.jpg');
       done();
     };
 
@@ -39,6 +39,38 @@ describe('WindowsToaster', function(){
       'title': 'Heya',
       'message': 'foo bar',
       'icon': 'file:///C:/node-notifier/test/fixture/coulson.jpg'
+    });
+  });
+
+  it('should not parse local path of icon', function (done) {
+    var icon = path.join(__dirname, 'fixture', 'coulson.jpg');
+    utils.fileCommand = function (notifier, argsList, callback) {
+      argsList[1].should.eql(icon);
+      done();
+    };
+
+    var notifier = new Notify();
+
+    notifier.notify({
+      'title': 'Heya',
+      'message': 'foo bar',
+      'icon': icon
+    });
+  });
+
+  it('should not parse normal URL of icon', function (done) {
+    var icon = 'http://csscomb.com/img/csscomb.jpg';
+    utils.fileCommand = function (notifier, argsList, callback) {
+      argsList[1].should.eql(icon);
+      done();
+    };
+
+    var notifier = new Notify();
+
+    notifier.notify({
+      'title': 'Heya',
+      'message': 'foo bar',
+      'icon': icon
     });
   });
 });
