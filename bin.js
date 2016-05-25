@@ -24,23 +24,27 @@ readme(aliases);
 var passedOptions = getOptionsIfExists(Object.keys(aliases), argv);
 var stdinMessage = '';
 
-process.stdin.on('readable', function(){
-  var chunk = this.read();
-  if (!chunk && !stdinMessage) {
-    doNotification(passedOptions);
-    this.end();
-    return;
-  }
-  if (!chunk) return;
-  stdinMessage += chunk.toString();
-});
-
-process.stdin.on('end', function(){
-  if (stdinMessage) {
-    passedOptions.message = stdinMessage;
-  }
+if (process.stdin.isTTY) {
   doNotification(passedOptions);
-});
+} else {
+  process.stdin.resume();
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', function(data) {
+    if (data) {
+      stdinMessage += data;
+    } else {
+      doNotification(passedOptions);
+      this.end();
+      return;
+    }
+  });
+  process.stdin.on('end', function(){
+    if (stdinMessage) {
+      passedOptions.message = stdinMessage;
+    }
+    doNotification(passedOptions);
+  });
+}
 
 function doNotification (options) {
 
