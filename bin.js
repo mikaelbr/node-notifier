@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var notifier = require('./');
+var Notification = require('./').Notification;
 var minimist = require('minimist');
 var usage = require('cli-usage');
 
@@ -11,17 +11,19 @@ var aliases = {
   'message': 'm',
   'icon': 'i',
   'sound': 's',
-  'open': 'o'
+  'open': 'o',
+  'port': 'p',
 };
 
 var argv = minimist(process.argv.slice(2), {
   alias: aliases,
-  string: ['icon', 'message', 'open', 'subtitle', 'title']
+  string: ['icon', 'message', 'open', 'subtitle', 'title', 'host', 'port']
 });
 
-readme(aliases);
+readme(aliases, ['host']);
 
-var passedOptions = getOptionsIfExists(Object.keys(aliases), argv);
+var validOpts = Object.keys(aliases).concat('host');
+var passedOptions = getOptionsIfExists(validOpts, argv);
 var stdinMessage = '';
 
 if (process.stdin.isTTY) {
@@ -47,7 +49,7 @@ if (process.stdin.isTTY) {
 }
 
 function doNotification (options) {
-
+  var notifier = new Notification(options);
   if (!options.message) {
     // Do not show an empty message
     process.exit(0);
@@ -62,7 +64,6 @@ function doNotification (options) {
     console.log(msg);
     process.exit(0);
   });
-
 }
 
 function getOptionsIfExists(optionTypes, argv) {
@@ -75,8 +76,8 @@ function getOptionsIfExists(optionTypes, argv) {
   return options;
 }
 
-function readme(input) {
-  var str = '# notify\n \n## Options\n' + params(input) + '\n\n';
+function readme(input, extra) {
+  var str = '# notify\n \n## Options\n' + params(input, extra) + '\n\n';
   str += '## Example\n```shell\n';
   str += '$ notify -t "Hello" -m "My Message" -s --open http://github.com\n';
   str += '$ notify -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg \n';
@@ -85,8 +86,14 @@ function readme(input) {
   usage(str);
 }
 
-function params(input) {
-  return Object.keys(input).reduce(function (acc, key) {
+function params(input, extra) {
+  var withAlias = Object.keys(input).reduce(function (acc, key) {
     return acc + ' * --' + key + ' (alias -' + input[key] + ')\n';
   }, '');
+
+  if (!extra) return withAlias;
+
+  return withAlias + extra.reduce(function (acc, key) {
+    return acc + ' * --' + key + '\n';
+  }, '')
 }
