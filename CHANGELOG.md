@@ -1,6 +1,21 @@
 Changelog
 ===
 
+### `v4.6.0`
+
+1. Adds support for Icon URL in Growl ([by @gucong3000](https://github.com/mikaelbr/node-notifier/pull/115))
+2. Adds options for passing host and port to cli tool ([reported by @el-davo](https://github.com/mikaelbr/node-notifier/issues/106))
+3. Fixes sanitize response on `notify` callback ([by @MadLittleMods](https://github.com/mikaelbr/node-notifier/commit/a44454a11eff452a8b55f9fbe291e189ed088708))
+4. Fixes use of new line in messages ([by @gucong3000](https://github.com/mikaelbr/node-notifier/pull/115))
+5. Fixes use of `file:///xxx` protocol icon paths for Windows 8.1 ([by @gucong3000](https://github.com/mikaelbr/node-notifier/pull/118))
+6. Fixes non-TTY usage and piping messages ([reported by @simensen](https://github.com/mikaelbr/node-notifier/issues/109))
+7. Updates vendor terminal-notifier version to 1.6.3 ([reported by @kid-icarus](https://github.com/mikaelbr/node-notifier/pull/120))
+
+#### Additions
+1. Adds syntactic sugar for `notify`. Now able to just pass message:
+```js
+notifier.notify('My message');
+```
 ### `v4.5.0`
 
 #### Additions
