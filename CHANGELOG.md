@@ -11,11 +11,6 @@ Changelog
 6. Fixes non-TTY usage and piping messages ([reported by @simensen](https://github.com/mikaelbr/node-notifier/issues/109))
 7. Updates vendor terminal-notifier version to 1.6.3 ([reported by @kid-icarus](https://github.com/mikaelbr/node-notifier/pull/120))
 
-#### Additions
-1. Adds syntactic sugar for `notify`. Now able to just pass message:
-```js
-notifier.notify('My message');
-```
 ### `v4.5.0`
 
 #### Additions
