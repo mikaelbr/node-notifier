@@ -340,6 +340,18 @@ asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
 ```
 
 
+### Using Webpack
+
+When using node-notifier inside of webpack, you must add the following snippet to your `webpack.config.js`. The reason this is required, is because node-notifier loads the notifiers from a binary, and so a relative file path is needed. When webpack compiles the modules, it supresses file directories, causing node-notifier to error on certain platforms. To fix/workaround this, you must tell webpack to keep the relative file directories, by doing so, append the following code to your `webpack.config.js`
+
+```javascript
+node: {
+  __filename: true,
+  __dirname: true
+}
+```
+
+
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
