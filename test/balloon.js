@@ -248,4 +248,80 @@ describe('WindowsBalloon', function(){
     })
   });
 
+  it('should have both type and duration options', function (done) {
+    var expected = [ '-m', 'body', '-p', 'title', '-q', '-d', '10', '-t', 'info' ];
+
+    utils.immediateFileCommand = function (notifier, argsList, callback) {
+      argsList.should.eql(expected);
+      done();
+    };
+
+    var notifier = new Notify();
+
+    notifier.notify({
+      title: "title",
+      message: "body",
+      type: "info",
+      t: 10
+    }, function (err) {
+      should.not.exist(err);
+    })
+  });
+
+  it('should sanitize wrong string type option to info', function (done) {
+    var expected = [ '-m', 'body', '-p', 'title', '-q', '-t', 'info' ];
+
+    utils.immediateFileCommand = function (notifier, argsList, callback) {
+      argsList.should.eql(expected);
+      done();
+    };
+
+    var notifier = new Notify();
+
+    notifier.notify({
+      title: "title",
+      message: "body",
+      type: "theansweris42"
+    }, function (err) {
+      should.not.exist(err);
+    })
+  });
+
+  it('should sanitize type option to error', function (done) {
+    var expected = [ '-m', 'body', '-p', 'title', '-q', '-t', 'error' ];
+
+    utils.immediateFileCommand = function (notifier, argsList, callback) {
+      argsList.should.eql(expected);
+      done();
+    };
+
+    var notifier = new Notify();
+
+    notifier.notify({
+      title: "title",
+      message: "body",
+      type: "ErRoR"
+    }, function (err) {
+      should.not.exist(err);
+    })
+  });
+
+  it('should sanitize wring integer type option to info', function (done) {
+    var expected = [ '-m', 'body', '-p', 'title', '-q', '-t', 'info' ];
+
+    utils.immediateFileCommand = function (notifier, argsList, callback) {
+      argsList.should.eql(expected);
+      done();
+    };
+
+    var notifier = new Notify();
+
+    notifier.notify({
+      title: "title",
+      message: "body",
+      type: 42
+    }, function (err) {
+      should.not.exist(err);
+    })
+  });
 });
