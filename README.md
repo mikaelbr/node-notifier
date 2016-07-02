@@ -245,6 +245,7 @@ notifier.notify({
   sound: false, // true | false.
   time: 5000, // How long to show balloon in ms
   wait: false, // Wait for User Action against Notification
+  type: 'info' // The notification type : info | warn | error
 }, function(error, response) {
   console.log(response);
 });
