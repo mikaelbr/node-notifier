@@ -24,7 +24,7 @@
   "author": "Mikael Brevik",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^1.21.4",
+    "mocha": "^3.0.0",
     "should": "^4.0.4"
   },
   "dependencies": {
