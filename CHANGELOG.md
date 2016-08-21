@@ -1,6 +1,12 @@
 Changelog
 ===
 
+
+### `v4.6.1`
+
+1. Adds npm ignore file, ignoring tests and examples from package.
+2. Fixes CI builds
+
 ### `v4.6.0`
 
 1. Adds support for Icon URL in Growl ([by @gucong3000](https://github.com/mikaelbr/node-notifier/pull/115))
