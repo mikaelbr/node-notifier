@@ -2,7 +2,7 @@
  * Wrapper for the toaster (https://github.com/nels-o/toaster)
  */
 var path = require('path'),
-    notifier = path.resolve(__dirname, '../vendor/toaster/toast.exe'),
+    notifier = path.resolve(__dirname, '../vendor/snoreToast/SnoreToast.exe'),
     utils = require('../lib/utils'),
     Balloon = require('./balloon'),
     cloneDeep = require('lodash.clonedeep');
