@@ -62,6 +62,6 @@ WindowsToaster.prototype.notify = function (options, callback) {
     wrapper: '',
     noEscape: true
   });
-  utils.fileCommand(this.options.customPath || notifier, argsList, actionJackedCallback);
+  utils.fileCommandForWin(this.options.customPath || notifier ,argsList,actionJackedCallback);
   return this;
 };

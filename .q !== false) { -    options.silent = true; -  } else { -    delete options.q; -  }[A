@@ -1,0 +1,52 @@
+[1mdiff --git a/lib/utils.js b/lib/utils.js[m
+[1mindex 182a68e..8ce0418 100644[m
+[1m--- a/lib/utils.js[m
+[1m+++ b/lib/utils.js[m
+[36m@@ -56,6 +56,13 @@[m [mmodule.exports.fileCommand = function (notifier, options, cb) {[m
+   });[m
+ };[m
+ [m
+[32m+[m[32mmodule.exports.fileCommandForWin = function (notifier, options, cb) {[m
+[32m+[m[32m return cp.spawn(notifier, options,{shell:true}, function (error, stdout, stderr) {[m
+[32m+[m[32m    if (error) return cb(error, stdout);[m
+[32m+[m[32m    cb(stderr, stdout);[m
+[32m+[m[32m  });[m
+[32m+[m[32m};[m
+[32m+[m
+ module.exports.immediateFileCommand = function (notifier, options, cb) {[m
+   notifierExists(notifier, function (exists) {[m
+     if (!exists) return cb(new Error('Notifier (' + notifier + ') not found on system.'));[m
+[36m@@ -248,11 +255,6 @@[m [mmodule.exports.mapToWin8 = function (options){[m
+     delete options.quiet;[m
+   }[m
+ [m
+[31m-  if (options.q !== false) {[m
+[31m-    options.silent = true;[m
+[31m-  } else {[m
+[31m-    delete options.q;[m
+[31m-  }[m
+ [m
+   if (options.sound) {[m
+     delete options.q;[m
+[36m@@ -354,4 +356,4 @@[m [mfunction sanitizeNotifuTypeArgument(type) {[m
+   }[m
+ [m
+   return 'info';[m
+[31m-}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/notifiers/toaster.js b/notifiers/toaster.js[m
+[1mindex 2d6ba1e..0161238 100644[m
+[1m--- a/notifiers/toaster.js[m
+[1m+++ b/notifiers/toaster.js[m
+[36m@@ -62,6 +62,6 @@[m [mWindowsToaster.prototype.notify = function (options, callback) {[m
+     wrapper: '',[m
+     noEscape: true[m
+   });[m
+[31m-  utils.fileCommand(this.options.customPath || notifier, argsList, actionJackedCallback);[m
+[32m+[m[32m  utils.fileCommandForWin(this.options.customPath || notifier ,argsList,actionJackedCallback);[m
+   return this;[m
+ };[m
+[1mdiff --git a/vendor/snoreToast/SnoreToast.exe b/vendor/snoreToast/SnoreToast.exe[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
