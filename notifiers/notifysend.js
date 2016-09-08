@@ -29,6 +29,9 @@ NotifySend.prototype.notify = function (options, callback) {
   options = cloneDeep(options || {});
   callback = callback || function () {};
 
+  if (typeof callback !== "function")
+    throw new TypeError('The second argument must be a function callback. You have passed '+ typeof callback);
+
   if (typeof options === 'string') options = {
       title: 'node-notifier',
       message: options
