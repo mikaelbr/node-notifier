@@ -1,17 +1,17 @@
 # node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 A Node.js module for sending cross platform system notifications. Using
-Notification Center for Mac, notify-osd/libnotify-bin for Linux, Toasters for
+Notification Center for macOS, notify-osd/libnotify-bin for Linux, Toasters for
 Windows 8/10, or taskbar Balloons for earlier Windows versions. If none of
 these requirements are met, Growl is used.
 
-![Mac Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/mac.png)
+![macOS Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/mac.png)
 ![Native Windows Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows.png)
 ![Growl Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/growl.png)
 
 ## Quick Usage
 
-Show a native notification on Mac, Windows, Linux:
+Show a native notification on macOS, Windows, Linux:
 
 ```javascript
 const notifier = require('node-notifier');
@@ -26,7 +26,7 @@ notifier.notify({
 ```
 
 ## Requirements
-- **Mac OS X**: >= 10.8 or Growl if earlier.
+- **macOS**: >= 10.8 or Growl if earlier.
 - **Linux**: `notify-osd` or `libnotify-bin` installed (Ubuntu should have this by default)
 - **Windows**: >= 8, task bar balloon if earlier or Growl if that is installed.
 - **General Fallback**: Growl
@@ -118,7 +118,7 @@ new nn.Growl(options).notify(options);
 
 Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/terminal-notifier).
 
-Native Notification Center requires Mac OS X version 10.8 or higher. If you have
+Native Notification Center requires macOS version 10.8 or higher. If you have
 an earlier version, Growl will be the fallback. If Growl isn't installed, an 
 error will be returned in the callback.
 
@@ -146,7 +146,7 @@ notifier.notify({
   'title': void 0,
   'subtitle': void 0,
   'message': void 0,
-  'sound': false, // Case Sensitive string for location of sound file, or use one of OS X's native sounds (see below)
+  'sound': false, // Case Sensitive string for location of sound file, or use one of macOS' native sounds (see below)
   'icon': 'Terminal Icon', // Absolute Path to Triggering Icon
   'contentImage': void 0, // Absolute Path to Attached Image (Content Image)
   'open': void 0, // URL to open on Click
@@ -156,7 +156,7 @@ notifier.notify({
 });
 ```
 
-**For Mac OS notifications, icon and contentImage requires OS X 10.9.**
+**For macOS notifications, icon and contentImage requires macOS 10.9.**
 
 Sound can be one of these: `Basso`, `Blow`, `Bottle`, `Frog`, `Funk`, `Glass`,
 `Hero`, `Morse`, `Ping`, `Pop`, `Purr`, `Sosumi`, `Submarine`, `Tink`. 
