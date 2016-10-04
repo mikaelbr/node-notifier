@@ -29,8 +29,13 @@ switch(os.type()) {
     }
     break;
   default:
-    module.exports = new Growl(options);
-    module.exports.Notification = Growl;
+    if(os.type().match(/BSD$/)) {
+      module.exports = new NotifySend(options);
+      module.exports.Notification = NotifySend;
+    } else {
+      module.exports = new Growl(options);
+      module.exports.Notification = Growl;
+    }
 }
 
 // Expose notifiers to give full control.
