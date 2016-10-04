@@ -21,14 +21,14 @@ describe('WindowsToaster', function(){
   });
 
   after(function () {
-    utils.fileCommand = this.original;
+    utils.fileCommandForWin = this.original;
     os.type = this.originalType;
     os.arch = this.originalArch;
     os.release = this.originalRelease;
   });
 
   it('should parse file protocol URL of icon', function (done) {
-    utils.fileCommand = function (notifier, argsList, callback) {
+    utils.fileCommandForWin = function (notifier, argsList, callback) {
       argsList[1].should.eql('C:\\node-notifier\\test\\fixture\\coulson.jpg');
       done();
     };
@@ -44,7 +44,7 @@ describe('WindowsToaster', function(){
 
   it('should not parse local path of icon', function (done) {
     var icon = path.join(__dirname, 'fixture', 'coulson.jpg');
-    utils.fileCommand = function (notifier, argsList, callback) {
+    utils.fileCommandForWin = function (notifier, argsList, callback) {
       argsList[1].should.eql(icon);
       done();
     };
@@ -60,7 +60,7 @@ describe('WindowsToaster', function(){
 
   it('should not parse normal URL of icon', function (done) {
     var icon = 'http://csscomb.com/img/csscomb.jpg';
-    utils.fileCommand = function (notifier, argsList, callback) {
+    utils.fileCommandForWin = function (notifier, argsList, callback) {
       argsList[1].should.eql(icon);
       done();
     };
