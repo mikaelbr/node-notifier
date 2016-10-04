@@ -32,8 +32,7 @@ switch(os.type()) {
     if(os.type().match(/BSD$/)) {
       module.exports = new NotifySend(options);
       module.exports.Notification = NotifySend;
-    }
-    else {
+    } else {
       module.exports = new Growl(options);
       module.exports.Notification = Growl;
     }
