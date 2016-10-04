@@ -42,8 +42,9 @@ NotifySend.prototype.notify = function (options, callback) {
     return this;
   }
 
-  if (os.type() !== 'Linux') {
-    callback(new Error('Only supported on Linux systems'));
+
+  if (os.type() !== 'Linux' && !os.type().match(/BSD$/)) {
+    callback(new Error('Only supported on Linux and *BSD systems'));
     return this;
   }
 
