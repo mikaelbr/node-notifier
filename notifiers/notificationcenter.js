@@ -51,9 +51,6 @@ NotificationCenter.prototype.notify = function (options, callback) {
   });
 
   options = utils.mapToMac(options);
-  if (!!options.wait) {
-    options.wait = 'YES';
-  }
 
   if (!options.message && !options.group && !options.list && !options.remove) {
     callback(new Error('Message, group, remove or list property is required.'));
