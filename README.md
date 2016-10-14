@@ -119,7 +119,7 @@ new nn.Growl(options).notify(options);
 Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/terminal-notifier).
 
 Native Notification Center requires macOS version 10.8 or higher. If you have
-an earlier version, Growl will be the fallback. If Growl isn't installed, an 
+an earlier version, Growl will be the fallback. If Growl isn't installed, an
 error will be returned in the callback.
 
 
@@ -150,16 +150,23 @@ notifier.notify({
   'icon': 'Terminal Icon', // Absolute Path to Triggering Icon
   'contentImage': void 0, // Absolute Path to Attached Image (Content Image)
   'open': void 0, // URL to open on Click
-  'wait': false // Wait for User Action against Notification
+  'wait': false, // Wait for User Action against Notification. Shortcut for timeout = 5 seconds
+
+  // New in latest version. See `example/macInput.js` for usage
+  timeout: 5, // Takes precedence over wait if both are defined.
+  closeLabel: void 0, // String. Label for cancel button
+  actions: void 0, // String | Array<String>. Action label or list of labels in case of dropdown
+  dropdownLabel: void 0, // String. Label to be used if multiple actions
+  reply: false // Boolean. If notification should take input. Is passed as argument in callback. Takes precedence over actions.
 }, function(error, response) {
   console.log(response);
 });
 ```
 
-**For macOS notifications, icon and contentImage requires macOS 10.9.**
+**For macOS notifications, icon and contentImage, and all forms of reply/actions requires macOS 10.9.**
 
 Sound can be one of these: `Basso`, `Blow`, `Bottle`, `Frog`, `Funk`, `Glass`,
-`Hero`, `Morse`, `Ping`, `Pop`, `Purr`, `Sosumi`, `Submarine`, `Tink`. 
+`Hero`, `Morse`, `Ping`, `Pop`, `Purr`, `Sosumi`, `Submarine`, `Tink`.
 If sound is simply `true`, `Bottle` is used.
 
 See [specific Notification Center example](./example/advanced.js).
