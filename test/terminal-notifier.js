@@ -209,6 +209,31 @@ describe('terminal-notifier', function(){
       });
     });
 
+    it('should still support wait flag with default timeout', function (done) {
+      var expected = [
+        '-title', '"Title"',
+        '-message', '"Message"',
+        '-timeout', '"5"'
+      ];
+
+      utils.fileCommand = function (notifier, argsList, callback) {
+        argsList.should.eql(expected);
+        done();
+      };
+
+      var notifier = new NotificationCenter();
+      notifier.isNotifyChecked = true;
+      notifier.hasNotifier = true;
+
+      notifier.notify({
+        title: 'Title',
+        message: 'Message',
+        wait: true
+      }, function (err) {
+        should.not.exist(err);
+      });
+    });
+
 
     it('should escape all title and message', function (done) {
       var expected = [ '-title', '"title \\"message\\""',
