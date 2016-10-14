@@ -9,8 +9,10 @@ nc.notify({
   'sound': 'Funk', // case sensitive
   'closeLabel': 'Absolutely not',
   'actions': trueAnswer,
-}, function (err, response) {
-  if (response !== trueAnswer.toLocaleLowerCase()) {
+}, function (err, response, metadata) {
+  console.log(metadata);
+
+  if (metadata.activationValue !== trueAnswer) {
     return; // No need to continue
   }
 
@@ -19,7 +21,12 @@ nc.notify({
     'message': 'Do you want to reply to them?',
     'sound': 'Funk', // case sensitive
     'reply': true
-  }, function () {
-    console.log(arguments);
+  }, function (err, response, metadata) {
+    console.log(metadata);
   });
+});
+
+
+nc.on('replied', function (obj, options, metadata) {
+  console.log('User replied', metadata);
 });

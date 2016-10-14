@@ -51,7 +51,8 @@ describe('utils', function(){
       var expected = {
         title: 'Foo',
         message: 'Bar',
-        appIcon: 'foobar'
+        appIcon: 'foobar',
+        json: true
       };
 
       _.mapToMac({

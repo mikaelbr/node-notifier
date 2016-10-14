@@ -47,6 +47,9 @@ NotificationCenter.prototype.notify = function (options, callback) {
     if (data === 'timeout') {
       return 'timeout';
     }
+    if (data === 'replied') {
+      return 'replied';
+    }
     return false;
   });
 
@@ -60,7 +63,7 @@ NotificationCenter.prototype.notify = function (options, callback) {
   var argsList = utils.constructArgumentList(options);
 
   if(utils.isMountainLion()) {
-    utils.fileCommand(this.options.customPath || notifier, argsList, actionJackedCallback);
+    utils.fileCommandJson(this.options.customPath || notifier, argsList, actionJackedCallback);
     return this;
   }
 
