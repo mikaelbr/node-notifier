@@ -139,7 +139,7 @@ const NotificationCenter = require('node-notifier').NotificationCenter;
 
 var notifier = new NotificationCenter({
   withFallback: false, // Use Growl Fallback if <= 10.8
-  customPath: void 0 // Relative path if you want to use your fork of terminal-notifier
+  customPath: void 0 // Relative path to binary if you want to use your fork of terminal-notifier
 });
 
 notifier.notify({
@@ -170,6 +170,12 @@ Sound can be one of these: `Basso`, `Blow`, `Bottle`, `Frog`, `Funk`, `Glass`,
 If sound is simply `true`, `Bottle` is used.
 
 See [specific Notification Center example](./example/advanced.js).
+
+**Custom Path clarification**
+
+`customPath` takes a value of a relative path to the binary of your custom version of terminal-notifier.
+
+Example: `./vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier`
 
 ### Usage WindowsToaster
 
