@@ -1,19 +1,17 @@
-var Notify = require('../notifiers/growl'),
-  should = require('should'),
-  growly = require('growly');
+var Notify = require('../notifiers/growl');
+var should = require('should');
+var growly = require('growly');
 
-describe('growl', function(){
-
-  beforeEach(function () {
+describe('growl', function() {
+  beforeEach(function() {
     this.original = growly.notify;
   });
 
-  afterEach(function () {
+  afterEach(function() {
     growly.notify = this.original;
   });
 
-
-  it('should have overridable host and port', function () {
+  it('should have overridable host and port', function() {
     var notifier = new Notify();
     should(notifier.options.host).equal(void 0);
     should(notifier.options.port).equal(void 0);
@@ -23,26 +21,25 @@ describe('growl', function(){
     should(notifier.options.port).equal('bar');
   });
 
-  it('should pass host and port to growly', function (done) {
-    growly.notify = function () {
+  it('should pass host and port to growly', function(done) {
+    growly.notify = function() {
       should(this.host).equal('foo');
       should(this.port).equal('bar');
       done();
     };
 
     var notifier = new Notify({ host: 'foo', port: 'bar' });
-    notifier.notify({ message: "foo", wait: true });
+    notifier.notify({ message: 'foo', wait: true });
   });
 
-  it('should not override host/port if no options passed', function (done) {
-    growly.notify = function () {
+  it('should not override host/port if no options passed', function(done) {
+    growly.notify = function() {
       should(this.host).equal(void 0);
       should(this.port).equal(void 0);
       done();
     };
 
     var notifier = new Notify();
-    notifier.notify({ message: "foo", wait: true });
+    notifier.notify({ message: 'foo', wait: true });
   });
-
 });

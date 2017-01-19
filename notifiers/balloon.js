@@ -15,20 +15,19 @@ Usage
 /w              Show the tooltip even if the user is in the quiet period that follows his very first login (Windows 7 and up)
 /xp             Use IUserNotification interface event when IUserNotification2 is available
 
-
 // Kill codes:
   2 = Timeout
   3 = Clicked
   4 = Closed or faded out
 
  */
-var path = require('path'),
-  notifier = path.resolve(__dirname, '../vendor/notifu/notifu'),
-  utils = require('../lib/utils'),
-  checkGrowl = require('../lib/checkGrowl'),
-  Toaster = require('./toaster'),
-  Growl = require('./growl'),
-  os = require('os');
+var path = require('path');
+var notifier = path.resolve(__dirname, '../vendor/notifu/notifu');
+var checkGrowl = require('../lib/checkGrowl');
+var utils = require('../lib/utils');
+var Toaster = require('./toaster');
+var Growl = require('./growl');
+var os = require('os');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -49,14 +48,17 @@ function WindowsBalloon(options) {
 }
 util.inherits(WindowsBalloon, EventEmitter);
 
+function noop() {
+}
 WindowsBalloon.prototype.notify = function(options, callback) {
-  var fallback, notifierOptions = this.options;
+  var fallback;
+  var notifierOptions = this.options;
   options = utils.clone(options || {});
-  callback = callback || (function() {
-    });
+  callback = callback || noop;
 
-  if (typeof options === 'string')
+  if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
+  }
 
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
@@ -128,7 +130,7 @@ function doNotification(options, notifierOptions, callback) {
     allowedArguments: allowedArguments
   });
 
-  if (!!options.wait) {
+  if (options.wait) {
     return utils.fileCommand(localNotifier, argsList, function(error, data) {
       var action = fromErrorCodeToAction(error.code);
       if (action === 'error') return callback(error, data);

@@ -8,7 +8,8 @@ var utils = require('../lib/utils');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var notifier = 'notify-send', hasNotifier = void 0;
+var notifier = 'notify-send';
+var hasNotifier = void 0;
 
 module.exports = NotifySend;
 
@@ -24,19 +25,22 @@ function NotifySend(options) {
 }
 util.inherits(NotifySend, EventEmitter);
 
+function noop() {
+}
 NotifySend.prototype.notify = function(options, callback) {
   options = utils.clone(options || {});
-  callback = callback || (function() {
-    });
+  callback = callback || noop;
 
-  if (typeof callback !== 'function')
+  if (typeof callback !== 'function') {
     throw new TypeError(
       'The second argument must be a function callback. You have passed ' +
         typeof callback
     );
+  }
 
-  if (typeof options === 'string')
+  if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
+  }
 
   if (!options.message) {
     callback(new Error('Message is required.'));

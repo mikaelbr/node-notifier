@@ -1,5 +1,6 @@
 var notifier = require('../');
 var nc = new notifier.NotificationCenter();
+var path = require('path');
 
 nc.notify(
   {
@@ -9,9 +10,9 @@ nc.notify(
     sound: 'Funk',
     // case sensitive
     wait: true,
-    appIcon: __dirname + '/coulson.jpg',
-    contentImage: __dirname + '/coulson.jpg',
-    open: 'file://' + __dirname + '/coulson.jpg'
+    appIcon: path.join(__dirname, 'coulson.jpg'),
+    contentImage: path.join(__dirname, 'coulson.jpg'),
+    open: 'file://' + path.join(__dirname, 'coulson.jpg')
   },
   function() {
     console.log(arguments);

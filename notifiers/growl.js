@@ -1,9 +1,9 @@
 /**
  * Wrapper for the growly module
  */
-var utils = require('../lib/utils'),
-  checkGrowl = require('../lib/checkGrowl'),
-  growly = require('growly');
+var checkGrowl = require('../lib/checkGrowl');
+var utils = require('../lib/utils');
+var growly = require('growly');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -31,8 +31,9 @@ Growl.prototype.notify = function(options, callback) {
   growly.setHost(this.options.host, this.options.port);
   options = utils.clone(options || {});
 
-  if (typeof options === 'string')
+  if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
+  }
 
   callback = utils.actionJackerDecorator(this, options, callback, function(
     data
@@ -56,8 +57,7 @@ Growl.prototype.notify = function(options, callback) {
   options.title = options.title || 'Node Notification:';
 
   if (hasGrowl || !!options.wait) {
-    var localCallback = !!options.wait ? callback : function() {
-      };
+    var localCallback = options.wait ? callback : noop;
     growly.notify(options.message, options, localCallback);
     if (!options.wait) callback();
     return this;
@@ -71,3 +71,6 @@ Growl.prototype.notify = function(options, callback) {
   });
   return this;
 };
+
+function noop() {
+}

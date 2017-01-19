@@ -1,16 +1,16 @@
 var os = require('os');
-var utils =  require('./lib/utils');
+var utils = require('./lib/utils');
 
 // All notifiers
 var NotifySend = require('./notifiers/notifysend');
 var NotificationCenter = require('./notifiers/notificationcenter');
 var WindowsToaster = require('./notifiers/toaster');
-var Growl =  require('./notifiers/growl');
-var WindowsBalloon =  require('./notifiers/balloon');
+var Growl = require('./notifiers/growl');
+var WindowsBalloon = require('./notifiers/balloon');
 
 var options = { withFallback: true };
 
-switch(os.type()) {
+switch (os.type()) {
   case 'Linux':
     module.exports = new NotifySend(options);
     module.exports.Notification = NotifySend;
@@ -29,7 +29,7 @@ switch(os.type()) {
     }
     break;
   default:
-    if(os.type().match(/BSD$/)) {
+    if (os.type().match(/BSD$/)) {
       module.exports = new NotifySend(options);
       module.exports.Notification = NotifySend;
     } else {

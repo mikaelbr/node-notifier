@@ -29,16 +29,19 @@ function NotificationCenter(options) {
 util.inherits(NotificationCenter, EventEmitter);
 var activeId = null;
 
+function noop() {
+}
 NotificationCenter.prototype.notify = function(options, callback) {
-  var fallbackNotifier = null, id = identificator();
+  var fallbackNotifier;
+  var id = identificator();
   options = utils.clone(options || {});
   activeId = id;
 
-  if (typeof options === 'string')
+  if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
+  }
 
-  callback = callback || (function() {
-    });
+  callback = callback || noop;
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,

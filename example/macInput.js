@@ -13,6 +13,7 @@ nc.notify(
     actions: trueAnswer
   },
   function(err, response, metadata) {
+    if (err) throw err;
     console.log(metadata);
 
     if (metadata.activationValue !== trueAnswer) {
@@ -28,6 +29,7 @@ nc.notify(
         reply: true
       },
       function(err, response, metadata) {
+        if (err) throw err;
         console.log(metadata);
       }
     );

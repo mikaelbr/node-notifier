@@ -1,8 +1,7 @@
-var should = require('should');
 var path = require('path');
-var os = require('os');
 var fs = require('fs');
 
+require('should');
 var _ = require('../lib/utils');
 
 describe('utils', function() {
@@ -78,18 +77,15 @@ describe('utils', function() {
       var icon = path.join(__dirname, 'fixture', 'coulson.jpg');
       var iconRead = fs.readFileSync(icon);
 
-      var expected = {
-        title: 'Foo',
-        message: 'Bar',
-        icon: fs.readFileSync(icon)
-      };
+      var expected = { title: 'Foo', message: 'Bar', icon: iconRead };
 
       var obj = _.mapToGrowl({ title: 'Foo', message: 'Bar', icon: icon });
+      obj.should.eql(expected);
 
       obj.should.have.property('icon');
       Buffer.isBuffer(obj.icon).should.be.true;
 
-      var obj = _.mapToGrowl({ title: 'Foo', message: 'Bar', appIcon: icon });
+      obj = _.mapToGrowl({ title: 'Foo', message: 'Bar', appIcon: icon });
 
       obj.should.have.property('icon');
       Buffer.isBuffer(obj.icon).should.be.true;

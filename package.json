@@ -3,11 +3,12 @@
   "version": "4.6.1",
   "description": "A Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
   "main": "index.js",
-  "engines" : {
-    "node" : ">=4.0.0"
+  "engines": {
+    "node": ">=4.0.0"
   },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec",
+    "lint": "eslint example/*.js lib/*.js notifiers/*.js test/**/*.js index.js"
   },
   "repository": "git@github.com:mikaelbr/node-notifier.git",
   "keywords": [
@@ -24,6 +25,11 @@
   "author": "Mikael Brevik",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^3.13.1",
+    "eslint-config-semistandard": "^7.0.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1",
     "mocha": "^3.0.0",
     "should": "^4.0.4"
   },

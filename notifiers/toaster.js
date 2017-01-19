@@ -25,13 +25,15 @@ function WindowsToaster(options) {
 }
 util.inherits(WindowsToaster, EventEmitter);
 
+function noop() {
+}
 WindowsToaster.prototype.notify = function(options, callback) {
   options = utils.clone(options || {});
-  callback = callback || (function() {
-    });
+  callback = callback || noop;
 
-  if (typeof options === 'string')
+  if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
+  }
 
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
