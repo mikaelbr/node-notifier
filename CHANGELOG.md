@@ -1,11 +1,34 @@
 Changelog
 ===
 
+### `v5.0.0` (_[WIP]_)
+
+#### Breaking Changes
+
+1. CLI is now removed. Can be found in separate project: https://github.com/mikaelbr/node-notifier-cli. This means you no longer get the `notify` bin when installing `node-notifier`. To get this do `npm i [-g] node-notifier-cli`
+2. Changed toaster implementation from `toast.exe` to [Snoretoast](https://github.com/KDE/snoretoast). This means if you are using your custom fork, you need to change. SnoreToast has some better default implemented functionality.
+3. [terminal-notifier](https://github.com/julienXX/terminal-notifier) dependency has been bumped to `v1.7.1`. With that there can be changes in the API, and supports now reply and buttons. Output has changed to JSON by default, this means the output of some functions of the terminal-notifier has broken. See https://github.com/julienXX/terminal-notifier for more details. See [README](https://github.com/mikaelbr/node-notifier#usage-notificationcenter) for documentation on how to use the new features, or [an example file](https://github.com/mikaelbr/node-notifier/blob/master/example/macInput.js).
+4. `notify` method will now throw error if second argument is something else than function (still optional): [#138](https://github.com/mikaelbr/node-notifier/pull/138)
+
+#### Additions
+
+1. Now supports *BSD systems: [#142](https://github.com/mikaelbr/node-notifier/pull/142)
+
+
+#### Technical Changes
+
+_Internal changes for those who might be interested_.
+
+1. Dependencies bumped
+2. Unnecessary dependencies removed (`lodash.deepClone`). Now uses JSON serialize/deserialize instead.
+3. Project is auto-formatted by [`prettier`](https://github.com/jlongster/prettier).
+4. [Linting is added](https://github.com/mikaelbr/node-notifier/blob/master/.eslintrc)
+5. Added way to better debug what is happening by setting `DEBUG` env-var to `true`. See [CONTRIBUTE.md](https://github.com/mikaelbr/node-notifier/blob/master/CONTRIBUTE.md) for more details.
 
 ### `v4.6.1`
 
 1. Adds npm ignore file, ignoring tests and examples from package.
-2. Fixes CI builds
+2. Fixes CI builds.
 
 ### `v4.6.0`
 
