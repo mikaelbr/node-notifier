@@ -2,9 +2,28 @@
 
 node-notifier love getting pull requests and other help. Here's a quick guide.
 
+## Debugging
+
+If you want to see what command is run, execute the node program with environment variable `DEBUG=true`, e.g.:
+
+```
+DEBUG=true node index.js
+```
+
+```
+node-notifier debug info (fileCommandJson):
+[notifier path] /Users/mib/node-notifier/vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier
+[notifier options] -message "Hello" -timeout "5" -json "true"
+```
+
+
+## Building
+
 Fork, then clone the repo:
 
+```
 git clone https://github.com/your-username/node-notifier.git
+```
 
 Install dependencies:
 
