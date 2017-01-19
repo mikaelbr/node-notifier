@@ -15,6 +15,10 @@ Changelog
 1. Now supports *BSD systems: [#142](https://github.com/mikaelbr/node-notifier/pull/142)
 
 
+#### Fixes
+
+1. Fixes new lines on messages on Windows: [#123](https://github.com/mikaelbr/node-notifier/issues/123)
+
 #### Technical Changes
 
 _Internal changes for those who might be interested_.
