@@ -139,7 +139,7 @@ const NotificationCenter = require('node-notifier').NotificationCenter;
 
 var notifier = new NotificationCenter({
   withFallback: false, // Use Growl Fallback if <= 10.8
-  customPath: void 0 // Relative path to binary if you want to use your fork of terminal-notifier
+  customPath: void 0 // Relative/Absolute path to binary if you want to use your own fork of terminal-notifier
 });
 
 notifier.notify({
@@ -173,7 +173,7 @@ See [specific Notification Center example](./example/advanced.js).
 
 **Custom Path clarification**
 
-`customPath` takes a value of a relative path to the binary of your custom version of terminal-notifier.
+`customPath` takes a value of a relative or absolute path to the binary of your fork/custom version of terminal-notifier.
 
 Example: `./vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier`
 
@@ -197,7 +197,7 @@ const WindowsToaster = require('node-notifier').WindowsToaster;
 
 var notifier = new WindowsToaster({
   withFallback: false, // Fallback to Growl or Balloons?
-  customPath: void 0 // Relative path if you want to use your fork of toast.exe
+  customPath: void 0 // Relative/Absolute path if you want to use your fork of toast.exe
 });
 
 notifier.notify({
@@ -249,7 +249,7 @@ const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 var notifier = new WindowsBalloon({
   withFallback: false, // Try Windows Toast and Growl first?
-  customPath: void 0 // Relative path if you want to use your fork of notifu
+  customPath: void 0 // Relative/Absolute path if you want to use your fork of notifu
 });
 
 notifier.notify({
