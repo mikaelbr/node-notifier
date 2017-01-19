@@ -3,9 +3,6 @@
   "version": "4.6.1",
   "description": "A Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
   "main": "index.js",
-  "engines": {
-    "node": ">=4.0.0"
-  },
   "scripts": {
     "test": "mocha -R spec",
     "example1": "node ./example/message.js",
