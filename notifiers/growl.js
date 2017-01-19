@@ -2,21 +2,20 @@
  * Wrapper for the growly module
  */
 var utils = require('../lib/utils'),
-    checkGrowl = require('../lib/checkGrowl'),
-    growly = require('growly'),
-    cloneDeep = require('lodash.clonedeep');
+  checkGrowl = require('../lib/checkGrowl'),
+  growly = require('growly');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var errorMessageNotFound = 'Couldn\'t connect to growl (might be used as a fallback). Make sure it is running';
+var errorMessageNotFound = "Couldn't connect to growl (might be used as a fallback). Make sure it is running";
 
 module.exports = Growl;
 
 var hasGrowl = void 0;
 
-function Growl (options) {
-  options = cloneDeep(options || {});
+function Growl(options) {
+  options = utils.clone(options || {});
   if (!(this instanceof Growl)) {
     return new Growl(options);
   }
@@ -28,17 +27,16 @@ function Growl (options) {
 }
 util.inherits(Growl, EventEmitter);
 
-
-Growl.prototype.notify = function (options, callback) {
+Growl.prototype.notify = function(options, callback) {
   growly.setHost(this.options.host, this.options.port);
-  options = cloneDeep(options || {});
+  options = utils.clone(options || {});
 
-  if (typeof options === 'string') options = {
-      title: 'node-notifier',
-      message: options
-  };
+  if (typeof options === 'string')
+    options = { title: 'node-notifier', message: options };
 
-  callback = utils.actionJackerDecorator(this, options, callback, function (data) {
+  callback = utils.actionJackerDecorator(this, options, callback, function(
+    data
+  ) {
     if (data === 'click') {
       return 'click';
     }
@@ -58,13 +56,14 @@ Growl.prototype.notify = function (options, callback) {
   options.title = options.title || 'Node Notification:';
 
   if (hasGrowl || !!options.wait) {
-    var localCallback = !!options.wait ? callback : function () {};
+    var localCallback = !!options.wait ? callback : function() {
+      };
     growly.notify(options.message, options, localCallback);
     if (!options.wait) callback();
     return this;
   }
 
-  checkGrowl(growly, function (didHaveGrowl) {
+  checkGrowl(growly, function(didHaveGrowl) {
     hasGrowl = didHaveGrowl;
     if (!didHaveGrowl) return callback(new Error(errorMessageNotFound));
     growly.notify(options.message, options);

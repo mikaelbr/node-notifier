@@ -1,15 +1,19 @@
 var notifier = require('../');
 var nc = new notifier.NotificationCenter();
 
-nc.notify({
-  'title': 'Phil Coulson',
-  'subtitle': 'Agent of S.H.I.E.L.D.',
-  'message': 'If I come out, will you shoot me? \'Cause then I won\'t come out.',
-  'sound': 'Funk', // case sensitive
-  'wait': true,
-  'appIcon': __dirname + '/coulson.jpg',
-  'contentImage': __dirname + '/coulson.jpg',
-  'open': 'file://' + __dirname + '/coulson.jpg'
-}, function () {
-  console.log(arguments);
-});
+nc.notify(
+  {
+    title: 'Phil Coulson',
+    subtitle: 'Agent of S.H.I.E.L.D.',
+    message: "If I come out, will you shoot me? 'Cause then I won't come out.",
+    sound: 'Funk',
+    // case sensitive
+    wait: true,
+    appIcon: __dirname + '/coulson.jpg',
+    contentImage: __dirname + '/coulson.jpg',
+    open: 'file://' + __dirname + '/coulson.jpg'
+  },
+  function() {
+    console.log(arguments);
+  }
+);

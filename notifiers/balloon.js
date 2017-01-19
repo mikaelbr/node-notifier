@@ -23,13 +23,12 @@ Usage
 
  */
 var path = require('path'),
-    notifier = path.resolve(__dirname, '../vendor/notifu/notifu'),
-    utils = require('../lib/utils'),
-    checkGrowl = require('../lib/checkGrowl'),
-    Toaster = require('./toaster'),
-    Growl = require('./growl'),
-    os = require('os'),
-    cloneDeep = require('lodash.clonedeep');
+  notifier = path.resolve(__dirname, '../vendor/notifu/notifu'),
+  utils = require('../lib/utils'),
+  checkGrowl = require('../lib/checkGrowl'),
+  Toaster = require('./toaster'),
+  Growl = require('./growl'),
+  os = require('os');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -38,8 +37,8 @@ var hasGrowl = void 0;
 
 module.exports = WindowsBalloon;
 
-function WindowsBalloon (options) {
-  options = cloneDeep(options || {});
+function WindowsBalloon(options) {
+  options = utils.clone(options || {});
   if (!(this instanceof WindowsBalloon)) {
     return new WindowsBalloon(options);
   }
@@ -50,32 +49,39 @@ function WindowsBalloon (options) {
 }
 util.inherits(WindowsBalloon, EventEmitter);
 
-WindowsBalloon.prototype.notify = function (options, callback) {
+WindowsBalloon.prototype.notify = function(options, callback) {
   var fallback, notifierOptions = this.options;
-  options = cloneDeep(options || {});
-  callback = callback || function () {};
+  options = utils.clone(options || {});
+  callback = callback || (function() {
+    });
 
-  if (typeof options === 'string') options = {
-      title: 'node-notifier',
-      message: options
-  };
+  if (typeof options === 'string')
+    options = { title: 'node-notifier', message: options };
 
-  var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
-    if (data === 'activate') {
-      return 'click';
+  var actionJackedCallback = utils.actionJackerDecorator(
+    this,
+    options,
+    callback,
+    function(data) {
+      if (data === 'activate') {
+        return 'click';
+      }
+      if (data === 'timeout') {
+        return 'timeout';
+      }
+      return false;
     }
-    if (data === 'timeout') {
-      return 'timeout';
-    }
-    return false;
-  });
+  );
 
   if (!!this.options.withFallback && utils.isWin8()) {
     fallback = fallback || new Toaster(notifierOptions);
     return fallback.notify(options, callback);
   }
 
-  if (!!this.options.withFallback && (!utils.isLessThanWin8() || hasGrowl === true)) {
+  if (
+    !!this.options.withFallback &&
+      (!utils.isLessThanWin8() || hasGrowl === true)
+  ) {
     fallback = fallback || new Growl(notifierOptions);
     return fallback.notify(options, callback);
   }
@@ -85,7 +91,7 @@ WindowsBalloon.prototype.notify = function (options, callback) {
     return this;
   }
 
-  checkGrowl(notifierOptions, function (hasGrowlResult) {
+  checkGrowl(notifierOptions, function(hasGrowlResult) {
     hasGrowl = hasGrowlResult;
 
     if (hasGrowl) {
@@ -99,9 +105,9 @@ WindowsBalloon.prototype.notify = function (options, callback) {
   return this;
 };
 
-var allowedArguments = ["t", "d", "p", "m", "i", "e", "q", "w", "xp"];
+var allowedArguments = [ 't', 'd', 'p', 'm', 'i', 'e', 'q', 'w', 'xp' ];
 
-function doNotification (options, notifierOptions, callback) {
+function doNotification(options, notifierOptions, callback) {
   var is64Bit = os.arch() === 'x64';
   options = options || {};
   options = utils.mapToNotifu(options);
@@ -123,7 +129,7 @@ function doNotification (options, notifierOptions, callback) {
   });
 
   if (!!options.wait) {
-    return utils.fileCommand(localNotifier, argsList, function (error, data) {
+    return utils.fileCommand(localNotifier, argsList, function(error, data) {
       var action = fromErrorCodeToAction(error.code);
       if (action === 'error') return callback(error, data);
 
@@ -133,7 +139,7 @@ function doNotification (options, notifierOptions, callback) {
   utils.immediateFileCommand(localNotifier, argsList, callback);
 }
 
-function fromErrorCodeToAction (errorCode) {
+function fromErrorCodeToAction(errorCode) {
   switch (errorCode) {
     case 2:
       return 'timeout';

@@ -1,22 +1,24 @@
 /**
  * A Node.js wrapper for terminal-notify (with fallback).
  */
-var path = require('path'),
-    notifier = path.join(__dirname, '../vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier'),
-    utils = require('../lib/utils'),
-    Growl = require('./growl'),
-    cloneDeep = require('lodash.clonedeep');
+var utils = require('../lib/utils');
+var Growl = require('./growl');
+var path = require('path');
+var notifier = path.join(
+  __dirname,
+  '../vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier'
+);
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 var errorMessageOsX = 'You need Mac OS X 10.8 or above to use NotificationCenter,' +
-                        ' or use Growl fallback with constructor option {withFallback: true}.';
+  ' or use Growl fallback with constructor option {withFallback: true}.';
 
 module.exports = NotificationCenter;
 
-function NotificationCenter (options) {
-  options = cloneDeep(options || {});
+function NotificationCenter(options) {
+  options = utils.clone(options || {});
   if (!(this instanceof NotificationCenter)) {
     return new NotificationCenter(options);
   }
@@ -27,31 +29,35 @@ function NotificationCenter (options) {
 util.inherits(NotificationCenter, EventEmitter);
 var activeId = null;
 
-NotificationCenter.prototype.notify = function (options, callback) {
+NotificationCenter.prototype.notify = function(options, callback) {
   var fallbackNotifier = null, id = identificator();
-  options = cloneDeep(options || {});
+  options = utils.clone(options || {});
   activeId = id;
 
-  if (typeof options === 'string') options = {
-      title: 'node-notifier',
-      message: options
-  };
+  if (typeof options === 'string')
+    options = { title: 'node-notifier', message: options };
 
-  callback = callback || function () {};
-  var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
-    if (activeId !== id) return false;
+  callback = callback || (function() {
+    });
+  var actionJackedCallback = utils.actionJackerDecorator(
+    this,
+    options,
+    callback,
+    function(data) {
+      if (activeId !== id) return false;
 
-    if (data === 'activate') {
-      return 'click';
+      if (data === 'activate') {
+        return 'click';
+      }
+      if (data === 'timeout') {
+        return 'timeout';
+      }
+      if (data === 'replied') {
+        return 'replied';
+      }
+      return false;
     }
-    if (data === 'timeout') {
-      return 'timeout';
-    }
-    if (data === 'replied') {
-      return 'replied';
-    }
-    return false;
-  });
+  );
 
   options = utils.mapToMac(options);
 
@@ -62,8 +68,12 @@ NotificationCenter.prototype.notify = function (options, callback) {
 
   var argsList = utils.constructArgumentList(options);
 
-  if(utils.isMountainLion()) {
-    utils.fileCommandJson(this.options.customPath || notifier, argsList, actionJackedCallback);
+  if (utils.isMountainLion()) {
+    utils.fileCommandJson(
+      this.options.customPath || notifier,
+      argsList,
+      actionJackedCallback
+    );
     return this;
   }
 
@@ -76,6 +86,6 @@ NotificationCenter.prototype.notify = function (options, callback) {
   return this;
 };
 
-function identificator () {
+function identificator() {
   return { _ref: 'val' };
 }

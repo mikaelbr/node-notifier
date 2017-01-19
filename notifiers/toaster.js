@@ -1,11 +1,10 @@
 /**
  * Wrapper for the toaster (https://github.com/nels-o/toaster)
  */
-var path = require('path'),
-    notifier = path.resolve(__dirname, '../vendor/snoreToast/SnoreToast.exe'),
-    utils = require('../lib/utils'),
-    Balloon = require('./balloon'),
-    cloneDeep = require('lodash.clonedeep');
+var path = require('path');
+var notifier = path.resolve(__dirname, '../vendor/snoreToast/SnoreToast.exe');
+var utils = require('../lib/utils');
+var Balloon = require('./balloon');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -14,8 +13,8 @@ var fallback = void 0;
 
 module.exports = WindowsToaster;
 
-function WindowsToaster (options) {
-  options = cloneDeep(options || {});
+function WindowsToaster(options) {
+  options = utils.clone(options || {});
   if (!(this instanceof WindowsToaster)) {
     return new WindowsToaster(options);
   }
@@ -26,24 +25,28 @@ function WindowsToaster (options) {
 }
 util.inherits(WindowsToaster, EventEmitter);
 
-WindowsToaster.prototype.notify = function (options, callback) {
-  options = cloneDeep(options || {});
-  callback = callback || function () {};
+WindowsToaster.prototype.notify = function(options, callback) {
+  options = utils.clone(options || {});
+  callback = callback || (function() {
+    });
 
-  if (typeof options === 'string') options = {
-      title: 'node-notifier',
-      message: options
-  };
+  if (typeof options === 'string')
+    options = { title: 'node-notifier', message: options };
 
-  var actionJackedCallback = utils.actionJackerDecorator(this, options, callback, function (data) {
-    if (data === 'activate') {
-      return 'click';
+  var actionJackedCallback = utils.actionJackerDecorator(
+    this,
+    options,
+    callback,
+    function(data) {
+      if (data === 'activate') {
+        return 'click';
+      }
+      if (data === 'timeout') {
+        return 'timeout';
+      }
+      return false;
     }
-    if (data === 'timeout') {
-      return 'timeout';
-    }
-    return false;
-  });
+  );
 
   options.title = options.title || 'Node Notification:';
 
@@ -62,6 +65,10 @@ WindowsToaster.prototype.notify = function (options, callback) {
     wrapper: '',
     noEscape: true
   });
-  utils.fileCommand(this.options.customPath || notifier ,argsList,actionJackedCallback);
+  utils.fileCommand(
+    this.options.customPath || notifier,
+    argsList,
+    actionJackedCallback
+  );
   return this;
 };

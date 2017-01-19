@@ -1,10 +1,9 @@
 /**
  * Node.js wrapper for "notify-send".
  */
-var os = require('os'),
-    which = require('which'),
-    utils = require('../lib/utils'),
-    cloneDeep = require('lodash.clonedeep');
+var os = require('os');
+var which = require('which');
+var utils = require('../lib/utils');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -13,8 +12,8 @@ var notifier = 'notify-send', hasNotifier = void 0;
 
 module.exports = NotifySend;
 
-function NotifySend (options) {
-  options = cloneDeep(options || {});
+function NotifySend(options) {
+  options = utils.clone(options || {});
   if (!(this instanceof NotifySend)) {
     return new NotifySend(options);
   }
@@ -25,23 +24,24 @@ function NotifySend (options) {
 }
 util.inherits(NotifySend, EventEmitter);
 
-NotifySend.prototype.notify = function (options, callback) {
-  options = cloneDeep(options || {});
-  callback = callback || function () {};
+NotifySend.prototype.notify = function(options, callback) {
+  options = utils.clone(options || {});
+  callback = callback || (function() {
+    });
 
-  if (typeof callback !== "function")
-    throw new TypeError('The second argument must be a function callback. You have passed '+ typeof callback);
+  if (typeof callback !== 'function')
+    throw new TypeError(
+      'The second argument must be a function callback. You have passed ' +
+        typeof callback
+    );
 
-  if (typeof options === 'string') options = {
-      title: 'node-notifier',
-      message: options
-  };
+  if (typeof options === 'string')
+    options = { title: 'node-notifier', message: options };
 
   if (!options.message) {
     callback(new Error('Message is required.'));
     return this;
   }
-
 
   if (os.type() !== 'Linux' && !os.type().match(/BSD$/)) {
     callback(new Error('Only supported on Linux and *BSD systems'));
@@ -64,26 +64,20 @@ NotifySend.prototype.notify = function (options, callback) {
   } catch (err) {
     hasNotifier = false;
     return callback(err);
-  };
+  }
 
   return this;
 };
 
-var allowedArguments = [
-  "urgency",
-  "expire-time",
-  "icon",
-  "category",
-  "hint"
-];
+var allowedArguments = [ 'urgency', 'expire-time', 'icon', 'category', 'hint' ];
 
-function doNotification (options, callback) {
+function doNotification(options, callback) {
   var initial, argsList;
 
   options = utils.mapToNotifySend(options);
   options.title = options.title || 'Node Notification:';
 
-  initial = [options.title, options.message];
+  initial = [ options.title, options.message ];
   delete options.title;
   delete options.message;
 
