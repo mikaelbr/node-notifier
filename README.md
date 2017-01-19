@@ -190,14 +190,14 @@ due to the Toast notification system. A good tip is to use something like
 From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify/issues/90#issuecomment-129333034)
 > You can make it work by going to System > Notifications & Actions. The 'toast' app needs to have Banners enabled. (You can activate banners by clicking on the 'toast' app and setting the 'Show notification banners' to On)
 
-[toaster](https://github.com/nels-o/toaster) is used to get native Windows Toasts!
+[Snoretoast](https://github.com/KDE/snoretoast) is used to get native Windows Toasts!
 
 ```javascript
 const WindowsToaster = require('node-notifier').WindowsToaster;
 
 var notifier = new WindowsToaster({
   withFallback: false, // Fallback to Growl or Balloons?
-  customPath: void 0 // Relative/Absolute path if you want to use your fork of toast.exe
+  customPath: void 0 // Relative/Absolute path if you want to use your fork of SnoreToast.exe
 });
 
 notifier.notify({
@@ -330,7 +330,7 @@ You can also pass message in as `stdin`:
 
 `node-notifier` is made possible through Open Source Software. A very special thanks to all the modules `node-notifier` uses.
 * [terminal-notifier](https://github.com/alloy/terminal-notifier)
-* [toaster](https://github.com/nels-o/toaster)
+* [Snoretoast](https://github.com/KDE/snoretoast)
 * [notifu](http://www.paralint.com/projects/notifu/)
 * [growly](https://github.com/theabraham/growly/)
 
