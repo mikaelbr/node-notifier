@@ -150,7 +150,7 @@ notifier.notify({
   'icon': 'Terminal Icon', // Absolute Path to Triggering Icon
   'contentImage': void 0, // Absolute Path to Attached Image (Content Image)
   'open': void 0, // URL to open on Click
-  'wait': false, // Wait for User Action against Notification. Shortcut for timeout = 5 seconds
+  'wait': false, // Wait for User Action against Notification or times out. Same as timeout = 5 seconds
 
   // New in latest version. See `example/macInput.js` for usage
   timeout: 5, // Takes precedence over wait if both are defined.
@@ -162,6 +162,11 @@ notifier.notify({
   console.log(response, metadata);
 });
 ```
+
+**Note:** `wait` option is shorthand for `timeout: 5` and doesn't make the notification sticky, but sets
+timeout for 5 seconds. Without `wait` or `timeout` notifications are just fired and forgotten Without
+given any response. To be able to listen for response (like activation/clicked), you have to define a timeout.
+This is not true if you have defined `reply`. If using `reply` it's recommended to set a high timeout or no timeout at all.
 
 **For macOS notifications, icon and contentImage, and all forms of reply/actions requires macOS 10.9.**
 
@@ -205,7 +210,7 @@ notifier.notify({
   message: void 0,
   icon: void 0, // Absolute path to Icon
   sound: false, // true | false.
-  wait: false, // Wait for User Action against Notification
+  wait: false, // Wait for User Action against Notification or times out
 }, function(error, response) {
   console.log(response);
 });
