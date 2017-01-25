@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -R spec",
-    "example1": "node ./example/message.js",
-    "example2": "node ./example/advanced.js",
-    "example3": "node ./example/macInput.js",
+    "example": "node ./example/message.js",
+    "example:mac": "node ./example/advanced.js",
+    "example:mac:input": "node ./example/macInput.js",
+    "example:windows": "node ./example/toaster.js",
     "lint": "eslint example/*.js lib/*.js notifiers/*.js test/**/*.js index.js"
   },
   "repository": {
