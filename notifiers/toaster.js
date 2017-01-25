@@ -27,6 +27,14 @@ util.inherits(WindowsToaster, EventEmitter);
 
 function noop() {
 }
+
+var timeoutMessage = 'the toast has timed out';
+var successMessage = 'user clicked on the toast';
+
+function hasText (str, txt) {
+  return str && str.indexOf(txt) !== -1;
+}
+
 WindowsToaster.prototype.notify = function(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
@@ -35,15 +43,28 @@ WindowsToaster.prototype.notify = function(options, callback) {
     options = { title: 'node-notifier', message: options };
   }
 
+  if (typeof callback !== 'function') {
+    throw new TypeError(
+      'The second argument must be a function callback. You have passed ' +
+        typeof fn
+    );
+  }
+
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,
-    callback,
-    function(data) {
-      if (data === 'activate') {
+    function cb (err, data) {
+      // Needs to filter out timeout. Not an actual error.
+      if (err && hasText(data, timeoutMessage)) {
+        return callback(null, data);
+      }
+      callback(err, data);
+    },
+    function mapper (data) {
+      if (hasText(data, successMessage)) {
         return 'click';
       }
-      if (data === 'timeout') {
+      if (hasText(data, timeoutMessage)) {
         return 'timeout';
       }
       return false;
