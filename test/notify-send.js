@@ -1,10 +1,9 @@
 var Notify = require('../notifiers/notifysend');
-var should = require('should');
 var utils = require('../lib/utils');
 var os = require('os');
 
 describe('notify-send', function() {
-  before(function() {
+  beforeEach(function() {
     this.original = utils.command;
     this.originalType = os.type;
     os.type = function() {
@@ -12,53 +11,41 @@ describe('notify-send', function() {
     };
   });
 
-  after(function() {
+  afterEach(function() {
     utils.command = this.original;
     os.type = this.originalType;
   });
 
-  it('should pass on title and body', function(done) {
-    var expected = [ '"title"', '"body"' ];
-
+  function expectArgsListToBe(expected, done) {
     utils.command = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
+      expect(argsList).toEqual(expected);
       done();
     };
+  }
 
+  it('should pass on title and body', function(done) {
+    var expected = [ '"title"', '"body"' ];
+    expectArgsListToBe(expected, done);
     var notifier = new Notify({ suppressOsdCheck: true });
-
-    notifier.notify({ title: 'title', message: 'body' }, function(err) {
-      should.not.exist(err);
-      done();
-    });
+    notifier.notify({ title: 'title', message: 'body' });
   });
 
   it('should pass have default title', function(done) {
     var expected = [ '"Node Notification:"', '"body"' ];
 
-    utils.command = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
+    expectArgsListToBe(expected, done);
     var notifier = new Notify({ suppressOsdCheck: true });
-
-    notifier.notify({ message: 'body' }, function(err) {
-      should.not.exist(err);
-      done();
-    });
+    notifier.notify({ message: 'body' });
   });
 
   it('should throw error if no message is passed', function(done) {
     utils.command = function(notifier, argsList, callback) {
-      should.not.exist(argsList);
-      done();
+      expect(argsList).toBeUndefined();
     };
 
     var notifier = new Notify({ suppressOsdCheck: true });
-
     notifier.notify({}, function(err) {
-      err.message.should.equal('Message is required.');
+      expect(err.message).toBe('Message is required.');
       done();
     });
   });
@@ -70,36 +57,17 @@ describe('notify-send', function() {
       '"some' + excapedNewline + ' \\"me\'ss\\`age\\`\\""'
     ];
 
-    utils.command = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
+    expectArgsListToBe(expected, done);
     var notifier = new Notify({ suppressOsdCheck: true });
-
-    notifier.notify({ message: 'some\n "me\'ss`age`"' }, function(err) {
-      should.not.exist(err);
-      done();
-    });
+    notifier.notify({ message: 'some\n "me\'ss`age`"' });
   });
 
   it('should send additional parameters as --"keyname"', function(done) {
     var expected = [ '"title"', '"body"', '--icon', '"icon-string"' ];
 
-    utils.command = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
+    expectArgsListToBe(expected, done);
     var notifier = new Notify({ suppressOsdCheck: true });
-
-    notifier.notify(
-      { title: 'title', message: 'body', icon: 'icon-string' },
-      function(err) {
-        should.not.exist(err);
-        done();
-      }
-    );
+    notifier.notify({ title: 'title', message: 'body', icon: 'icon-string' });
   });
 
   it(
@@ -107,25 +75,14 @@ describe('notify-send', function() {
     function(done) {
       var expected = [ '"title"', '"body"', '--icon', '"icon-string"' ];
 
-      utils.command = function(notifier, argsList, callback) {
-        argsList.should.eql(expected);
-        done();
-      };
-
+      expectArgsListToBe(expected, done);
       var notifier = new Notify({ suppressOsdCheck: true });
-
-      notifier.notify(
-        {
-          title: 'title',
-          message: 'body',
-          icon: 'icon-string',
-          tullball: 'notValid'
-        },
-        function(err) {
-          should.not.exist(err);
-          done();
-        }
-      );
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        icon: 'icon-string',
+        tullball: 'notValid'
+      });
     }
   );
 });

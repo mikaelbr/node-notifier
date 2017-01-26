@@ -1,17 +1,14 @@
-var should = require('should');
 var notifier = require('../');
 
 describe('constructors', function() {
   it('should expose a default selected instance', function() {
-    should(notifier.notify).be.ok;
+    expect(notifier.notify).toBeTruthy();
   });
 
   it('should expect only a function callback as second parameter', function() {
-    var cb = function() {
-    };
-    var data = { title: 'My notification' };
-
-    should(notifier.notify(data, cb)).be.ok;
+    function cb() {
+    }
+    expect(notifier.notify({ title: 'My notification' }, cb)).toBeTruthy();
   });
 
   it('should throw error when second parameter is not a function', function() {
@@ -19,35 +16,32 @@ describe('constructors', function() {
     var wrongParamTwo = 'meaningless string';
     var data = { title: 'My notification' };
 
-    notifier.notify.bind(
-      notifier,
-      data,
-      wrongParamOne
-    ).should.throw(/^The second argument/);
-    notifier.notify.bind(
-      notifier,
-      data,
-      wrongParamTwo
-    ).should.throw(/^The second argument/);
+    var base = notifier.notify.bind(notifier, data);
+    expect(
+      base.bind(notifier, wrongParamOne)
+    ).toThrowError(/^The second argument/);
+    expect(
+      base.bind(notifier, wrongParamTwo)
+    ).toThrowError(/^The second argument/);
   });
 
   it('should expose a default selected constructor function', function() {
-    should(notifier instanceof notifier.Notification).be.ok;
+    expect(notifier).toBeInstanceOf(notifier.Notification);
   });
 
   it('should expose constructor for WindowsBalloon', function() {
-    should(notifier.WindowsBalloon).be.ok;
+    expect(notifier.WindowsBalloon).toBeTruthy();
   });
 
   it('should expose constructor for WindowsToaster', function() {
-    should(notifier.WindowsToaster).be.ok;
+    expect(notifier.WindowsToaster).toBeTruthy();
   });
 
   it('should expose constructor for NotifySend', function() {
-    should(notifier.NotifySend).be.ok;
+    expect(notifier.NotifySend).toBeTruthy();
   });
 
   it('should expose constructor for Growl', function() {
-    should(notifier.Growl).be.ok;
+    expect(notifier.Growl).toBeTruthy();
   });
 });

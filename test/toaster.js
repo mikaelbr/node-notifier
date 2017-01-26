@@ -2,11 +2,10 @@ var Notify = require('../notifiers/toaster');
 var utils = require('../lib/utils');
 var path = require('path');
 var os = require('os');
-var should = require('should');
-var testUtils = require('./_test_utils');
+var testUtils = require('./_test-utils');
 
 describe('WindowsToaster', function() {
-  before(function() {
+  beforeEach(function() {
     this.original = utils.fileCommand;
     this.originalType = os.type;
     this.originalArch = os.arch;
@@ -19,30 +18,37 @@ describe('WindowsToaster', function() {
     };
   });
 
-  after(function() {
+  afterEach(function() {
     utils.fileCommand = this.original;
     os.type = this.originalType;
     os.arch = this.originalArch;
     os.release = this.originalRelease;
   });
 
+  function expectArgsListToBe(expected, done) {
+    utils.fileCommandJson = function(notifier, argsList, callback) {
+      expect(argsList).toEqual(expected);
+      done();
+    };
+  }
+
   it('should only pass allowed options and proper named properties', function(
     done
   ) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      testUtils.argsListHas(argsList, '-t').should.be.true();
-      testUtils.argsListHas(argsList, '-m').should.be.true();
-      testUtils.argsListHas(argsList, '-w').should.be.true();
-      testUtils.argsListHas(argsList, '-p').should.be.true();
-      testUtils.argsListHas(argsList, '-id').should.be.true();
-      testUtils.argsListHas(argsList, '-appID').should.be.true();
-      testUtils.argsListHas(argsList, '-install').should.be.true();
-      testUtils.argsListHas(argsList, '-close').should.be.true();
+      expect(testUtils.argsListHas(argsList, '-t')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-m')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-w')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-p')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-id')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-appID')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-install')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-close')).toBeTruthy();
 
-      testUtils.argsListHas(argsList, '-foo').should.be.false();
-      testUtils.argsListHas(argsList, '-bar').should.be.false();
-      testUtils.argsListHas(argsList, '-message').should.be.false();
-      testUtils.argsListHas(argsList, '-title').should.be.false();
+      expect(testUtils.argsListHas(argsList, '-foo')).toBeFalsy();
+      expect(testUtils.argsListHas(argsList, '-bar')).toBeFalsy();
+      expect(testUtils.argsListHas(argsList, '-message')).toBeFalsy();
+      expect(testUtils.argsListHas(argsList, '-title')).toBeFalsy();
       done();
     };
     var notifier = new Notify();
@@ -65,8 +71,8 @@ describe('WindowsToaster', function() {
 
   it('should pass wait and silent without parameters', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      should(testUtils.getOptionValue(argsList, '-w')).not.equal('true');
-      should(testUtils.getOptionValue(argsList, '-silent')).not.equal('true');
+      expect(testUtils.getOptionValue(argsList, '-w')).not.toBe('true');
+      expect(testUtils.getOptionValue(argsList, '-silent')).not.toBe('true');
       done();
     };
     var notifier = new Notify();
@@ -81,7 +87,7 @@ describe('WindowsToaster', function() {
 
   it('should translate from notification centers appIcon', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      testUtils.argsListHas(argsList, '-p').should.be.true();
+      expect(testUtils.argsListHas(argsList, '-p')).toBeTruthy();
       done();
     };
     var notifier = new Notify();
@@ -94,8 +100,8 @@ describe('WindowsToaster', function() {
 
   it('should translate from remove to close', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      testUtils.argsListHas(argsList, '-close').should.be.true();
-      testUtils.argsListHas(argsList, '-remove').should.be.false();
+      expect(testUtils.argsListHas(argsList, '-close')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-remove')).toBeFalsy();
       done();
     };
     var notifier = new Notify();
@@ -107,54 +113,54 @@ describe('WindowsToaster', function() {
     var notifier = new Notify();
 
     notifier.notify({ title: 'Heya' }, function(err) {
-      err.message.should.startWith('Message or ID to close is required');
+      expect(err.message).toBe('Message or ID to close is required.');
       done();
     });
   });
 
   it('should pass only close', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      testUtils.argsListHas(argsList, '-close').should.be.true();
+      expect(testUtils.argsListHas(argsList, '-close')).toBeTruthy();
       callback();
     };
     var notifier = new Notify();
 
     notifier.notify({ close: 3 }, function(err) {
-      should.not.exist(err);
+      expect(err).toBeFalsy();
       done();
     });
   });
 
   it('should pass only message', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      testUtils.argsListHas(argsList, '-m').should.be.true();
+      expect(testUtils.argsListHas(argsList, '-m')).toBeTruthy();
       callback();
     };
     var notifier = new Notify();
 
     notifier.notify({ message: 'Hello' }, function(err) {
-      should.not.exist(err);
+      expect(err).toBeFalsy();
       done();
     });
   });
 
   it('should pass shorthand message', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      testUtils.argsListHas(argsList, '-m').should.be.true();
+      expect(testUtils.argsListHas(argsList, '-m')).toBeTruthy();
       callback();
     };
     var notifier = new Notify();
 
     notifier.notify('hello', function(err) {
-      should.not.exist(err);
+      expect(err).toBeFalsy();
       done();
     });
   });
 
   it('should wrap message and title', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      should(testUtils.getOptionValue(argsList, '-t')).equal('Heya');
-      should(testUtils.getOptionValue(argsList, '-m')).equal('foo bar');
+      expect(testUtils.getOptionValue(argsList, '-t')).toBe('Heya');
+      expect(testUtils.getOptionValue(argsList, '-m')).toBe('foo bar');
       done();
     };
     var notifier = new Notify();
@@ -166,10 +172,10 @@ describe('WindowsToaster', function() {
     'should validate and transform sound to default sound if Mac sound is selected',
     function(done) {
       utils.fileCommand = function(notifier, argsList, callback) {
-        should(testUtils.getOptionValue(argsList, '-t')).equal('Heya');
-        should(
+        expect(testUtils.getOptionValue(argsList, '-t')).toBe('Heya');
+        expect(
           testUtils.getOptionValue(argsList, '-s')
-        ).equal('Notification.Default');
+        ).toBe('Notification.Default');
         done();
       };
       var notifier = new Notify();
@@ -180,9 +186,9 @@ describe('WindowsToaster', function() {
 
   it('sound as true should select default value', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      should(
+      expect(
         testUtils.getOptionValue(argsList, '-s')
-      ).equal('Notification.Default');
+      ).toBe('Notification.Default');
       done();
     };
     var notifier = new Notify();
@@ -192,7 +198,7 @@ describe('WindowsToaster', function() {
 
   it('sound as false should be same as silent', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      testUtils.argsListHas(argsList, '-silent').should.be.true();
+      expect(testUtils.argsListHas(argsList, '-silent')).toBeTruthy();
       done();
     };
     var notifier = new Notify();
@@ -202,7 +208,7 @@ describe('WindowsToaster', function() {
 
   it('should override sound', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      should(testUtils.getOptionValue(argsList, '-s')).equal('Notification.IM');
+      expect(testUtils.getOptionValue(argsList, '-s')).toBe('Notification.IM');
       done();
     };
     var notifier = new Notify();
@@ -216,7 +222,7 @@ describe('WindowsToaster', function() {
 
   it('should parse file protocol URL of icon', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      argsList[1].should.eql('C:\\node-notifier\\test\\fixture\\coulson.jpg');
+      expect(argsList[1]).toBe('C:\\node-notifier\\test\\fixture\\coulson.jpg');
       done();
     };
 
@@ -232,7 +238,7 @@ describe('WindowsToaster', function() {
   it('should not parse local path of icon', function(done) {
     var icon = path.join(__dirname, 'fixture', 'coulson.jpg');
     utils.fileCommand = function(notifier, argsList, callback) {
-      argsList[1].should.eql(icon);
+      expect(argsList[1]).toBe(icon);
       done();
     };
 
@@ -243,7 +249,7 @@ describe('WindowsToaster', function() {
   it('should not parse normal URL of icon', function(done) {
     var icon = 'http://csscomb.com/img/csscomb.jpg';
     utils.fileCommand = function(notifier, argsList, callback) {
-      argsList[1].should.eql(icon);
+      expect(argsList[1]).toBe(icon);
       done();
     };
 

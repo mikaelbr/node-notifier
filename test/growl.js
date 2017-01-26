@@ -1,5 +1,4 @@
 var Notify = require('../notifiers/growl');
-var should = require('should');
 var growly = require('growly');
 
 describe('growl', function() {
@@ -13,18 +12,18 @@ describe('growl', function() {
 
   it('should have overridable host and port', function() {
     var notifier = new Notify();
-    should(notifier.options.host).equal(void 0);
-    should(notifier.options.port).equal(void 0);
+    expect(notifier.options.host).toBeUndefined();
+    expect(notifier.options.port).toBeUndefined();
 
     notifier = new Notify({ host: 'foo', port: 'bar' });
-    should(notifier.options.host).equal('foo');
-    should(notifier.options.port).equal('bar');
+    expect(notifier.options.host).toBe('foo');
+    expect(notifier.options.port).toBe('bar');
   });
 
   it('should pass host and port to growly', function(done) {
     growly.notify = function() {
-      should(this.host).equal('foo');
-      should(this.port).equal('bar');
+      expect(this.host).toBe('foo');
+      expect(this.port).toBe('bar');
       done();
     };
 
@@ -34,12 +33,10 @@ describe('growl', function() {
 
   it('should not override host/port if no options passed', function(done) {
     growly.notify = function() {
-      should(this.host).equal(void 0);
-      should(this.port).equal(void 0);
+      expect(this.host).toBeUndefined();
+      expect(this.port).toBeUndefined();
       done();
     };
-
-    var notifier = new Notify();
-    notifier.notify({ message: 'foo', wait: true });
+    new Notify().notify({ message: 'foo', wait: true });
   });
 });

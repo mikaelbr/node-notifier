@@ -1,11 +1,10 @@
 var NotificationCenter = require('../notifiers/notificationcenter');
 var Growl = require('../notifiers/growl');
 var utils = require('../lib/utils');
-var should = require('should');
 var path = require('path');
 var os = require('os');
 var fs = require('fs');
-var testUtils = require('./_test_utils');
+var testUtils = require('./_test-utils');
 
 var notifier = null;
 var originalUtils = utils.fileCommandJson;
@@ -16,7 +15,7 @@ describe('Mac fallback', function() {
   var original = utils.isMountainLion;
   var originalMac = utils.isMac;
 
-  after(function() {
+  afterEach(function() {
     utils.isMountainLion = original;
     utils.isMac = originalMac;
   });
@@ -31,9 +30,8 @@ describe('Mac fallback', function() {
         return true;
       };
       var n = new NotificationCenter({ withFallback: true });
-
       n.notify({ message: 'Hello World' }, function(_, response) {
-        (this instanceof Growl).should.be.true;
+        expect(this).toBeInstanceOf(Growl);
         done();
       });
     }
@@ -50,8 +48,8 @@ describe('Mac fallback', function() {
       };
       var n = new NotificationCenter();
       n.notify({ message: 'Hello World' }, function(err, response) {
-        err.should.be.ok;
-        (this instanceof Growl).should.be.false;
+        expect(err).toBeTruthy();
+        expect(this).not.toBeInstanceOf(Growl);
         done();
       });
     }
@@ -59,7 +57,7 @@ describe('Mac fallback', function() {
 });
 
 describe('terminal-notifier', function() {
-  before(function() {
+  beforeEach(function() {
     os.type = function() {
       return 'Darwin';
     };
@@ -73,7 +71,7 @@ describe('terminal-notifier', function() {
     notifier = new NotificationCenter();
   });
 
-  after(function() {
+  afterEach(function() {
     os.type = originalType;
     utils.isMountainLion = originalMacVersion;
   });
@@ -85,13 +83,13 @@ describe('terminal-notifier', function() {
       };
     });
 
-    after(function() {
+    afterEach(function() {
       utils.fileCommandJson = originalUtils;
     });
 
     it('should notify with a message', function(done) {
       notifier.notify({ message: 'Hello World' }, function(err, response) {
-        (err === null).should.be.true;
+        expect(err).toBeNull();
         done();
       });
     });
@@ -100,7 +98,7 @@ describe('terminal-notifier', function() {
       notifier
         .notify({ message: 'First test' })
         .notify({ message: 'Second test' }, function(err, response) {
-          (err === null).should.be.true;
+          expect(err).toBeNull();
           done();
         });
     });
@@ -116,7 +114,7 @@ describe('terminal-notifier', function() {
       };
 
       notifier.notify({ list: 'ALL' }, function(_, response) {
-        response.should.be.ok;
+        expect(response).toBeTruthy();
         done();
       });
     });
@@ -132,14 +130,14 @@ describe('terminal-notifier', function() {
       };
 
       notifier.notify({ remove: 'ALL' }, function(_, response) {
-        response.should.be.ok;
+        expect(response).toBeTruthy();
 
         utils.fileCommandJson = function(n, o, cb) {
           cb(null, '');
         };
 
         notifier.notify({ list: 'ALL' }, function(_, response) {
-          response.should.not.be.ok;
+          expect(response).toBeFalsy();
           done();
         });
       });
@@ -147,13 +145,20 @@ describe('terminal-notifier', function() {
   });
 
   describe('arguments', function() {
-    before(function() {
+    beforeEach(function() {
       this.original = utils.fileCommandJson;
     });
 
-    after(function() {
+    afterEach(function() {
       utils.fileCommandJson = this.original;
     });
+
+    function expectArgsListToBe(expected, done) {
+      utils.fileCommandJson = function(notifier, argsList, callback) {
+        expect(argsList).toEqual(expected);
+        done();
+      };
+    }
 
     it('should allow for non-sensical arguments (fail gracefully)', function(
       done
@@ -169,32 +174,24 @@ describe('terminal-notifier', function() {
         '"true"'
       ];
 
-      utils.fileCommandJson = function(notifier, argsList, callback) {
-        argsList.should.eql(expected);
-        done();
-      };
-
+      expectArgsListToBe(expected, done);
       var notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
-      notifier.notify(
-        { title: 'title', message: 'body', tullball: 'notValid' },
-        function(err) {
-          should.not.exist(err);
-          done();
-        }
-      );
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        tullball: 'notValid'
+      });
     });
 
     it(
       'should validate and transform sound to default sound if Windows sound is selected',
       function(done) {
         utils.fileCommandJson = function(notifier, argsList, callback) {
-          should(testUtils.getOptionValue(argsList, '-title')).equal('"Heya"');
-          should(
-            testUtils.getOptionValue(argsList, '-sound')
-          ).equal('"Bottle"');
+          expect(testUtils.getOptionValue(argsList, '-title')).toBe('"Heya"');
+          expect(testUtils.getOptionValue(argsList, '-sound')).toBe('"Bottle"');
           done();
         };
         var notifier = new NotificationCenter();
@@ -218,25 +215,16 @@ describe('terminal-notifier', function() {
         '"true"'
       ];
 
-      utils.fileCommandJson = function(notifier, argsList, callback) {
-        argsList.should.eql(expected);
-        done();
-      };
-
+      expectArgsListToBe(expected, done);
       var notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
-      notifier.notify(
-        {
-          title: 'title "message"',
-          message: 'body "message"',
-          actions: [ 'foo', 'bar', 'baz "foo" bar' ]
-        },
-        function(err) {
-          should.not.exist(err);
-        }
-      );
+      notifier.notify({
+        title: 'title "message"',
+        message: 'body "message"',
+        actions: [ 'foo', 'bar', 'baz "foo" bar' ]
+      });
     });
 
     it('should still support wait flag with default timeout', function(done) {
@@ -251,21 +239,12 @@ describe('terminal-notifier', function() {
         '"true"'
       ];
 
-      utils.fileCommandJson = function(notifier, argsList, callback) {
-        argsList.should.eql(expected);
-        done();
-      };
-
+      expectArgsListToBe(expected, done);
       var notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
-      notifier.notify(
-        { title: 'Title', message: 'Message', wait: true },
-        function(err) {
-          should.not.exist(err);
-        }
-      );
+      notifier.notify({ title: 'Title', message: 'Message', wait: true });
     });
 
     it('should let timeout set precedence over wait', function(done) {
@@ -280,21 +259,17 @@ describe('terminal-notifier', function() {
         '"true"'
       ];
 
-      utils.fileCommandJson = function(notifier, argsList, callback) {
-        argsList.should.eql(expected);
-        done();
-      };
-
+      expectArgsListToBe(expected, done);
       var notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
-      notifier.notify(
-        { title: 'Title', message: 'Message', wait: true, timeout: 10 },
-        function(err) {
-          should.not.exist(err);
-        }
-      );
+      notifier.notify({
+        title: 'Title',
+        message: 'Message',
+        wait: true,
+        timeout: 10
+      });
     });
 
     it('should escape all title and message', function(done) {
@@ -309,26 +284,16 @@ describe('terminal-notifier', function() {
         '"true"'
       ];
 
-      utils.fileCommandJson = function(notifier, argsList, callback) {
-        argsList.should.eql(expected);
-        done();
-      };
-
+      expectArgsListToBe(expected, done);
       var notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
-      notifier.notify(
-        {
-          title: 'title "message"',
-          message: 'body "message"',
-          tullball: 'notValid'
-        },
-        function(err) {
-          should.not.exist(err);
-          done();
-        }
-      );
+      notifier.notify({
+        title: 'title "message"',
+        message: 'body "message"',
+        tullball: 'notValid'
+      });
     });
   });
 });

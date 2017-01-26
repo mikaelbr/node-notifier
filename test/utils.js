@@ -1,7 +1,5 @@
 var path = require('path');
 var fs = require('fs');
-
-require('should');
 var _ = require('../lib/utils');
 
 describe('utils', function() {
@@ -10,10 +8,10 @@ describe('utils', function() {
       var obj = { a: { b: 42 }, c: 123 };
       var obj2 = _.clone(obj);
 
-      obj.should.eql(obj2);
+      expect(obj).toEqual(obj2);
       obj.a.b += 2;
       obj.c += 2;
-      obj.should.not.eql(obj2);
+      expect(obj).not.toEqual(obj2);
     });
   });
 
@@ -21,17 +19,13 @@ describe('utils', function() {
     it('should map icon for notify-send', function() {
       var expected = { title: 'Foo', message: 'Bar', icon: 'foobar' };
 
-      _.mapToNotifySend({
-        title: 'Foo',
-        message: 'Bar',
-        appIcon: 'foobar'
-      }).should.eql(expected);
+      expect(
+        _.mapToNotifySend({ title: 'Foo', message: 'Bar', appIcon: 'foobar' })
+      ).toEqual(expected);
 
-      _.mapToNotifySend({
-        title: 'Foo',
-        message: 'Bar',
-        i: 'foobar'
-      }).should.eql(expected);
+      expect(
+        _.mapToNotifySend({ title: 'Foo', message: 'Bar', i: 'foobar' })
+      ).toEqual(expected);
     });
 
     it('should map short hand for notify-sned', function() {
@@ -43,13 +37,9 @@ describe('utils', function() {
         hint: 'e'
       };
 
-      _.mapToNotifySend({
-        u: 'a',
-        e: 'b',
-        c: 'c',
-        i: 'd',
-        h: 'e'
-      }).should.eql(expected);
+      expect(
+        _.mapToNotifySend({ u: 'a', e: 'b', c: 'c', i: 'd', h: 'e' })
+      ).toEqual(expected);
     });
 
     it('should map icon for notification center', function() {
@@ -60,17 +50,13 @@ describe('utils', function() {
         json: true
       };
 
-      _.mapToMac({
-        title: 'Foo',
-        message: 'Bar',
-        icon: 'foobar'
-      }).should.eql(expected);
+      expect(
+        _.mapToMac({ title: 'Foo', message: 'Bar', icon: 'foobar' })
+      ).toEqual(expected);
 
-      _.mapToMac({
-        title: 'Foo',
-        message: 'Bar',
-        i: 'foobar'
-      }).should.eql(expected);
+      expect(
+        _.mapToMac({ title: 'Foo', message: 'Bar', i: 'foobar' })
+      ).toEqual(expected);
     });
 
     it('should map icon for growl', function() {
@@ -80,15 +66,15 @@ describe('utils', function() {
       var expected = { title: 'Foo', message: 'Bar', icon: iconRead };
 
       var obj = _.mapToGrowl({ title: 'Foo', message: 'Bar', icon: icon });
-      obj.should.eql(expected);
+      expect(obj).toEqual(expected);
 
-      obj.should.have.property('icon');
-      Buffer.isBuffer(obj.icon).should.be.true;
+      expect(obj.icon).toBeTruthy();
+      expect(Buffer.isBuffer(obj.icon)).toBeTruthy();
 
       obj = _.mapToGrowl({ title: 'Foo', message: 'Bar', appIcon: icon });
 
-      obj.should.have.property('icon');
-      Buffer.isBuffer(obj.icon).should.be.true;
+      expect(obj.icon).toBeTruthy();
+      expect(Buffer.isBuffer(obj.icon)).toBeTruthy();
     });
 
     it('should not map icon url for growl', function() {
@@ -96,17 +82,13 @@ describe('utils', function() {
 
       var expected = { title: 'Foo', message: 'Bar', icon: icon };
 
-      _.mapToGrowl({
-        title: 'Foo',
-        message: 'Bar',
-        icon: icon
-      }).should.eql(expected);
+      expect(
+        _.mapToGrowl({ title: 'Foo', message: 'Bar', icon: icon })
+      ).toEqual(expected);
 
-      _.mapToGrowl({
-        title: 'Foo',
-        message: 'Bar',
-        appIcon: icon
-      }).should.eql(expected);
+      expect(
+        _.mapToGrowl({ title: 'Foo', message: 'Bar', appIcon: icon })
+      ).toEqual(expected);
     });
   });
 });

@@ -1,10 +1,9 @@
 var Notify = require('../notifiers/balloon');
 var utils = require('../lib/utils');
-var should = require('should');
 var os = require('os');
 
 describe('WindowsBalloon', function() {
-  before(function() {
+  beforeEach(function() {
     this.original = utils.immediateFileCommand;
     this.originalType = os.type;
     this.originalArch = os.arch;
@@ -13,28 +12,30 @@ describe('WindowsBalloon', function() {
     };
   });
 
-  after(function() {
+  afterEach(function() {
     utils.immediateFileCommand = this.original;
     os.type = this.originalType;
     os.arch = this.originalArch;
   });
+
+  function expectArgsListToBe(expected, done) {
+    utils.immediateFileCommand = function(notifier, argsList, callback) {
+      expect(argsList).toEqual(expected);
+      done();
+    };
+  }
 
   it('should use 64 bit notifu', function(done) {
     os.arch = function() {
       return 'x64';
     };
     var expected = 'notifu64.exe';
-
     utils.immediateFileCommand = function(notifier, argsList, callback) {
-      notifier.should.endWith(expected);
+      expect(notifier).toEndWith(expected);
       done();
     };
 
-    var notifier = new Notify();
-
-    notifier.notify({ title: 'title', message: 'body' }, function(err) {
-      should.not.exist(err);
-    });
+    new Notify().notify({ title: 'title', message: 'body' });
   });
 
   it('should use 32 bit notifu if 32 arch', function(done) {
@@ -42,58 +43,31 @@ describe('WindowsBalloon', function() {
       return 'ia32';
     };
     var expected = 'notifu.exe';
-
     utils.immediateFileCommand = function(notifier, argsList, callback) {
-      notifier.should.endWith(expected);
+      expect(notifier).toEndWith(expected);
       done();
     };
-
-    var notifier = new Notify();
-
-    notifier.notify({ title: 'title', message: 'body' }, function(err) {
-      should.not.exist(err);
-    });
+    new Notify().notify({ title: 'title', message: 'body' });
   });
 
   it('should pass on title and body', function(done) {
     var expected = [ '-m', 'body', '-p', 'title', '-q' ];
-
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify({ title: 'title', message: 'body' }, function(err) {
-      should.not.exist(err);
-    });
+    expectArgsListToBe(expected, done);
+    new Notify().notify({ title: 'title', message: 'body' });
   });
 
   it('should pass have default title', function(done) {
     var expected = [ '-m', 'body', '-q', '-p', 'Node Notification:' ];
-
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify({ message: 'body' }, function(err) {
-      should.not.exist(err);
-    });
+    expectArgsListToBe(expected, done);
+    new Notify().notify({ message: 'body' });
   });
 
   it('should throw error if no message is passed', function(done) {
     utils.immediateFileCommand = function(notifier, argsList, callback) {
-      should.not.exist(argsList);
+      expect(argsList).toBeUndefined();
     };
-
-    var notifier = new Notify();
-
-    notifier.notify({}, function(err) {
-      err.message.should.equal('Message is required.');
+    new Notify().notify({}, function(err) {
+      expect(err.message).toBe('Message is required.');
       done();
     });
   });
@@ -106,65 +80,32 @@ describe('WindowsBalloon', function() {
       '-p',
       'Node Notification:'
     ];
-
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify({ message: 'some "me\'ss`age`"' }, function(err) {
-      should.not.exist(err);
-    });
+    expectArgsListToBe(expected, done);
+    new Notify().notify({ message: 'some "me\'ss`age`"' });
   });
 
   it('should be able to deactivate silent mode', function(done) {
     var expected = [ '-m', 'body', '-p', 'Node Notification:' ];
-
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify({ message: 'body', sound: true }, function(err) {
-      should.not.exist(err);
-    });
+    expectArgsListToBe(expected, done);
+    new Notify().notify({ message: 'body', sound: true });
   });
 
   it('should be able to deactivate silent mode, by doing quiet false', function(
     done
   ) {
     var expected = [ '-m', 'body', '-p', 'Node Notification:' ];
-
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify({ message: 'body', quiet: false }, function(err) {
-      should.not.exist(err);
-    });
+    expectArgsListToBe(expected, done);
+    new Notify().notify({ message: 'body', quiet: false });
   });
 
   it('should send set time', function(done) {
     var expected = [ '-m', 'body', '-p', 'title', '-d', '1000', '-q' ];
 
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify({ title: 'title', message: 'body', time: '1000' }, function(
-      err
-    ) {
-      should.not.exist(err);
+    expectArgsListToBe(expected, done);
+    var notifier = new Notify().notify({
+      title: 'title',
+      message: 'body',
+      time: '1000'
     });
   });
 
@@ -181,19 +122,14 @@ describe('WindowsBalloon', function() {
       '-q'
     ];
 
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify(
-      { title: 'title', message: 'body', d: '1000', icon: 'icon', w: false },
-      function(err) {
-        should.not.exist(err);
-      }
-    );
+    expectArgsListToBe(expected, done);
+    new Notify().notify({
+      title: 'title',
+      message: 'body',
+      d: '1000',
+      icon: 'icon',
+      w: false
+    });
   });
 
   it('should send additional parameters as --"keyname"', function(done) {
@@ -210,39 +146,26 @@ describe('WindowsBalloon', function() {
       '-q'
     ];
 
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify(
-      { title: 'title', message: 'body', d: '1000', icon: 'icon', w: true },
-      function(err) {
-        should.not.exist(err);
-      }
-    );
+    expectArgsListToBe(expected, done);
+    new Notify().notify({
+      title: 'title',
+      message: 'body',
+      d: '1000',
+      icon: 'icon',
+      w: true
+    });
   });
 
   it('should remove extra options that are not supported by notifu', function(
     done
   ) {
     var expected = [ '-m', 'body', '-p', 'title', '-q' ];
-
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify(
-      { title: 'title', message: 'body', tullball: 'notValid' },
-      function(err) {
-        should.not.exist(err);
-      }
-    );
+    expectArgsListToBe(expected, done);
+    new Notify().notify({
+      title: 'title',
+      message: 'body',
+      tullball: 'notValid'
+    });
   });
 
   it('should have both type and duration options', function(done) {
@@ -258,71 +181,35 @@ describe('WindowsBalloon', function() {
       'info'
     ];
 
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify(
-      { title: 'title', message: 'body', type: 'info', t: 10 },
-      function(err) {
-        should.not.exist(err);
-      }
-    );
+    expectArgsListToBe(expected, done);
+    new Notify().notify({
+      title: 'title',
+      message: 'body',
+      type: 'info',
+      t: 10
+    });
   });
 
   it('should sanitize wrong string type option to info', function(done) {
     var expected = [ '-m', 'body', '-p', 'title', '-q', '-t', 'info' ];
 
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify(
-      { title: 'title', message: 'body', type: 'theansweris42' },
-      function(err) {
-        should.not.exist(err);
-      }
-    );
+    expectArgsListToBe(expected, done);
+    new Notify().notify({
+      title: 'title',
+      message: 'body',
+      type: 'theansweris42'
+    });
   });
 
   it('should sanitize type option to error', function(done) {
     var expected = [ '-m', 'body', '-p', 'title', '-q', '-t', 'error' ];
-
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify(
-      { title: 'title', message: 'body', type: 'ErRoR' },
-      function(err) {
-        should.not.exist(err);
-      }
-    );
+    expectArgsListToBe(expected, done);
+    new Notify().notify({ title: 'title', message: 'body', type: 'ErRoR' });
   });
 
   it('should sanitize wring integer type option to info', function(done) {
     var expected = [ '-m', 'body', '-p', 'title', '-q', '-t', 'info' ];
-
-    utils.immediateFileCommand = function(notifier, argsList, callback) {
-      argsList.should.eql(expected);
-      done();
-    };
-
-    var notifier = new Notify();
-
-    notifier.notify({ title: 'title', message: 'body', type: 42 }, function(
-      err
-    ) {
-      should.not.exist(err);
-    });
+    expectArgsListToBe(expected, done);
+    new Notify().notify({ title: 'title', message: 'body', type: 42 });
   });
 });
