@@ -3,7 +3,8 @@ var path = require('path');
 
 notifier.notify({
   message: 'Hello. This is a longer text\nWith "some" newlines.',
-  wait: true
+  wait: true,
+  sound: true
 }, function(err, data) {
   // Will also wait until notification is closed.
   console.log('Waited');

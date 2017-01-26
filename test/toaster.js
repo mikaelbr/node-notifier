@@ -113,6 +113,19 @@ describe('WindowsToaster', function() {
     });
   });
 
+  it('sound as true should select default value', function(done) {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      should(testUtils.getOptionValue(argsList, '-s')).equal('Notification.Default');
+      done();
+    };
+    var notifier = new Notify();
+
+    notifier.notify({
+      message: 'foo bar',
+      sound: true
+    });
+  });
+
   it('should override sound', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
       should(testUtils.getOptionValue(argsList, '-s')).equal('Notification.IM');
