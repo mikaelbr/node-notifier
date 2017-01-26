@@ -237,7 +237,7 @@ var notifier = new Growl({
 notifier.notify({
   title: 'Foo',
   message: 'Hello World',
-  icon: fs.readFileSync(__dirname + "/coulson.jpg"),
+  icon: fs.readFileSync(__dirname + '/coulson.jpg'),
   wait: false, // Wait for User Action against Notification
 
   // and other growl options like sticky etc.
@@ -291,7 +291,7 @@ var notifier = new NotifySend();
 notifier.notify({
   title: 'Foo',
   message: 'Hello World',
-  icon: __dirname + "/coulson.jpg",
+  icon: __dirname + '/coulson.jpg',
 
   // .. and other notify-send flags:
   urgency: void 0,
@@ -305,38 +305,7 @@ See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gut
 
 ## CLI
 
-You can also use node-notifier as a CLI (as of `v4.2.0`).
-
-```shell
-$ notify -h
-
-# notify
-## Options
-   * --help (alias -h)
-   * --title (alias -t)
-   * --subtitle (alias -st)
-   * --message (alias -m)
-   * --icon (alias -i)
-   * --sound (alias -s)
-   * --open (alias -o)
-
-## Example
-
-   $ notify -t "Hello" -m "My Message" -s --open http://github.com
-   $ notify -t "Agent Coulson" --icon https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/coulson.jpg -m "Well, that's new. "
-   $ notify -m "My Message" -s Glass
-   $ echo "My Message" | notify -t "Hello"
-```
-
-You can also pass message in as `stdin`:
-
-```js
-➜ echo "Message" | notify
-
-# Works with existing arguments
-➜ echo "Message" | notify -t "My Title"
-➜ echo "Some message" | notify -t "My Title" -s
-```
+CLI is moved to separate project: https://github.com/mikaelbr/node-notifier-cli
 
 ## Thanks to OSS
 
