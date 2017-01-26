@@ -7,7 +7,10 @@ these requirements are met, Growl is used.
 
 ![macOS Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/mac.png)
 ![Native Windows Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows.png)
-![Growl Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/growl.png)
+
+## Input Example macOS Notification Center
+
+![Input Example](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/input-example.gif)
 
 ## Quick Usage
 
