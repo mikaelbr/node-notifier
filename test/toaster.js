@@ -90,6 +90,72 @@ describe('WindowsToaster', function() {
     });
   });
 
+  it('should translate from remove to close', function(done) {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      testUtils.argsListHas(argsList, '-close').should.be.true();
+      testUtils.argsListHas(argsList, '-remove').should.be.false();
+      done();
+    };
+    var notifier = new Notify();
+
+    notifier.notify({
+      message: 'Heya',
+      remove: 3
+    });
+  });
+
+  it('should fail if neither close or message is defined', function(done) {
+    var notifier = new Notify();
+
+    notifier.notify({ title: 'Heya' }, function (err) {
+      err.message.should.startWith('Message or ID to close is required');
+      done();
+    });
+  });
+
+  it('should pass only close', function(done) {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      testUtils.argsListHas(argsList, '-close').should.be.true();
+      callback();
+    };
+    var notifier = new Notify();
+
+    notifier.notify({
+      close: 3
+    }, function (err) {
+      should.not.exist(err);
+      done();
+    });
+  });
+
+  it('should pass only message', function(done) {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      testUtils.argsListHas(argsList, '-m').should.be.true();
+      callback();
+    };
+    var notifier = new Notify();
+
+    notifier.notify({
+      message: 'Hello'
+    }, function (err) {
+      should.not.exist(err);
+      done();
+    });
+  });
+
+  it('should pass shorthand message', function(done) {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      testUtils.argsListHas(argsList, '-m').should.be.true();
+      callback();
+    };
+    var notifier = new Notify();
+
+    notifier.notify('hello', function (err) {
+      should.not.exist(err);
+      done();
+    });
+  });
+
   it('should wrap message and title', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
       should(testUtils.getOptionValue(argsList, '-t')).equal('Heya');
