@@ -126,6 +126,19 @@ describe('WindowsToaster', function() {
     });
   });
 
+  it('sound as false should be same as silent', function(done) {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      testUtils.argsListHas(argsList, '-silent').should.be.true();
+      done();
+    };
+    var notifier = new Notify();
+
+    notifier.notify({
+      message: 'foo bar',
+      sound: false
+    });
+  });
+
   it('should override sound', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
       should(testUtils.getOptionValue(argsList, '-s')).equal('Notification.IM');
