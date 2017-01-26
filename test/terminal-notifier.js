@@ -5,6 +5,7 @@ var should = require('should');
 var path = require('path');
 var os = require('os');
 var fs = require('fs');
+var testUtils = require('./_test_utils');
 
 var notifier = null;
 var originalUtils = utils.fileCommandJson;
@@ -184,6 +185,20 @@ describe('terminal-notifier', function() {
           done();
         }
       );
+    });
+
+    it('should validate and transform sound to default sound if Windows sound is selected', function(done) {
+      utils.fileCommandJson = function(notifier, argsList, callback) {
+        should(testUtils.getOptionValue(argsList, '-title')).equal('"Heya"');
+        should(testUtils.getOptionValue(argsList, '-sound')).equal('"Bottle"');
+        done();
+      };
+      var notifier = new NotificationCenter();
+      notifier.notify({
+        title: 'Heya',
+        message: 'foo bar',
+        sound: 'Notification.Default'
+      });
     });
 
     it('should convert list of actions to flat list', function(done) {
