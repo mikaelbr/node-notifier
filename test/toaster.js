@@ -26,7 +26,9 @@ describe('WindowsToaster', function() {
     os.release = this.originalRelease;
   });
 
-  it('should only pass allowed options and proper named properties', function(done) {
+  it('should only pass allowed options and proper named properties', function(
+    done
+  ) {
     utils.fileCommand = function(notifier, argsList, callback) {
       testUtils.argsListHas(argsList, '-t').should.be.true();
       testUtils.argsListHas(argsList, '-m').should.be.true();
@@ -98,16 +100,13 @@ describe('WindowsToaster', function() {
     };
     var notifier = new Notify();
 
-    notifier.notify({
-      message: 'Heya',
-      remove: 3
-    });
+    notifier.notify({ message: 'Heya', remove: 3 });
   });
 
   it('should fail if neither close or message is defined', function(done) {
     var notifier = new Notify();
 
-    notifier.notify({ title: 'Heya' }, function (err) {
+    notifier.notify({ title: 'Heya' }, function(err) {
       err.message.should.startWith('Message or ID to close is required');
       done();
     });
@@ -120,9 +119,7 @@ describe('WindowsToaster', function() {
     };
     var notifier = new Notify();
 
-    notifier.notify({
-      close: 3
-    }, function (err) {
+    notifier.notify({ close: 3 }, function(err) {
       should.not.exist(err);
       done();
     });
@@ -135,9 +132,7 @@ describe('WindowsToaster', function() {
     };
     var notifier = new Notify();
 
-    notifier.notify({
-      message: 'Hello'
-    }, function (err) {
+    notifier.notify({ message: 'Hello' }, function(err) {
       should.not.exist(err);
       done();
     });
@@ -150,7 +145,7 @@ describe('WindowsToaster', function() {
     };
     var notifier = new Notify();
 
-    notifier.notify('hello', function (err) {
+    notifier.notify('hello', function(err) {
       should.not.exist(err);
       done();
     });
@@ -164,38 +159,35 @@ describe('WindowsToaster', function() {
     };
     var notifier = new Notify();
 
-    notifier.notify({
-      title: 'Heya',
-      message: 'foo bar'
-    });
+    notifier.notify({ title: 'Heya', message: 'foo bar' });
   });
 
-  it('should validate and transform sound to default sound if Mac sound is selected', function(done) {
-    utils.fileCommand = function(notifier, argsList, callback) {
-      should(testUtils.getOptionValue(argsList, '-t')).equal('Heya');
-      should(testUtils.getOptionValue(argsList, '-s')).equal('Notification.Default');
-      done();
-    };
-    var notifier = new Notify();
+  it(
+    'should validate and transform sound to default sound if Mac sound is selected',
+    function(done) {
+      utils.fileCommand = function(notifier, argsList, callback) {
+        should(testUtils.getOptionValue(argsList, '-t')).equal('Heya');
+        should(
+          testUtils.getOptionValue(argsList, '-s')
+        ).equal('Notification.Default');
+        done();
+      };
+      var notifier = new Notify();
 
-    notifier.notify({
-      title: 'Heya',
-      message: 'foo bar',
-      sound: 'Frog'
-    });
-  });
+      notifier.notify({ title: 'Heya', message: 'foo bar', sound: 'Frog' });
+    }
+  );
 
   it('sound as true should select default value', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      should(testUtils.getOptionValue(argsList, '-s')).equal('Notification.Default');
+      should(
+        testUtils.getOptionValue(argsList, '-s')
+      ).equal('Notification.Default');
       done();
     };
     var notifier = new Notify();
 
-    notifier.notify({
-      message: 'foo bar',
-      sound: true
-    });
+    notifier.notify({ message: 'foo bar', sound: true });
   });
 
   it('sound as false should be same as silent', function(done) {
@@ -205,10 +197,7 @@ describe('WindowsToaster', function() {
     };
     var notifier = new Notify();
 
-    notifier.notify({
-      message: 'foo bar',
-      sound: false
-    });
+    notifier.notify({ message: 'foo bar', sound: false });
   });
 
   it('should override sound', function(done) {

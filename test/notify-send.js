@@ -64,7 +64,7 @@ describe('notify-send', function() {
   });
 
   it('should escape message input', function(done) {
-  var excapedNewline = process.platform === 'win32' ? '\\r\\n' : '\\n';
+    var excapedNewline = process.platform === 'win32' ? '\\r\\n' : '\\n';
     var expected = [
       '"Node Notification:"',
       '"some' + excapedNewline + ' \\"me\'ss\\`age\\`\\""'

@@ -31,7 +31,7 @@ function noop() {
 var timeoutMessage = 'the toast has timed out';
 var successMessage = 'user clicked on the toast';
 
-function hasText (str, txt) {
+function hasText(str, txt) {
   return str && str.indexOf(txt) !== -1;
 }
 
@@ -53,14 +53,14 @@ WindowsToaster.prototype.notify = function(options, callback) {
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,
-    function cb (err, data) {
+    function cb(err, data) {
       // Needs to filter out timeout. Not an actual error.
       if (err && hasText(data, timeoutMessage)) {
         return callback(null, data);
       }
       callback(err, data);
     },
-    function mapper (data) {
+    function mapper(data) {
       if (hasText(data, successMessage)) {
         return 'click';
       }
@@ -72,7 +72,10 @@ WindowsToaster.prototype.notify = function(options, callback) {
   );
 
   options.title = options.title || 'Node Notification:';
-  if (typeof options.message === 'undefined' && typeof options.close === 'undefined') {
+  if (
+    typeof options.message === 'undefined' &&
+      typeof options.close === 'undefined'
+  ) {
     callback(new Error('Message or ID to close is required.'));
     return this;
   }
