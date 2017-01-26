@@ -4,6 +4,7 @@ var path = require('path');
 notifier.notify({
   message: 'Hello. This is a longer text\nWith "some" newlines.',
   wait: true,
+  icon: path.join(__dirname, 'coulson.jpg'),
   sound: true
 }, function(err, data) {
   // Will also wait until notification is closed.
