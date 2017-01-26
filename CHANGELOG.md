@@ -8,12 +8,27 @@ Changelog
 1. CLI is now removed. Can be found in separate project: https://github.com/mikaelbr/node-notifier-cli. This means you no longer get the `notify` bin when installing `node-notifier`. To get this do `npm i [-g] node-notifier-cli`
 2. Changed toaster implementation from `toast.exe` to [Snoretoast](https://github.com/KDE/snoretoast). This means if you are using your custom fork, you need to change. SnoreToast has some better default implemented functionality.
 3. [terminal-notifier](https://github.com/julienXX/terminal-notifier) dependency has been bumped to `v1.7.1`. With that there can be changes in the API, and supports now reply and buttons. Output has changed to JSON by default, this means the output of some functions of the terminal-notifier has broken. See https://github.com/julienXX/terminal-notifier for more details. See [README](https://github.com/mikaelbr/node-notifier#usage-notificationcenter) for documentation on how to use the new features, or [an example file](https://github.com/mikaelbr/node-notifier/blob/master/example/macInput.js).
-4. `notify` method will now throw error if second argument is something else than function (still optional): [#138](https://github.com/mikaelbr/node-notifier/pull/138)
+4. `notify` method will now throw error if second argument is something else than function (still optional): [#138](https://github.com/mikaelbr/node-notifier/pull/138).
+
 
 #### Additions
 
-1. Now supports *BSD systems: [#142](https://github.com/mikaelbr/node-notifier/pull/142)
+1. Now supports *BSD systems: [#142](https://github.com/mikaelbr/node-notifier/pull/142).
+2. With the new toaster implementation you can do more! For instance customize sound and close notification. See all options:
 
+```javascript
+{
+  title: void 0, // String. Required
+  message: void 0, // String. Required if remove is not defined
+  icon: void 0, // String. Absolute path to Icon
+  sound: false, // Bool | String (as defined by http://msdn.microsoft.com/en-us/library/windows/apps/hh761492.aspx)
+  wait: false, // Bool. Wait for User Action against Notification or times out
+  id: void 0, // Number. ID to use for closing notification.
+  appID: void 0, // String. App.ID. Don't create a shortcut but use the provided app id.
+  remove: void 0, // Number. Refer to previously created notification to close.
+  install: void 0 // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
+}
+```
 
 #### Fixes
 
