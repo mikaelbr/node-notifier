@@ -33,6 +33,9 @@ describe('WindowsToaster', function() {
       testUtils.argsListHas(argsList, '-w').should.be.true();
       testUtils.argsListHas(argsList, '-p').should.be.true();
       testUtils.argsListHas(argsList, '-id').should.be.true();
+      testUtils.argsListHas(argsList, '-appID').should.be.true();
+      testUtils.argsListHas(argsList, '-install').should.be.true();
+      testUtils.argsListHas(argsList, '-close').should.be.true();
 
       testUtils.argsListHas(argsList, '-foo').should.be.false();
       testUtils.argsListHas(argsList, '-bar').should.be.false();
@@ -47,7 +50,10 @@ describe('WindowsToaster', function() {
       message: 'foo bar',
       extra: 'dsakdsa',
       foo: 'bar',
+      close: 123,
       bar: true,
+      install: '/dsa/',
+      appID: 123,
       icon: 'file:///C:/node-notifier/test/fixture/coulson.jpg',
       id: 1337,
       sound: 'Notification.IM',
