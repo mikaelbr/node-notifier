@@ -1,7 +1,7 @@
 Changelog
 ===
 
-### `v5.0.0` (_[WIP]_)
+### `v5.0.0`
 
 #### Breaking Changes
 
