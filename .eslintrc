@@ -2,7 +2,7 @@
   "extends": "semistandard",
   "env": {
     "node": true,
-    "mocha": true
+    "jest": true
   },
   "rules": {
     "space-before-function-paren": 0,

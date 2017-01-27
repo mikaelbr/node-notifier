@@ -102,11 +102,7 @@ describe('WindowsBalloon', function() {
     var expected = [ '-m', 'body', '-p', 'title', '-d', '1000', '-q' ];
 
     expectArgsListToBe(expected, done);
-    var notifier = new Notify().notify({
-      title: 'title',
-      message: 'body',
-      time: '1000'
-    });
+    new Notify().notify({ title: 'title', message: 'body', time: '1000' });
   });
 
   it('should not send false flags', function(done) {

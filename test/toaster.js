@@ -25,13 +25,6 @@ describe('WindowsToaster', function() {
     os.release = this.originalRelease;
   });
 
-  function expectArgsListToBe(expected, done) {
-    utils.fileCommandJson = function(notifier, argsList, callback) {
-      expect(argsList).toEqual(expected);
-      done();
-    };
-  }
-
   it('should only pass allowed options and proper named properties', function(
     done
   ) {
