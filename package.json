@@ -4,6 +4,7 @@
   "description": "A Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
   "main": "index.js",
   "scripts": {
+    "pretest": "npm run lint",
     "test": "jest",
     "example": "node ./example/message.js",
     "example:mac": "node ./example/advanced.js",
