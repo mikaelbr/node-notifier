@@ -9,6 +9,8 @@ Obligatory fail. Fixes minor issue with non-JSON output for macOS.
 
 #### Breaking Changes
 
+*Note/TL;DR*: If you are just using `node-notifier` with things like `message`, `title` and `icon`, v5 should work just as before.
+
 1. CLI is now removed. Can be found in separate project: https://github.com/mikaelbr/node-notifier-cli. This means you no longer get the `notify` bin when installing `node-notifier`. To get this do `npm i [-g] node-notifier-cli`
 2. Changed toaster implementation from `toast.exe` to [Snoretoast](https://github.com/KDE/snoretoast). This means if you are using your custom fork, you need to change. SnoreToast has some better default implemented functionality.
 3. [terminal-notifier](https://github.com/julienXX/terminal-notifier) dependency has been bumped to `v1.7.1`. With that there can be changes in the API, and supports now reply and buttons. Output has changed to JSON by default, this means the output of some functions of the terminal-notifier has broken. See https://github.com/julienXX/terminal-notifier for more details. See [README](https://github.com/mikaelbr/node-notifier#usage-notificationcenter) for documentation on how to use the new features, or [an example file](https://github.com/mikaelbr/node-notifier/blob/master/example/macInput.js).
