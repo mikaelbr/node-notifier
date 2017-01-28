@@ -210,7 +210,7 @@ describe('terminal-notifier', function() {
         '-message',
         '"body \\"message\\""',
         '-actions',
-        '"foo","bar","baz \\"foo\\" bar"',
+        'foo,bar,baz "foo" bar',
         '-json',
         '"true"'
       ];
