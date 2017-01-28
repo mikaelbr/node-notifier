@@ -1,6 +1,10 @@
 Changelog
 ===
 
+### `v5.0.2`
+
+Non-obligatory fail. Fixes issue with multiple actions for macOS.
+
 ### `v5.0.1`
 
 Obligatory fail. Fixes minor issue with non-JSON output for macOS.
