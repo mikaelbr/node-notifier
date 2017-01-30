@@ -276,8 +276,7 @@ notifier.notify({
 });
 ```
 
-See full usage on the [project homepage:
-notifu](http://www.paralint.com/projects/notifu/).
+See full usage on the [project homepage: notifu](http://www.paralint.com/projects/notifu/).
 
 ### Usage NotifySend
 
@@ -325,6 +324,9 @@ When using node-notifier within a tmux session, it can cause a hang in the syste
 
 See more info here: https://github.com/mikaelbr/node-notifier/issues/61#issuecomment-163560801
 
+### Custom icon without terminal icon on macOS
+
+Even if you define an icon in the configuration object for `node-notifier`, you will see a small Terminal icon in the notification (see the example at the top of this document). This is the way notifications on macOS work, it always show the parent icon of the application initiating the notification. For node-notifier, terminal-notifier is the initiator and has Terminal icon defined as its icon. To define your custom icon, you need to fork terminal-notifier and build your custom version with your icon. See this issue for more info: https://github.com/mikaelbr/node-notifier/issues/71
 
 ### Within Electron Packaging
 
