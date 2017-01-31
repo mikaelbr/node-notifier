@@ -1,9 +1,9 @@
 # node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
-A Node.js module for sending cross platform system notifications. Using
-Notification Center for macOS, notify-osd/libnotify-bin for Linux, Toasters for
-Windows 8/10, or taskbar Balloons for earlier Windows versions. If none of
-these requirements are met, Growl is used.
+Send cross platform native notifications using Node.js. Notification Center for macOS,
+notify-osd/libnotify-bin for Linux, Toasters for Windows 8/10, or taskbar Balloons for
+earlier Windows versions. If none of these requirements are met, Growl is used.
+[Works well with electron](#within-electron-packaging).
 
 ![macOS Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/mac.png)
 ![Native Windows Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows.png)
@@ -31,16 +31,14 @@ notifier.notify({
 ## Requirements
 - **macOS**: >= 10.8 or Growl if earlier.
 - **Linux**: `notify-osd` or `libnotify-bin` installed (Ubuntu should have this by default)
-- **Windows**: >= 8, task bar balloon if earlier or Growl if that is installed.
+- **Windows**: >= 8, task bar balloon for Windows < 8. Growl as fallback. Growl takes precedence over Windows balloons.
 - **General Fallback**: Growl
-
-Growl takes precedence over Windows balloons.
 
 See [documentation and flow chart for reporter choice](./DECISION_FLOW.md)
 
 ## Install
-```
-$ npm install --save node-notifier
+```shell
+npm install --save node-notifier
 ```
 
 ## Cross-Platform Advanced Usage
@@ -119,7 +117,7 @@ new nn.Growl(options).notify(options);
 
 ### Usage NotificationCenter
 
-Same usage and parameter setup as [terminal-notifier](https://github.com/alloy/terminal-notifier).
+Same usage and parameter setup as [terminal-notifier](https://github.com/julienXX/terminal-notifier).
 
 Native Notification Center requires macOS version 10.8 or higher. If you have
 an earlier version, Growl will be the fallback. If Growl isn't installed, an
@@ -128,7 +126,7 @@ error will be returned in the callback.
 
 #### Example
 
-Wrapping around [terminal-notifier](https://github.com/alloy/terminal-notifier), you can
+Wrapping around [terminal-notifier](https://github.com/julienXX/terminal-notifier), you can
 do all terminal-notifier can do through properties to the `notify` method. E.g.
 if `terminal-notifier` says `-message`, you can do `{message: 'Foo'}`, or
 if `terminal-notifier` says `-list ALL`, you can do `{list: 'ALL'}`. Notification
@@ -177,7 +175,7 @@ Sound can be one of these: `Basso`, `Blow`, `Bottle`, `Frog`, `Funk`, `Glass`,
 `Hero`, `Morse`, `Ping`, `Pop`, `Purr`, `Sosumi`, `Submarine`, `Tink`.
 If sound is simply `true`, `Bottle` is used.
 
-See [specific Notification Center example](./example/advanced.js).
+See [specific Notification Center example](./example/advanced.js). Also, [see input example](./example/macInput.js).
 
 **Custom Path clarification**
 
@@ -309,7 +307,7 @@ CLI is moved to separate project: https://github.com/mikaelbr/node-notifier-cli
 ## Thanks to OSS
 
 `node-notifier` is made possible through Open Source Software. A very special thanks to all the modules `node-notifier` uses.
-* [terminal-notifier](https://github.com/alloy/terminal-notifier)
+* [terminal-notifier](https://github.com/julienXX/terminal-notifier)
 * [Snoretoast](https://github.com/KDE/snoretoast)
 * [notifu](http://www.paralint.com/projects/notifu/)
 * [growly](https://github.com/theabraham/growly/)
