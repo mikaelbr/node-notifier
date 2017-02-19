@@ -2,7 +2,7 @@
 
 Send cross platform native notifications using Node.js. Notification Center for macOS,
 notify-osd/libnotify-bin for Linux, Toasters for Windows 8/10, or taskbar Balloons for
-earlier Windows versions. If none of these requirements are met, Growl is used.
+earlier Windows versions. Growl is used if none of these requirements are met.
 [Works well with electron](#within-electron-packaging).
 
 ![macOS Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/mac.png)
