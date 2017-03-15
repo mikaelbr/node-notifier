@@ -41,12 +41,16 @@ NotificationCenter.prototype.notify = function(options, callback) {
   if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
   }
+  var timeout;
 
   callback = callback || noop;
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,
-    callback,
+    function(err, data) {
+      clearTimeout(timeout);
+      callback(err, data);
+    },
     function(data) {
       if (activeId !== id) return false;
 
@@ -71,7 +75,6 @@ NotificationCenter.prototype.notify = function(options, callback) {
   }
 
   var argsList = utils.constructArgumentList(options);
-
   if (utils.isMountainLion()) {
     var cp = utils.fileCommandJson(
       this.options.customPath || notifier,
@@ -79,7 +82,7 @@ NotificationCenter.prototype.notify = function(options, callback) {
       actionJackedCallback
     );
     // Redundancy fallback to prevent memory leak
-    setTimeout(
+    timeout = setTimeout(
       function() {
         cp.kill('SIGTERM');
       },
