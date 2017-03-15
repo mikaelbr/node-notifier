@@ -47,9 +47,9 @@ NotificationCenter.prototype.notify = function(options, callback) {
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,
-    function(err, data) {
+    function() {
       clearTimeout(timeout);
-      callback(err, data);
+      callback.apply(null, arguments);
     },
     function(data) {
       if (activeId !== id) return false;
