@@ -44,6 +44,14 @@ NotificationCenter.prototype.notify = function(options, callback) {
   var timeout;
 
   callback = callback || noop;
+
+  if (typeof callback !== 'function') {
+    throw new TypeError(
+      'The second argument must be a function callback. You have passed ' +
+        typeof fn
+    );
+  }
+
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,
