@@ -1,7 +1,7 @@
 Changelog
 ===
 
-### `v5.1.0`
+### `v5.1.2`
 
 - Adds temporary workaround for `terminal-notifier` memory leak as seen in https://github.com/facebook/jest/issues/2999 and https://github.com/julienXX/terminal-notifier/issues/173.
 - Add appName option and hide snoreToast if not setted ([#158](https://github.com/mikaelbr/node-notifier/pull/158))
