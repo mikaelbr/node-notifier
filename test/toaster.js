@@ -78,6 +78,19 @@ describe('WindowsToaster', function() {
     });
   });
 
+  it('should default to empty app name', function(done) {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      expect(testUtils.getOptionValue(argsList, '-appID')).toBe(' ');
+      done();
+    };
+    var notifier = new Notify();
+
+    notifier.notify({
+      title: 'Heya',
+      message: 'foo bar'
+    });
+  });
+
   it('should translate from notification centers appIcon', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
       expect(testUtils.argsListHas(argsList, '-p')).toBeTruthy();

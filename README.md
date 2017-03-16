@@ -213,7 +213,7 @@ notifier.notify({
   sound: false, // Bool | String (as defined by http://msdn.microsoft.com/en-us/library/windows/apps/hh761492.aspx)
   wait: false, // Bool. Wait for User Action against Notification or times out
   id: void 0, // Number. ID to use for closing notification.
-  appID: void 0, // String. App.ID. Don't create a shortcut but use the provided app id.
+  appID: void 0, // String. App.ID and app Name. Defaults to empty string.
   remove: void 0, // Number. Refer to previously created notification to close.
   install: void 0 // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
 }, function(error, response) {
