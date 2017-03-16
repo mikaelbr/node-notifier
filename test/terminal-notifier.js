@@ -76,11 +76,21 @@ describe('terminal-notifier', function() {
     utils.isMountainLion = originalMacVersion;
   });
 
+  // Simulate async operation, move to end of message queue.
+  function asyncify (fn) {
+    return function () {
+      var args = arguments;
+      setTimeout(function () {
+        fn.apply(null, args);
+      }, 0);
+    };
+  }
+
   describe('#notify()', function() {
     beforeEach(function() {
-      utils.fileCommandJson = function(n, o, cb) {
+      utils.fileCommandJson = asyncify(function(n, o, cb) {
         cb(null, '');
-      };
+      });
     });
 
     afterEach(function() {
@@ -104,14 +114,14 @@ describe('terminal-notifier', function() {
     });
 
     it('should be able to list all notifications', function(done) {
-      utils.fileCommandJson = function(n, o, cb) {
+      utils.fileCommandJson = asyncify(function(n, o, cb) {
         cb(
           null,
           fs
             .readFileSync(path.join(__dirname, '/fixture/listAll.txt'))
             .toString()
         );
-      };
+      });
 
       notifier.notify({ list: 'ALL' }, function(_, response) {
         expect(response).toBeTruthy();
@@ -120,21 +130,21 @@ describe('terminal-notifier', function() {
     });
 
     it('should be able to remove all messages', function(done) {
-      utils.fileCommandJson = function(n, o, cb) {
+      utils.fileCommandJson = asyncify(function(n, o, cb) {
         cb(
           null,
           fs
             .readFileSync(path.join(__dirname, '/fixture/removeAll.txt'))
             .toString()
         );
-      };
+      });
 
       notifier.notify({ remove: 'ALL' }, function(_, response) {
         expect(response).toBeTruthy();
 
-        utils.fileCommandJson = function(n, o, cb) {
+        utils.fileCommandJson = asyncify(function(n, o, cb) {
           cb(null, '');
-        };
+        });
 
         notifier.notify({ list: 'ALL' }, function(_, response) {
           expect(response).toBeFalsy();
@@ -154,10 +164,11 @@ describe('terminal-notifier', function() {
     });
 
     function expectArgsListToBe(expected, done) {
-      utils.fileCommandJson = function(notifier, argsList, callback) {
+      utils.fileCommandJson = asyncify(function(notifier, argsList, callback) {
         expect(argsList).toEqual(expected);
+        callback();
         done();
-      };
+      });
     }
 
     it('should allow for non-sensical arguments (fail gracefully)', function(
@@ -189,11 +200,12 @@ describe('terminal-notifier', function() {
     it(
       'should validate and transform sound to default sound if Windows sound is selected',
       function(done) {
-        utils.fileCommandJson = function(notifier, argsList, callback) {
+        utils.fileCommandJson = asyncify(function(notifier, argsList, callback) {
           expect(testUtils.getOptionValue(argsList, '-title')).toBe('"Heya"');
           expect(testUtils.getOptionValue(argsList, '-sound')).toBe('"Bottle"');
+          callback();
           done();
-        };
+        });
         var notifier = new NotificationCenter();
         notifier.notify({
           title: 'Heya',
