@@ -7,7 +7,7 @@ node-notifier love getting pull requests and other help. Here's a quick guide.
 If you want to see what command is run, execute the node program with environment variable `DEBUG=true`, e.g.:
 
 ```
-DEBUG=true node index.js
+DEBUG="notifier" node index.js
 ```
 
 ```
