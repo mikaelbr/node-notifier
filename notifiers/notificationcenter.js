@@ -6,7 +6,7 @@ var Growl = require('./growl');
 var path = require('path');
 var notifier = path.join(
   __dirname,
-  '../vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier'
+  '../vendor/terminal-notifier'
 );
 
 var EventEmitter = require('events').EventEmitter;
