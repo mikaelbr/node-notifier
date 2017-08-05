@@ -73,7 +73,7 @@ describe('notify-send', function() {
   it(
     'should remove extra options that are not supported by notify-send',
     function(done) {
-      var expected = [ '"title"', '"body"', '--icon', '"icon-string"' ];
+      var expected = [ '"title"', '"body"', '--icon', '"icon-string"', '--expire-time', '"100"' ];
 
       expectArgsListToBe(expected, done);
       var notifier = new Notify({ suppressOsdCheck: true });
@@ -81,6 +81,7 @@ describe('notify-send', function() {
         title: 'title',
         message: 'body',
         icon: 'icon-string',
+        time: 100,
         tullball: 'notValid'
       });
     }
