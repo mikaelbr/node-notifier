@@ -4,17 +4,13 @@
 var utils = require('../lib/utils');
 var Growl = require('./growl');
 var path = require('path');
-var notifier = path.join(
-  __dirname,
-  '../vendor/terminal-notifier'
-);
+var notifier = path.join(__dirname, '../vendor/terminal-notifier');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var FAILSAFE_TIMEOUT = 30 * 1000;
-
-var errorMessageOsX = 'You need Mac OS X 10.8 or above to use NotificationCenter,' +
+var errorMessageOsX =
+  'You need Mac OS X 10.8 or above to use NotificationCenter,' +
   ' or use Growl fallback with constructor option {withFallback: true}.';
 
 module.exports = NotificationCenter;
@@ -41,8 +37,6 @@ NotificationCenter.prototype.notify = function(options, callback) {
   if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
   }
-  var timeout;
-
   callback = callback || noop;
 
   if (typeof callback !== 'function') {
@@ -55,10 +49,7 @@ NotificationCenter.prototype.notify = function(options, callback) {
   var actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,
-    function() {
-      clearTimeout(timeout);
-      callback.apply(null, arguments);
-    },
+    callback,
     function(data) {
       if (activeId !== id) return false;
 
@@ -84,19 +75,11 @@ NotificationCenter.prototype.notify = function(options, callback) {
 
   var argsList = utils.constructArgumentList(options);
   if (utils.isMountainLion()) {
-    var cp = utils.fileCommandJson(
+    utils.fileCommandJson(
       this.options.customPath || notifier,
       argsList,
       actionJackedCallback
     );
-    // Redundancy fallback to prevent memory leak
-    timeout = setTimeout(
-      function() {
-        cp.kill('SIGTERM');
-      },
-      FAILSAFE_TIMEOUT
-    );
-
     return this;
   }
 
