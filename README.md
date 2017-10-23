@@ -41,10 +41,6 @@ See [documentation and flow chart for reporter choice](./DECISION_FLOW.md)
 npm install --save node-notifier
 ```
 
-## CLI
-
-CLI is moved to separate project: https://github.com/mikaelbr/node-notifier-cli
-
 ## Cross-Platform Advanced Usage
 
 Standard usage, with cross-platform fallbacks as defined in the
@@ -303,6 +299,10 @@ notifier.notify({
 ```
 
 See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gutsy/man1/notify-send.1.html)
+
+## CLI
+
+CLI is moved to separate project: https://github.com/mikaelbr/node-notifier-cli
 
 ## Thanks to OSS
 
