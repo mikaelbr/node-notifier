@@ -21,11 +21,22 @@ function NotificationCenter(options) {
     return new NotificationCenter(options);
   }
   this.options = options;
+  this.notifications = [];
 
   EventEmitter.call(this);
 }
 util.inherits(NotificationCenter, EventEmitter);
 var activeId = null;
+
+/**
+ * Call this to cancel timeouts on current notifications
+ */
+NotificationCenter.prototype.clearAll = function() {
+  for (var i in this.notifications) {
+    this.notifications[i].kill();
+  }
+  this.notifications = [];
+};
 
 function noop() {}
 NotificationCenter.prototype.notify = function(options, callback) {
@@ -75,11 +86,19 @@ NotificationCenter.prototype.notify = function(options, callback) {
 
   var argsList = utils.constructArgumentList(options);
   if (utils.isMountainLion()) {
-    utils.fileCommandJson(
+    // This will be the index of the newly added notification once its been
+    // added
+    let index = this.notifications.length;
+    let p = utils.fileCommandJson(
       this.options.customPath || notifier,
       argsList,
-      actionJackedCallback
+      function(e, data) {
+        // delete the notification since its been cleared
+        this.notifications.splice(index, 1);
+        actionJackedCallback(e, data);
+      }.bind(this)
     );
+    this.notifications.push(p);
     return this;
   }
 

@@ -308,4 +308,42 @@ describe('terminal-notifier', function() {
       });
     });
   });
+
+  describe('#clearAll()', function() {
+    let mockProcess = {
+      kill: jest.fn()
+    };
+    beforeEach(function() {
+      // reset mock for each test
+      mockProcess.kill = jest.fn();
+      utils.fileCommandJson = function() {
+        return mockProcess;
+      };
+    });
+
+    afterEach(function() {
+      utils.fileCommandJson = originalUtils;
+    });
+
+    it('should kill all terminal-notifier processes', function() {
+      notifier.notify({ message: 'Hello World' }, function() {});
+      notifier.clearAll();
+      expect(mockProcess.kill.mock.calls.length).toBe(1);
+    });
+
+    it('should not kill finished terminal-notifier processes', function(done) {
+      utils.fileCommandJson = function(n, o, cb) {
+        setTimeout(function() {
+          cb(null, '');
+          // After the callback the notification will be cleared.
+          // Calling `clearAll` should be a no-op
+          notifier.clearAll();
+          expect(mockProcess.kill.mock.calls.length).toBe(0);
+          done();
+        }, 0);
+        return mockProcess;
+      };
+      notifier.notify({ message: 'Hello World' }, function() {});
+    });
+  });
 });
