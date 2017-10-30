@@ -88,8 +88,8 @@ NotificationCenter.prototype.notify = function(options, callback) {
   if (utils.isMountainLion()) {
     // This will be the index of the newly added notification once its been
     // added
-    let index = this.notifications.length;
-    let p = utils.fileCommandJson(
+    var index = this.notifications.length;
+    var p = utils.fileCommandJson(
       this.options.customPath || notifier,
       argsList,
       function(e, data) {

@@ -310,7 +310,7 @@ describe('terminal-notifier', function() {
   });
 
   describe('#clearAll()', function() {
-    let mockProcess = {
+    var mockProcess = {
       kill: jest.fn()
     };
     beforeEach(function() {
