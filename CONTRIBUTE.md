@@ -4,10 +4,10 @@ node-notifier love getting pull requests and other help. Here's a quick guide.
 
 ## Debugging
 
-If you want to see what command is run, execute the node program with the environmental variable `DEBUG="notifier"`, e.g.:
+If you want to see what command is run, execute the node program with environment variable `DEBUG=true`, e.g.:
 
 ```
-DEBUG="notifier" node index.js
+DEBUG=true node index.js
 ```
 
 ```
