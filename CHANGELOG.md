@@ -1,9 +1,17 @@
 # Changelog
 
+### `v5.2.1`
+
+* Rollback `notifu` update as it triggered Avast virus scan.
+
 ### `v5.2.0`
 
 * Updates `terminal-notifier` dependency to `v1.7.2`, fixing memory leak. But not to `v1.8.0` as this breaks how icons work.
-* Fixes issue with `appID` by removing default empty string (see README Windows section)
+* Updates `notifu` with new subtitle "Notification"
+* Fix: issue with `appID` by removing default empty string (see README Windows section)
+* Fix: link notifier time property to notify-send expire-time flag
+
+* Minor change: use a more specific condition for enabling debug logging ([#171](https://github.com/mikaelbr/node-notifier/pull/171))
 
 ### `v5.1.2`
 
