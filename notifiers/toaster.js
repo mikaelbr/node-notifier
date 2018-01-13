@@ -25,8 +25,7 @@ function WindowsToaster(options) {
 }
 util.inherits(WindowsToaster, EventEmitter);
 
-function noop() {
-}
+function noop() {}
 
 var timeoutMessage = 'the toast has timed out';
 var successMessage = 'user clicked on the toast';
@@ -74,7 +73,7 @@ WindowsToaster.prototype.notify = function(options, callback) {
   options.title = options.title || 'Node Notification:';
   if (
     typeof options.message === 'undefined' &&
-      typeof options.close === 'undefined'
+    typeof options.close === 'undefined'
   ) {
     callback(new Error('Message or ID to close is required.'));
     return this;
