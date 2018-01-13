@@ -23,20 +23,22 @@ notifier.notify('Message');
 
 // Object
 notifier.notify({
-  'title': 'My notification',
-  'message': 'Hello, there!'
+  title: 'My notification',
+  message: 'Hello, there!'
 });
 ```
 
 ## Requirements
-- **macOS**: >= 10.8 or Growl if earlier.
-- **Linux**: `notify-osd` or `libnotify-bin` installed (Ubuntu should have this by default)
-- **Windows**: >= 8, task bar balloon for Windows < 8. Growl as fallback. Growl takes precedence over Windows balloons.
-- **General Fallback**: Growl
+
+* **macOS**: >= 10.8 or Growl if earlier.
+* **Linux**: `notify-osd` or `libnotify-bin` installed (Ubuntu should have this by default)
+* **Windows**: >= 8, task bar balloon for Windows < 8. Growl as fallback. Growl takes precedence over Windows balloons.
+* **General Fallback**: Growl
 
 See [documentation and flow chart for reporter choice](./DECISION_FLOW.md)
 
 ## Install
+
 ```shell
 npm install --save node-notifier
 ```
@@ -55,21 +57,24 @@ below will work in a way or another on all platforms.
 const notifier = require('node-notifier');
 const path = require('path');
 
-notifier.notify({
-  title: 'My awesome title',
-  message: 'Hello from node, Mr. User!',
-  icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
-  sound: true, // Only Notification Center or Windows Toasters
-  wait: true // Wait with callback, until user action is taken against notification
-}, function (err, response) {
-  // Response is response from notification
-});
+notifier.notify(
+  {
+    title: 'My awesome title',
+    message: 'Hello from node, Mr. User!',
+    icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
+    sound: true, // Only Notification Center or Windows Toasters
+    wait: true // Wait with callback, until user action is taken against notification
+  },
+  function(err, response) {
+    // Response is response from notification
+  }
+);
 
-notifier.on('click', function (notifierObject, options) {
+notifier.on('click', function(notifierObject, options) {
   // Triggers if `wait: true` and user clicks notification
 });
 
-notifier.on('timeout', function (notifierObject, options) {
+notifier.on('timeout', function(notifierObject, options) {
   // Triggers if `wait: true` and notification closes
 });
 ```
@@ -79,6 +84,7 @@ want to customize it or have more specific options per system.
 See documentation for each reporter below.
 
 Example:
+
 ```javascript
 const NotificationCenter = require('node-notifier/notifiers/notificationcenter');
 new NotificationCenter(options).notify();
@@ -94,7 +100,6 @@ new Growl(options).notify();
 
 const WindowsBalloon = require('node-notifier/notifiers/balloon');
 new WindowsBalloon(options).notify();
-
 ```
 
 Or if you are using several (or you are lazy):
@@ -118,7 +123,6 @@ new nn.Growl(options).notify(options);
 * [Growl documentation](#usage-growl)
 * [Notify-send documentation](#usage-notifysend)
 
-
 ### Usage NotificationCenter
 
 Same usage and parameter setup as [terminal-notifier](https://github.com/julienXX/terminal-notifier).
@@ -126,7 +130,6 @@ Same usage and parameter setup as [terminal-notifier](https://github.com/julienX
 Native Notification Center requires macOS version 10.8 or higher. If you have
 an earlier version, Growl will be the fallback. If Growl isn't installed, an
 error will be returned in the callback.
-
 
 #### Example
 
@@ -147,25 +150,28 @@ var notifier = new NotificationCenter({
   customPath: void 0 // Relative/Absolute path to binary if you want to use your own fork of terminal-notifier
 });
 
-notifier.notify({
-  'title': void 0,
-  'subtitle': void 0,
-  'message': void 0,
-  'sound': false, // Case Sensitive string for location of sound file, or use one of macOS' native sounds (see below)
-  'icon': 'Terminal Icon', // Absolute Path to Triggering Icon
-  'contentImage': void 0, // Absolute Path to Attached Image (Content Image)
-  'open': void 0, // URL to open on Click
-  'wait': false, // Wait for User Action against Notification or times out. Same as timeout = 5 seconds
+notifier.notify(
+  {
+    title: void 0,
+    subtitle: void 0,
+    message: void 0,
+    sound: false, // Case Sensitive string for location of sound file, or use one of macOS' native sounds (see below)
+    icon: 'Terminal Icon', // Absolute Path to Triggering Icon
+    contentImage: void 0, // Absolute Path to Attached Image (Content Image)
+    open: void 0, // URL to open on Click
+    wait: false, // Wait for User Action against Notification or times out. Same as timeout = 5 seconds
 
-  // New in latest version. See `example/macInput.js` for usage
-  timeout: 5, // Takes precedence over wait if both are defined.
-  closeLabel: void 0, // String. Label for cancel button
-  actions: void 0, // String | Array<String>. Action label or list of labels in case of dropdown
-  dropdownLabel: void 0, // String. Label to be used if multiple actions
-  reply: false // Boolean. If notification should take input. Value passed as third argument in callback and event emitter.
-}, function(error, response, metadata) {
-  console.log(response, metadata);
-});
+    // New in latest version. See `example/macInput.js` for usage
+    timeout: 5, // Takes precedence over wait if both are defined.
+    closeLabel: void 0, // String. Label for cancel button
+    actions: void 0, // String | Array<String>. Action label or list of labels in case of dropdown
+    dropdownLabel: void 0, // String. Label to be used if multiple actions
+    reply: false // Boolean. If notification should take input. Value passed as third argument in callback and event emitter.
+  },
+  function(error, response, metadata) {
+    console.log(response, metadata);
+  }
+);
 ```
 
 **Note:** `wait` option is shorthand for `timeout: 5` and doesn't make the notification sticky, but sets
@@ -195,9 +201,8 @@ You also need to specify the image by using an absolute path. These limitations 
 due to the Toast notification system. A good tip is to use something like
 `path.join` or `path.delimiter` to have cross-platform pathing.
 
-**Windows 10 Note:** You might have to activate banner notification for the toast to show.
-
 From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify/issues/90#issuecomment-129333034)
+
 > You can make it work by going to System > Notifications & Actions. The 'toast' app needs to have Banners enabled. (You can activate banners by clicking on the 'toast' app and setting the 'Show notification banners' to On)
 
 **Windows 10 Fall Creators Update (Version 1709) Note:**
@@ -205,6 +210,8 @@ From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify
 With the Fall Creators Update Notifications on Windows 10 will only work as expected if the correct appID is specified.
 Your appID has to be exactly the same as registered with the install of your app.
 You can find the ID of your App by searching the registry for the appID you specified at installation of your app. For example if you are using the squirrel framework your appID will be something like com.squirrel.your.app.
+
+Default behaviour is to have the underlying toaster applicaton as appId. This works as expected, but shows `SnoreToast` as text in the notification.
 
 [Snoretoast](https://github.com/KDE/snoretoast) is used to get native Windows Toasts!
 
@@ -216,19 +223,22 @@ var notifier = new WindowsToaster({
   customPath: void 0 // Relative/Absolute path if you want to use your fork of SnoreToast.exe
 });
 
-notifier.notify({
-  title: void 0, // String. Required
-  message: void 0, // String. Required if remove is not defined
-  icon: void 0, // String. Absolute path to Icon
-  sound: false, // Bool | String (as defined by http://msdn.microsoft.com/en-us/library/windows/apps/hh761492.aspx)
-  wait: false, // Bool. Wait for User Action against Notification or times out
-  id: void 0, // Number. ID to use for closing notification.
-  appID: void 0, // String. App.ID and app Name. Defaults to empty string.
-  remove: void 0, // Number. Refer to previously created notification to close.
-  install: void 0 // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
-}, function(error, response) {
-  console.log(response);
-});
+notifier.notify(
+  {
+    title: void 0, // String. Required
+    message: void 0, // String. Required if remove is not defined
+    icon: void 0, // String. Absolute path to Icon
+    sound: false, // Bool | String (as defined by http://msdn.microsoft.com/en-us/library/windows/apps/hh761492.aspx)
+    wait: false, // Bool. Wait for User Action against Notification or times out
+    id: void 0, // Number. ID to use for closing notification.
+    appID: void 0, // String. App.ID and app Name. Defaults to empty string.
+    remove: void 0, // Number. Refer to previously created notification to close.
+    install: void 0 // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
+  },
+  function(error, response) {
+    console.log(response);
+  }
+);
 ```
 
 ### Usage Growl
@@ -272,16 +282,19 @@ var notifier = new WindowsBalloon({
   customPath: void 0 // Relative/Absolute path if you want to use your fork of notifu
 });
 
-notifier.notify({
-  title: void 0,
-  message: void 0,
-  sound: false, // true | false.
-  time: 5000, // How long to show balloon in ms
-  wait: false, // Wait for User Action against Notification
-  type: 'info' // The notification type : info | warn | error
-}, function(error, response) {
-  console.log(response);
-});
+notifier.notify(
+  {
+    title: void 0,
+    message: void 0,
+    sound: false, // true | false.
+    time: 5000, // How long to show balloon in ms
+    wait: false, // Wait for User Action against Notification
+    type: 'info' // The notification type : info | warn | error
+  },
+  function(error, response) {
+    console.log(response);
+  }
+);
 ```
 
 See full usage on the [project homepage: notifu](http://www.paralint.com/projects/notifu/).
@@ -304,7 +317,7 @@ notifier.notify({
   urgency: void 0,
   time: void 0,
   category: void 0,
-  hint: void 0,
+  hint: void 0
 });
 ```
 
@@ -313,6 +326,7 @@ See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gut
 ## Thanks to OSS
 
 `node-notifier` is made possible through Open Source Software. A very special thanks to all the modules `node-notifier` uses.
+
 * [terminal-notifier](https://github.com/julienXX/terminal-notifier)
 * [Snoretoast](https://github.com/KDE/snoretoast)
 * [notifu](http://www.paralint.com/projects/notifu/)
@@ -340,7 +354,6 @@ If packaging your Electron app as an `asar`, you will find node-notifier will fa
 asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
 ```
 
-
 ### Using Webpack
 
 When using node-notifier inside of webpack, you must add the following snippet to your `webpack.config.js`. The reason this is required, is because node-notifier loads the notifiers from a binary, and so a relative file path is needed. When webpack compiles the modules, it supresses file directories, causing node-notifier to error on certain platforms. To fix/workaround this, you must tell webpack to keep the relative file directories, by doing so, append the following code to your `webpack.config.js`
@@ -352,7 +365,6 @@ node: {
 }
 ```
 
-
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
@@ -360,9 +372,7 @@ node: {
 [npm-url]: https://npmjs.org/package/node-notifier
 [npm-image]: http://img.shields.io/npm/v/node-notifier.svg?style=flat
 [npm-downloads]: http://img.shields.io/npm/dm/node-notifier.svg?style=flat
-
 [travis-url]: http://travis-ci.org/mikaelbr/node-notifier
 [travis-image]: http://img.shields.io/travis/mikaelbr/node-notifier.svg?style=flat
-
 [depstat-url]: https://gemnasium.com/mikaelbr/node-notifier
 [depstat-image]: http://img.shields.io/gemnasium/mikaelbr/node-notifier.svg?style=flat
