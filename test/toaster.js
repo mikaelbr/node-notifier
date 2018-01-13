@@ -77,9 +77,9 @@ describe('WindowsToaster', function() {
     });
   });
 
-  it('should default to empty app name', function(done) {
+  it('should not have appId', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      expect(testUtils.getOptionValue(argsList, '-appID')).toBe(' ');
+      expect(testUtils.argsListHas(argsList, '-appId')).toBeFalsy();
       done();
     };
     var notifier = new Notify();
