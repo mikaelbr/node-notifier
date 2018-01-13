@@ -336,6 +336,10 @@ See flags and options [on the man pages](http://manpages.ubuntu.com/manpages/gut
 
 ## Common Issues
 
+### `SnoreToast` text on Windows
+
+See note on "Windows 10 Fall Creators Update" in Windows section. Short answer, update to your own `appId`.
+
 ### Use inside tmux session
 
 When using node-notifier within a tmux session, it can cause a hang in the system. This can be solved by following the steps described in this comment: https://github.com/julienXX/terminal-notifier/issues/115#issuecomment-104214742
