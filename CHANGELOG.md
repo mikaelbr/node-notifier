@@ -1,10 +1,14 @@
-Changelog
-===
+# Changelog
+
+### `v5.2.0`
+
+* Updates `terminal-notifier` dependency to `v1.7.2`, fixing memory leak. But not to `v1.8.0` as this breaks how icons work.
+* Fixes issue with `appID` by removing default empty string (see README Windows section)
 
 ### `v5.1.2`
 
-- Adds temporary workaround for `terminal-notifier` memory leak as seen in https://github.com/facebook/jest/issues/2999 and https://github.com/julienXX/terminal-notifier/issues/173.
-- Add appName option and hide snoreToast if not setted ([#158](https://github.com/mikaelbr/node-notifier/pull/158))
+* Adds temporary workaround for `terminal-notifier` memory leak as seen in https://github.com/facebook/jest/issues/2999 and https://github.com/julienXX/terminal-notifier/issues/173.
+* Add appName option and hide snoreToast if not setted ([#158](https://github.com/mikaelbr/node-notifier/pull/158))
 
 ### `v5.0.2`
 
@@ -18,17 +22,16 @@ Obligatory fail. Fixes minor issue with non-JSON output for macOS.
 
 #### Breaking Changes
 
-*Note/TL;DR*: If you are just using `node-notifier` with things like `message`, `title` and `icon`, v5 should work just as before.
+_Note/TL;DR_: If you are just using `node-notifier` with things like `message`, `title` and `icon`, v5 should work just as before.
 
 1. CLI is now removed. Can be found in separate project: https://github.com/mikaelbr/node-notifier-cli. This means you no longer get the `notify` bin when installing `node-notifier`. To get this do `npm i [-g] node-notifier-cli`
 2. Changed toaster implementation from `toast.exe` to [Snoretoast](https://github.com/KDE/snoretoast). This means if you are using your custom fork, you need to change. SnoreToast has some better default implemented functionality.
 3. [terminal-notifier](https://github.com/julienXX/terminal-notifier) dependency has been bumped to `v1.7.1`. With that there can be changes in the API, and supports now reply and buttons. Output has changed to JSON by default, this means the output of some functions of the terminal-notifier has broken. See https://github.com/julienXX/terminal-notifier for more details. See [README](https://github.com/mikaelbr/node-notifier#usage-notificationcenter) for documentation on how to use the new features, or [an example file](https://github.com/mikaelbr/node-notifier/blob/master/example/macInput.js).
 4. `notify` method will now throw error if second argument is something else than function (still optional): [#138](https://github.com/mikaelbr/node-notifier/pull/138).
 
-
 #### Additions
 
-1. Now supports *BSD systems: [#142](https://github.com/mikaelbr/node-notifier/pull/142).
+1. Now supports \*BSD systems: [#142](https://github.com/mikaelbr/node-notifier/pull/142).
 2. With the new toaster implementation you can do more! For instance customize sound and close notification. See all options:
 
 ```javascript
@@ -77,7 +80,9 @@ _Internal changes for those who might be interested_.
 ### `v4.5.0`
 
 #### Additions
+
 1. Adds syntactic sugar for `notify`. Now able to just pass message:
+
 ```js
 notifier.notify('My message');
 ```
@@ -85,6 +90,7 @@ notifier.notify('My message');
 See [#45](https://github.com/mikaelbr/node-notifier/issues/45) for more info.
 
 #### Fixes
+
 1. Improvements to docs and examples
 2. Updates `semver` dependency to support Webpacking with Electron.
 
@@ -95,12 +101,15 @@ See [#45](https://github.com/mikaelbr/node-notifier/issues/45) for more info.
 3. Adds support for win7 with electron asar-package
 
 ### `v4.3.1`
+
 Obligatory patch fix:
+
 1. Adds new stdin CLI options to docs
 
 ### `v4.3.0`
+
 1. Adds support for piping messages in to CLI.
-(With `node-notifier` installed as a CLI `npm i -g node-notifier`)
+   (With `node-notifier` installed as a CLI `npm i -g node-notifier`)
 
 ```shell
 ➜ echo "Message" | notify
@@ -109,73 +118,92 @@ Obligatory patch fix:
 ```
 
 ### `v4.2.3`
+
 1. Fixed input arguments to CLI to be strings where they should be strings.
 
 ### `v4.2.2`
+
 1. Fixed no notification when no message for the CLI. [#58](https://github.com/mikaelbr/node-notifier/pull/58)
 2. Changes `which` test to be sync, avoiding some edge cases with multiple notifications.
 
 ### `v4.2.1`
+
 1. Minor fix for docs in CLI usage
 
 ### `v4.2.0`
+
 1. Adds CLI support.
 2. Fixes Debug "HRESULT : 0xC00CE508" exception on Win8. PR [#49](https://github.com/mikaelbr/node-notifier/pull/49)
 
 ### `v4.1.2`
+
 1. Fixes correct terminal-notifier (own fork https://github.com/mikaelbr/terminal-notifier)
    to support activate / click.
 
 ### `v4.1.1`
+
 1. Fixes proper error codes for balloon: #42
 2. Removes unused debug files: #41
 3. Patches differences between subtitle for notify-send: #43
 4. Updates terminal-notifier dependency (removing black borders) #44 #18
 
 ### `v4.1.0`
+
 1. Adds support for changing host and port for Growl.
 
 ### `v4.0.3`
+
 1. Fixes Notification center issue with multiple callback events.
 2. Fixes error in source code: Fixes long-spaces to proper spaces
 
 ### `v4.0.2`
+
 1. Fixes issue with immidiate notifu notifications (with `wait : false`)
 2. Fixes issue with boolean flags for notifu.
 3. Restructures directories. Making it easier to require notifiers directly.
 
 ### `v4.0.1`
+
 1. Fixes issue with optional callback for notify-send
 
 ### `v4.0.0`
+
 Major changes and breaking API.
+
 1. require('node-notifier') now returns an instance with fallbackable notifications.
+
 ```js
 var notifier = require('node-notifier');
 notifier.notify();
 ```
+
 2. Introduced a `wait` property (default `false`), to get user input for
-Notification Center, Windows Toaster, Windows Balloons and Growl. Sadly not
-for notify-send.
+   Notification Center, Windows Toaster, Windows Balloons and Growl. Sadly not
+   for notify-send.
+
 ```js
 var notifier = require('node-notifier');
-notifier.notify({ wait: true }, function (err, response) {
-     // response is response after user have interacted
-     // with the notification or the notification has timed out.
+notifier.notify({ wait: true }, function(err, response) {
+  // response is response after user have interacted
+  // with the notification or the notification has timed out.
 });
 ```
+
 3. All notification instances are now event emitters, emitting events
-`click` or `timeout`. This is only applicable if `{ wait: true }`.
+   `click` or `timeout`. This is only applicable if `{ wait: true }`.
+
 ```js
 var notifier = require('node-notifier');
-notifier.on('click', function (notificationObject, options) {
-     // options.someArbitraryData === 'foo'
+notifier.on('click', function(notificationObject, options) {
+  // options.someArbitraryData === 'foo'
 });
 notifier.notify({ wait: true, someArbitraryData: 'foo' });
 ```
+
 4. WindowsToaster and NotificationCenter now can have sounds by doing `{ sound: true }`.
-Default NotificationCenter sound is Bottle. Can still use define sound on
-Mac:
+   Default NotificationCenter sound is Bottle. Can still use define sound on
+   Mac:
+
 ```js
 var notifier = require('node-notifier');
 notifier.notify({ sound: true });
@@ -184,33 +212,43 @@ notifier.notify({ sound: 'Morse' });
 ```
 
 ### `v3.4.0`
+
 1. Adds Growl as priority over Balloons
 
 ### `v3.3.0`
+
 1. Adds support for native Windows 7 and earlier (through task bar balloons)
 2. Changes growl implementation. Adds better support for GNTP
 
 ### `v3.2.1`
+
 1. Fixes support for notifications from folders with spaces on Windows.
 
 ### `v3.2.0`
+
 1. Adds native Windows 8 support.
 
 ### `v3.1.0`
+
 1. Adds Growl as fallback for Mac OS X pre 10.8.
 
 ### `v3.0.6`
+
 1. Fixes typo: Changes Growl app name from `Gulp` to `Node`.
 
 ### `v3.0.5`
+
 1. Maps common options between the different notifiers. Allowing for common usage with different notifiers.
 
 ### `v3.0.4`
+
 1. Fixes expires for notify-send (Issue #13)
 
 ### `v3.0.2`
+
 1. Fixes version check for Mac OS X Yosemite
 
 ### `v3.0.0`
+
 1. Updates terminal-notifier to version 1.6.0; adding support for appIcon and contentImage
 2. Removes parsing of output sent from notifier (Notification Center)
