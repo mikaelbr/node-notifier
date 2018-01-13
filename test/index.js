@@ -6,8 +6,7 @@ describe('constructors', function() {
   });
 
   it('should expect only a function callback as second parameter', function() {
-    function cb() {
-    }
+    function cb() {}
     expect(notifier.notify({ title: 'My notification' }, cb)).toBeTruthy();
   });
 
@@ -17,12 +16,12 @@ describe('constructors', function() {
     var data = { title: 'My notification' };
 
     var base = notifier.notify.bind(notifier, data);
-    expect(
-      base.bind(notifier, wrongParamOne)
-    ).toThrowError(/^The second argument/);
-    expect(
-      base.bind(notifier, wrongParamTwo)
-    ).toThrowError(/^The second argument/);
+    expect(base.bind(notifier, wrongParamOne)).toThrowError(
+      /^The second argument/
+    );
+    expect(base.bind(notifier, wrongParamTwo)).toThrowError(
+      /^The second argument/
+    );
   });
 
   it('should expose a default selected constructor function', function() {

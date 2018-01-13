@@ -3,17 +3,18 @@ var utils = require('../lib/utils');
 var os = require('os');
 
 describe('notify-send', function() {
+  var original = utils.command;
+  var originalType = os.type;
+
   beforeEach(function() {
-    this.original = utils.command;
-    this.originalType = os.type;
     os.type = function() {
       return 'Linux';
     };
   });
 
   afterEach(function() {
-    utils.command = this.original;
-    os.type = this.originalType;
+    utils.command = original;
+    os.type = originalType;
   });
 
   function expectArgsListToBe(expected, done) {
@@ -24,14 +25,14 @@ describe('notify-send', function() {
   }
 
   it('should pass on title and body', function(done) {
-    var expected = [ '"title"', '"body"' ];
+    var expected = ['"title"', '"body"'];
     expectArgsListToBe(expected, done);
     var notifier = new Notify({ suppressOsdCheck: true });
     notifier.notify({ title: 'title', message: 'body' });
   });
 
   it('should pass have default title', function(done) {
-    var expected = [ '"Node Notification:"', '"body"' ];
+    var expected = ['"Node Notification:"', '"body"'];
 
     expectArgsListToBe(expected, done);
     var notifier = new Notify({ suppressOsdCheck: true });
@@ -63,27 +64,31 @@ describe('notify-send', function() {
   });
 
   it('should send additional parameters as --"keyname"', function(done) {
-    var expected = [ '"title"', '"body"', '--icon', '"icon-string"' ];
+    var expected = ['"title"', '"body"', '--icon', '"icon-string"'];
 
     expectArgsListToBe(expected, done);
     var notifier = new Notify({ suppressOsdCheck: true });
     notifier.notify({ title: 'title', message: 'body', icon: 'icon-string' });
   });
 
-  it(
-    'should remove extra options that are not supported by notify-send',
-    function(done) {
-      var expected = [ '"title"', '"body"', '--icon', '"icon-string"', '--expire-time', '"100"' ];
+  it('should remove extra options that are not supported by notify-send', function(done) {
+    var expected = [
+      '"title"',
+      '"body"',
+      '--icon',
+      '"icon-string"',
+      '--expire-time',
+      '"100"'
+    ];
 
-      expectArgsListToBe(expected, done);
-      var notifier = new Notify({ suppressOsdCheck: true });
-      notifier.notify({
-        title: 'title',
-        message: 'body',
-        icon: 'icon-string',
-        time: 100,
-        tullball: 'notValid'
-      });
-    }
-  );
+    expectArgsListToBe(expected, done);
+    var notifier = new Notify({ suppressOsdCheck: true });
+    notifier.notify({
+      title: 'title',
+      message: 'body',
+      icon: 'icon-string',
+      time: 100,
+      tullball: 'notValid'
+    });
+  });
 });
