@@ -48,8 +48,7 @@ function WindowsBalloon(options) {
 }
 util.inherits(WindowsBalloon, EventEmitter);
 
-function noop() {
-}
+function noop() {}
 WindowsBalloon.prototype.notify = function(options, callback) {
   var fallback;
   var notifierOptions = this.options;
@@ -82,7 +81,7 @@ WindowsBalloon.prototype.notify = function(options, callback) {
 
   if (
     !!this.options.withFallback &&
-      (!utils.isLessThanWin8() || hasGrowl === true)
+    (!utils.isLessThanWin8() || hasGrowl === true)
   ) {
     fallback = fallback || new Growl(notifierOptions);
     return fallback.notify(options, callback);
@@ -93,7 +92,7 @@ WindowsBalloon.prototype.notify = function(options, callback) {
     return this;
   }
 
-  checkGrowl(notifierOptions, function(hasGrowlResult) {
+  checkGrowl(notifierOptions, function(_, hasGrowlResult) {
     hasGrowl = hasGrowlResult;
 
     if (hasGrowl) {
@@ -107,7 +106,7 @@ WindowsBalloon.prototype.notify = function(options, callback) {
   return this;
 };
 
-var allowedArguments = [ 't', 'd', 'p', 'm', 'i', 'e', 'q', 'w', 'xp' ];
+var allowedArguments = ['t', 'd', 'p', 'm', 'i', 'e', 'q', 'w', 'xp'];
 
 function doNotification(options, notifierOptions, callback) {
   var is64Bit = os.arch() === 'x64';

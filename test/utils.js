@@ -54,9 +54,9 @@ describe('utils', function() {
         _.mapToMac({ title: 'Foo', message: 'Bar', icon: 'foobar' })
       ).toEqual(expected);
 
-      expect(
-        _.mapToMac({ title: 'Foo', message: 'Bar', i: 'foobar' })
-      ).toEqual(expected);
+      expect(_.mapToMac({ title: 'Foo', message: 'Bar', i: 'foobar' })).toEqual(
+        expected
+      );
     });
 
     it('should map icon for growl', function() {

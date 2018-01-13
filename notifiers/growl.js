@@ -8,7 +8,8 @@ var growly = require('growly');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var errorMessageNotFound = "Couldn't connect to growl (might be used as a fallback). Make sure it is running";
+var errorMessageNotFound =
+  "Couldn't connect to growl (might be used as a fallback). Make sure it is running";
 
 module.exports = Growl;
 
@@ -63,7 +64,7 @@ Growl.prototype.notify = function(options, callback) {
     return this;
   }
 
-  checkGrowl(growly, function(didHaveGrowl) {
+  checkGrowl(growly, function(_, didHaveGrowl) {
     hasGrowl = didHaveGrowl;
     if (!didHaveGrowl) return callback(new Error(errorMessageNotFound));
     growly.notify(options.message, options);
@@ -72,5 +73,4 @@ Growl.prototype.notify = function(options, callback) {
   return this;
 };
 
-function noop() {
-}
+function noop() {}

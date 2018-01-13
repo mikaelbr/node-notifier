@@ -10,9 +10,9 @@ expect.extend({
 function endsWith(subjectString, searchString, position) {
   if (
     typeof position !== 'number' ||
-      !isFinite(position) ||
-      Math.floor(position) !== position ||
-      position > subjectString.length
+    !isFinite(position) ||
+    Math.floor(position) !== position ||
+    position > subjectString.length
   ) {
     position = subjectString.length;
   }

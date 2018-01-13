@@ -20,40 +20,34 @@ describe('Mac fallback', function() {
     utils.isMac = originalMac;
   });
 
-  it(
-    'should default to Growl notification if older Mac OSX than 10.8',
-    function(done) {
-      utils.isMountainLion = function() {
-        return false;
-      };
-      utils.isMac = function() {
-        return true;
-      };
-      var n = new NotificationCenter({ withFallback: true });
-      n.notify({ message: 'Hello World' }, function(_, response) {
-        expect(this).toBeInstanceOf(Growl);
-        done();
-      });
-    }
-  );
+  it('should default to Growl notification if older Mac OSX than 10.8', function(done) {
+    utils.isMountainLion = function() {
+      return false;
+    };
+    utils.isMac = function() {
+      return true;
+    };
+    var n = new NotificationCenter({ withFallback: true });
+    n.notify({ message: 'Hello World' }, function(_, response) {
+      expect(this).toBeInstanceOf(Growl);
+      done();
+    });
+  });
 
-  it(
-    'should not fallback to Growl notification if withFallback is false',
-    function(done) {
-      utils.isMountainLion = function() {
-        return false;
-      };
-      utils.isMac = function() {
-        return true;
-      };
-      var n = new NotificationCenter();
-      n.notify({ message: 'Hello World' }, function(err, response) {
-        expect(err).toBeTruthy();
-        expect(this).not.toBeInstanceOf(Growl);
-        done();
-      });
-    }
-  );
+  it('should not fallback to Growl notification if withFallback is false', function(done) {
+    utils.isMountainLion = function() {
+      return false;
+    };
+    utils.isMac = function() {
+      return true;
+    };
+    var n = new NotificationCenter();
+    n.notify({ message: 'Hello World' }, function(err, response) {
+      expect(err).toBeTruthy();
+      expect(this).not.toBeInstanceOf(Growl);
+      done();
+    });
+  });
 });
 
 describe('terminal-notifier', function() {
@@ -77,10 +71,10 @@ describe('terminal-notifier', function() {
   });
 
   // Simulate async operation, move to end of message queue.
-  function asyncify (fn) {
-    return function () {
+  function asyncify(fn) {
+    return function() {
       var args = arguments;
-      setTimeout(function () {
+      setTimeout(function() {
         fn.apply(null, args);
       }, 0);
     };
@@ -171,9 +165,7 @@ describe('terminal-notifier', function() {
       });
     }
 
-    it('should allow for non-sensical arguments (fail gracefully)', function(
-      done
-    ) {
+    it('should allow for non-sensical arguments (fail gracefully)', function(done) {
       var expected = [
         '-title',
         '"title"',
@@ -197,23 +189,20 @@ describe('terminal-notifier', function() {
       });
     });
 
-    it(
-      'should validate and transform sound to default sound if Windows sound is selected',
-      function(done) {
-        utils.fileCommandJson = asyncify(function(notifier, argsList, callback) {
-          expect(testUtils.getOptionValue(argsList, '-title')).toBe('"Heya"');
-          expect(testUtils.getOptionValue(argsList, '-sound')).toBe('"Bottle"');
-          callback();
-          done();
-        });
-        var notifier = new NotificationCenter();
-        notifier.notify({
-          title: 'Heya',
-          message: 'foo bar',
-          sound: 'Notification.Default'
-        });
-      }
-    );
+    it('should validate and transform sound to default sound if Windows sound is selected', function(done) {
+      utils.fileCommandJson = asyncify(function(notifier, argsList, callback) {
+        expect(testUtils.getOptionValue(argsList, '-title')).toBe('"Heya"');
+        expect(testUtils.getOptionValue(argsList, '-sound')).toBe('"Bottle"');
+        callback();
+        done();
+      });
+      var notifier = new NotificationCenter();
+      notifier.notify({
+        title: 'Heya',
+        message: 'foo bar',
+        sound: 'Notification.Default'
+      });
+    });
 
     it('should convert list of actions to flat list', function(done) {
       var expected = [
@@ -235,7 +224,7 @@ describe('terminal-notifier', function() {
       notifier.notify({
         title: 'title "message"',
         message: 'body "message"',
-        actions: [ 'foo', 'bar', 'baz "foo" bar' ]
+        actions: ['foo', 'bar', 'baz "foo" bar']
       });
     });
 

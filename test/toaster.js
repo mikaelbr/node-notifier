@@ -5,11 +5,12 @@ var os = require('os');
 var testUtils = require('./_test-utils');
 
 describe('WindowsToaster', function() {
+  var original = utils.fileCommand;
+  var originalType = os.type;
+  var originalArch = os.arch;
+  var originalRelease = os.release;
+
   beforeEach(function() {
-    this.original = utils.fileCommand;
-    this.originalType = os.type;
-    this.originalArch = os.arch;
-    this.originalRelease = os.release;
     os.release = function() {
       return '6.2.9200';
     };
@@ -19,15 +20,13 @@ describe('WindowsToaster', function() {
   });
 
   afterEach(function() {
-    utils.fileCommand = this.original;
-    os.type = this.originalType;
-    os.arch = this.originalArch;
-    os.release = this.originalRelease;
+    utils.fileCommand = original;
+    os.type = originalType;
+    os.arch = originalArch;
+    os.release = originalRelease;
   });
 
-  it('should only pass allowed options and proper named properties', function(
-    done
-  ) {
+  it('should only pass allowed options and proper named properties', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
       expect(testUtils.argsListHas(argsList, '-t')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-m')).toBeTruthy();
@@ -78,9 +77,9 @@ describe('WindowsToaster', function() {
     });
   });
 
-  it('should default to empty app name', function(done) {
+  it('should not have appId', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      expect(testUtils.getOptionValue(argsList, '-appID')).toBe(' ');
+      expect(testUtils.argsListHas(argsList, '-appId')).toBeFalsy();
       done();
     };
     var notifier = new Notify();
@@ -174,27 +173,24 @@ describe('WindowsToaster', function() {
     notifier.notify({ title: 'Heya', message: 'foo bar' });
   });
 
-  it(
-    'should validate and transform sound to default sound if Mac sound is selected',
-    function(done) {
-      utils.fileCommand = function(notifier, argsList, callback) {
-        expect(testUtils.getOptionValue(argsList, '-t')).toBe('Heya');
-        expect(
-          testUtils.getOptionValue(argsList, '-s')
-        ).toBe('Notification.Default');
-        done();
-      };
-      var notifier = new Notify();
+  it('should validate and transform sound to default sound if Mac sound is selected', function(done) {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      expect(testUtils.getOptionValue(argsList, '-t')).toBe('Heya');
+      expect(testUtils.getOptionValue(argsList, '-s')).toBe(
+        'Notification.Default'
+      );
+      done();
+    };
+    var notifier = new Notify();
 
-      notifier.notify({ title: 'Heya', message: 'foo bar', sound: 'Frog' });
-    }
-  );
+    notifier.notify({ title: 'Heya', message: 'foo bar', sound: 'Frog' });
+  });
 
   it('sound as true should select default value', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      expect(
-        testUtils.getOptionValue(argsList, '-s')
-      ).toBe('Notification.Default');
+      expect(testUtils.getOptionValue(argsList, '-s')).toBe(
+        'Notification.Default'
+      );
       done();
     };
     var notifier = new Notify();
