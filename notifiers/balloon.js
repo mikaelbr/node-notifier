@@ -22,9 +22,10 @@ Usage
 
  */
 var path = require('path');
-var notifier = path.resolve(__dirname, '../vendor/notifu/notifu');
-var checkGrowl = require('../lib/checkGrowl');
 var utils = require('../lib/utils');
+var notifier = path.resolve(utils.getVendorDir(), 'notifu/notifu');
+var checkGrowl = require('../lib/checkGrowl');
+
 var Toaster = require('./toaster');
 var Growl = require('./growl');
 var os = require('os');
