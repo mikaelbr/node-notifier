@@ -2,8 +2,9 @@
  * Wrapper for the toaster (https://github.com/nels-o/toaster)
  */
 var path = require('path');
-var notifier = path.resolve(__dirname, '../vendor/snoreToast/SnoreToast.exe');
 var utils = require('../lib/utils');
+var notifier = path.resolve(utils.getVendorDir(), 'snoreToast/SnoreToast.exe');
+
 var Balloon = require('./balloon');
 
 var EventEmitter = require('events').EventEmitter;
