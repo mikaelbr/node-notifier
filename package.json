@@ -1,8 +1,8 @@
 {
-  "name": "node-notifier",
+  "name": "brave-node-notifier",
   "version": "5.2.1",
   "description":
-    "A Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
+    "A fork of a Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
   "main": "index.js",
   "scripts": {
     "precommit": "lint-staged",
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/mikaelbr/node-notifier.git"
+    "url": "git+ssh://git@github.com/brave-intl/brave-node-notifier.git"
   },
   "keywords": [
     "notification center",
@@ -59,9 +59,9 @@
     "*.{js,json,css,md}": ["prettier --write", "git add"]
   },
   "bugs": {
-    "url": "https://github.com/mikaelbr/node-notifier/issues"
+    "url": "https://github.com/brave-intl/brave-node-notifier/issues"
   },
-  "homepage": "https://github.com/mikaelbr/node-notifier#readme",
+  "homepage": "https://github.com/brave-intl/brave-node-notifier#readme",
   "directories": {
     "example": "example",
     "test": "test"

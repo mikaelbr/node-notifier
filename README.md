@@ -1,3 +1,34 @@
+# brave-node-notifier
+
+This is a fork of [node-notifier](https://github.com/mikaelbr/node-notifier).
+The only differences (at this point) is that:
+
+* the embedded `terminal-notifier` application for macOS has a different `Terminal.icns` file
+
+* the utility routines are exposed via `require('brave-node-notifier`).utils`
+
+* an example of the preferred calling sequence is [here](example/brave-example.js)
+
+## Why this fork?
+
+The [original package](https://github.com/mikaelbr/node-notifier) is a one-stop meeting place to get all the notifications in
+one package;
+however,
+there isn't enough abstaction in the package's `notify()` method to do the "usual thing" consistently across platforms.
+The "usual thing" (for my application) is:
+
+* Display "title" and "message"
+* Display the application's icon (exactly once) and no other icons
+* If supported, have one action button and a dismiss button; otherwise, just some "chrome" to dismiss the notification
+* A click on anything other than the dismiss button/chrome is considered a click for the action
+* Get a callback with the result of the notification, one of: `"clicked"`, `"closed"`, or `"ignored"`
+
+        example('Title', 'Message...', null, (err, result) => {
+          console.log('err=' + (err && err.toString()) + ' result=' + JSON.stringify(result))
+        })
+
+Take a look [here](example/brave-example.js).
+
 # node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 Send cross platform native notifications using Node.js. Notification Center for macOS,

@@ -44,3 +44,5 @@ module.exports.NotificationCenter = NotificationCenter;
 module.exports.WindowsToaster = WindowsToaster;
 module.exports.WindowsBalloon = WindowsBalloon;
 module.exports.Growl = Growl;
+
+module.exports.utils = utils;
