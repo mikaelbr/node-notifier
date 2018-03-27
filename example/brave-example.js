@@ -22,7 +22,7 @@ const example = (title, message, idle, callback) => {
     message: message,
     sound: true,
     wait: true,
-    sleep: idle || 10
+    timeout: idle || 15
   };
 
   let extras = {
@@ -48,13 +48,13 @@ const example = (title, message, idle, callback) => {
     let result = arguments[2] && arguments[2].activationType;
 
     if (!result && arguments[1]) {
-      result =
-        {
-          'the user clicked on the toast.': 'contentsClicked',
-          'the toast has timed out': 'timeout',
-          'the user dismissed this toast': 'closed'
-        }[arguments[1]] || 'unknown';
+      result = {
+        'the user clicked on the toast.': 'contentsClicked',
+        'the toast has timed out': 'timeout',
+        'the user dismissed this toast': 'closed'
+      }[arguments[1]];
     }
+    if (!result) result = 'unknown';
     if (result.indexOf('Clicked') !== -1) result = 'clicked';
     if (result === 'timeout') result = 'ignored';
 
