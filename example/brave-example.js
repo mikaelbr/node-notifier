@@ -33,7 +33,7 @@ const example = (title, message, idle, callback) => {
     // Terminal.icns has been updated!
     Darwin: () => {
       if (notifier.utils.isMountainLion())
-        return { closeLabel: 'Dismiss', actions: 'View' };
+        return { actions: 'View', closeLabel: 'Close' };
     },
 
     Windows_NT: () => {
@@ -58,6 +58,7 @@ const example = (title, message, idle, callback) => {
     if (result.indexOf('Clicked') !== -1) result = 'clicked';
     if (result === 'timeout') result = 'ignored';
 
+    console.log(JSON.stringify(arguments, null, 2));
     report(null, result);
   });
 
