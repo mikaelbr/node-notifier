@@ -3,6 +3,31 @@
 const notifier = require('../index');
 const os = require('os');
 
+const enabled = () => {
+  let f = {
+    Darwin: () => {
+      if (!notifier.utils.isMountainLion()) return;
+
+      /* 
+
+% defaults -currentHost read ~/Library/Preferences/ByHost/com.apple.notificationcenterui
+    ensure doNotDisturb=0
+
+  ensure terminal-notifier is enabled for Alerts
+ */
+      return true;
+    },
+
+    Windows_NT: () => {
+      if (!notifier.utils.isLessThanWin8()) return;
+
+      return true;
+    }
+  }[os.type()];
+
+  return f && f();
+};
+
 const example = (title, message, idle, callback) => {
   const type = os.type();
 
@@ -64,6 +89,8 @@ const example = (title, message, idle, callback) => {
 
   return true;
 };
+
+console.log('enabled: ' + JSON.stringify(enabled()));
 
 example('Title', 'Message...', null, (err, result) => {
   console.log(

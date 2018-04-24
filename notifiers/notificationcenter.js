@@ -9,7 +9,7 @@ var notifier = path.join(
   'terminal-notifier.app/Contents/MacOS/terminal-notifier'
 );
 /* perhaps in a future release...
- % defaults write com.apple.notificationcenterui bannerTime 10
+ % defaults write com.apple.notificationcenterui bannerTime "$timeout"
  % killall NotificationCenter
 */
 
