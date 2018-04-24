@@ -58,7 +58,7 @@ const example = (title, message, idle, callback) => {
     // Terminal.icns has been updated!
     Darwin: () => {
       if (notifier.utils.isMountainLion())
-        return { actions: 'View', closeLabel: 'Close' };
+        return { actions: 'Open', closeLabel: 'Close' };
     },
 
     Windows_NT: () => {
