@@ -9,11 +9,10 @@ const enabled = () => {
       if (!notifier.utils.isMountainLion()) return;
 
       /* 
-
 % defaults -currentHost read ~/Library/Preferences/ByHost/com.apple.notificationcenterui
     ensure doNotDisturb=0
 
-  ensure terminal-notifier is enabled for Alerts
+  verify that terminal-notifier is enabled for Alerts
  */
       return true;
     },
