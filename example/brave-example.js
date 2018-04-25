@@ -2,6 +2,7 @@
 
 const notifier = require('../index');
 const os = require('os');
+var path = require('path');
 
 const enabled = () => {
   let f = {
@@ -62,7 +63,10 @@ const example = (title, message, idle, callback) => {
 
     Windows_NT: () => {
       if (!notifier.utils.isLessThanWin8())
-        return { appID: 'com.squirrel.brave.Brave' };
+        return {
+          appID: 'com.squirrel.brave.Brave',
+          icon: path.join(__dirname, 'BAT_icon.png')
+        };
     }
   }[type];
   if (extras) extras = extras();
