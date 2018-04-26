@@ -1,50 +1,37 @@
 /* jshint asi: true, node: true, laxbreak: true, laxcomma: true, undef: true, esversion: 6 */
 
 const notifier = require('../index');
-const exec = require('child_process').exec;
 const os = require('os');
 const path = require('path');
 
-// perhaps move this inside the package...
+const osType = os.type();
 
-const enabled = cb => {
-  let f = {
-    Darwin: () => {
-      if (!notifier.utils.isMountainLion()) return;
-
-      exec(
-        'defaults -currentHost read ~/Library/Preferences/ByHost/com.apple.notificationcenterui',
-        (err, stdout, stderr) => {
-          if (err) return cb(err, stderr);
-
-          return cb(null, stdout.indexOf('doNotDisturb = 0;') !== -1);
-        }
-      );
-
-      return true;
-    },
-
-    Windows_NT: () => {
-      if (!notifier.utils.isLessThanWin8()) return;
-
-      cb(null, true);
-
-      return true;
-    }
-  }[os.type()];
-
-  if (!f || !f()) setImmediate(cb);
-};
-
-enabled((err, result) => {
-  if (err) return console.log('enabled: err=' + err.toString());
-
-  console.log('enabled: result=' + JSON.stringify(result));
+notifier.available((err, result) => {
+  console.log(
+    'available: err=' +
+      (err && err.toString()) +
+      ' result=' +
+      JSON.stringify(result)
+  );
+});
+notifier.configured((err, result) => {
+  console.log(
+    'configured: err=' +
+      (err && err.toString()) +
+      ' result=' +
+      JSON.stringify(result)
+  );
+});
+notifier.enabled((err, result) => {
+  console.log(
+    'enabled: err=' +
+      (err && err.toString()) +
+      ' result=' +
+      JSON.stringify(result)
+  );
 });
 
 const example = (title, message, idle, callback) => {
-  const type = os.type();
-
   const report = (err, result) => {
     if (callback) return callback(err, result);
 
@@ -84,7 +71,7 @@ const example = (title, message, idle, callback) => {
         };
       }
     }
-  }[type];
+  }[osType];
   if (extras) extras = extras();
   if (!extras) return report(new Error('notifications not supported'));
 
@@ -102,7 +89,9 @@ const example = (title, message, idle, callback) => {
     if (result.indexOf('Clicked') !== -1) result = 'clicked';
     if (result === 'timeout') result = 'ignored';
 
-    console.log(require('json-stringify-safe')(arguments, null, 2));
+    console.log(
+      'arguments: ' + require('json-stringify-safe')(arguments, null, 2)
+    );
     report(null, result);
   });
 
