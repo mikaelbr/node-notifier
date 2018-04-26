@@ -1,32 +1,46 @@
 /* jshint asi: true, node: true, laxbreak: true, laxcomma: true, undef: true, esversion: 6 */
 
 const notifier = require('../index');
+const exec = require('child_process').exec;
 const os = require('os');
-var path = require('path');
+const path = require('path');
 
-const enabled = () => {
+// perhaps move this inside the package...
+
+const enabled = cb => {
   let f = {
     Darwin: () => {
       if (!notifier.utils.isMountainLion()) return;
 
-      /* 
-% defaults -currentHost read ~/Library/Preferences/ByHost/com.apple.notificationcenterui
-    ensure doNotDisturb=0
+      exec(
+        'defaults -currentHost read ~/Library/Preferences/ByHost/com.apple.notificationcenterui',
+        (err, stdout, stderr) => {
+          if (err) return cb(err, stderr);
 
-  verify that terminal-notifier is enabled for Alerts
- */
+          return cb(null, stdout.indexOf('doNotDisturb = 0;') !== -1);
+        }
+      );
+
       return true;
     },
 
     Windows_NT: () => {
       if (!notifier.utils.isLessThanWin8()) return;
 
+      cb(null, true);
+
       return true;
     }
   }[os.type()];
 
-  return f && f();
+  if (!f || !f()) setImmediate(cb);
 };
+
+enabled((err, result) => {
+  if (err) return console.log('enabled: err=' + err.toString());
+
+  console.log('enabled: result=' + JSON.stringify(result));
+});
 
 const example = (title, message, idle, callback) => {
   const type = os.type();
@@ -57,16 +71,18 @@ const example = (title, message, idle, callback) => {
 
     // Terminal.icns has been updated!
     Darwin: () => {
-      if (notifier.utils.isMountainLion())
+      if (notifier.utils.isMountainLion()) {
         return { actions: 'Open', closeLabel: 'Close' };
+      }
     },
 
     Windows_NT: () => {
-      if (!notifier.utils.isLessThanWin8())
+      if (!notifier.utils.isLessThanWin8()) {
         return {
           appID: 'com.squirrel.brave.Brave',
           icon: path.join(__dirname, 'BAT_icon.png')
         };
+      }
     }
   }[type];
   if (extras) extras = extras();
@@ -86,14 +102,12 @@ const example = (title, message, idle, callback) => {
     if (result.indexOf('Clicked') !== -1) result = 'clicked';
     if (result === 'timeout') result = 'ignored';
 
-    console.log(JSON.stringify(arguments, null, 2));
+    console.log(require('json-stringify-safe')(arguments, null, 2));
     report(null, result);
   });
 
   return true;
 };
-
-console.log('enabled: ' + JSON.stringify(enabled()));
 
 example('Title', 'Message...', null, (err, result) => {
   console.log(
