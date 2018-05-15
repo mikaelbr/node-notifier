@@ -76,8 +76,9 @@ const configured = callback => {
     let f = {
       Darwin: () => {
         exec('launchctl list', (err, stdout, stderr) => {
-          if (!err && stdout.indexOf('com.apple.notificationcenterui') === -1)
+          if (!err && stdout.indexOf('com.apple.notificationcenterui') === -1) {
             return callback(null, false);
+          }
 
           exec('defaults export com.apple.ncprefs -', (err, stdout, stderr) => {
             let data, entry;
