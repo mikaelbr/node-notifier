@@ -71,7 +71,7 @@ const available = callback => {
 
 const configured = callback => {
   available((err, result) => {
-    if (err) return callback, err, result;
+    if (callback) return callback(err, result);
 
     let f = {
       Darwin: () => {
@@ -105,7 +105,7 @@ const configured = callback => {
 
 const enabled = callback => {
   configured((err, result) => {
-    if (err) return callback, err, result;
+    if (err) return callback(err, result);
 
     let f = {
       Darwin: () => {
