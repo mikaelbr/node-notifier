@@ -1,4 +1,4 @@
-# node-notifier [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+# node-notifier [![NPM version][npm-image]][npm-url] [![Install size][size-image]][size-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
 Send cross platform native notifications using Node.js. Notification Center for macOS,
 notify-osd/libnotify-bin for Linux, Toasters for Windows 8/10, or taskbar Balloons for
@@ -375,6 +375,8 @@ node: {
 
 [npm-url]: https://npmjs.org/package/node-notifier
 [npm-image]: http://img.shields.io/npm/v/node-notifier.svg?style=flat
+[size-url]: https://packagephobia.now.sh/result?p=node-notifier
+[size-image]: https://packagephobia.now.sh/badge?p=node-notifier
 [npm-downloads]: http://img.shields.io/npm/dm/node-notifier.svg?style=flat
 [travis-url]: http://travis-ci.org/mikaelbr/node-notifier
 [travis-image]: http://img.shields.io/travis/mikaelbr/node-notifier.svg?style=flat
