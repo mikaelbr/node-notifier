@@ -81,8 +81,11 @@ const example = (title, message, idle, callback) => {
     if (!result && arguments[1]) {
       result = {
         'the user clicked on the toast.': 'contentsClicked',
+        'the user activated the notification': 'contentsClicked',
         'the toast has timed out': 'timeout',
-        'the user dismissed this toast': 'closed'
+        'the notification has timed out.': 'timeout',
+        'the user dismissed this toast': 'closed',
+        'the user dismissed the notification.': 'closed'
       }[arguments[1]];
     }
     if (!result) result = 'unknown';
