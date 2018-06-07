@@ -64,9 +64,7 @@ const available = callback => {
     }
   }[osType];
 
-  setImmediate(() => {
-    callback(null, f && f());
-  });
+  return f && f();
 };
 
 const configured = callback => {
