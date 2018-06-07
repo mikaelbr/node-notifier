@@ -53,7 +53,7 @@ module.exports.Growl = Growl;
 
 module.exports.utils = utils;
 
-const available = callback => {
+const available = () => {
   let f = {
     Darwin: () => {
       return utils.isMountainLion();
@@ -64,42 +64,42 @@ const available = callback => {
     }
   }[osType];
 
-  return f && f();
+  return (f && f()) || false;
 };
 
 const configured = callback => {
-  available((err, result) => {
-    if (callback) return callback(err, result);
+  let result = available();
 
-    let f = {
-      Darwin: () => {
-        exec('launchctl list', (err, stdout, stderr) => {
-          if (!err && stdout.indexOf('com.apple.notificationcenterui') === -1) {
-            return callback(null, false);
-          }
+  if (!result) return callback(null, result);
 
-          exec('defaults export com.apple.ncprefs -', (err, stdout, stderr) => {
-            let data, entry;
+  let f = {
+    Darwin: () => {
+      exec('launchctl list', (err, stdout, stderr) => {
+        if (!err && stdout.indexOf('com.apple.notificationcenterui') === -1) {
+          return callback(null, false);
+        }
 
-            if (err) return callback(err, stderr);
+        exec('defaults export com.apple.ncprefs -', (err, stdout, stderr) => {
+          let data, entry;
 
-            data = plist.parse(stdout);
-            entry = underscore.findWhere(data && data.apps, {
-              'bundle-id': 'com.brave.terminal-notifier'
-            });
-            callback(null, !!(entry.flags & (1 << 4)));
+          if (err) return callback(err, stderr);
+
+          data = plist.parse(stdout);
+          entry = underscore.findWhere(data && data.apps, {
+            'bundle-id': 'com.brave.terminal-notifier'
           });
+          callback(null, !!(entry.flags & (1 << 4)));
         });
-      },
+      });
+    },
 
-      Windows_NT: () => {
-        return callback(null, true);
-      }
-    }[osType];
+    Windows_NT: () => {
+      return callback(null, true);
+    }
+  }[osType];
 
-    if (!f) return callback(null);
-    f();
-  });
+  if (!f) return callback(null, false);
+  f();
 };
 
 const enabled = callback => {
@@ -123,7 +123,7 @@ const enabled = callback => {
       }
     }[osType];
 
-    if (!f) return callback(null);
+    if (!f) return callback(null, false);
     f();
   });
 };

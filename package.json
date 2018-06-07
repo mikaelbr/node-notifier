@@ -1,6 +1,6 @@
 {
   "name": "brave-node-notifier",
-  "version": "5.2.4",
+  "version": "5.2.5",
   "description":
     "A fork of a Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
   "main": "index.js",

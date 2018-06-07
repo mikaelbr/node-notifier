@@ -6,14 +6,7 @@ const path = require('path');
 
 const osType = os.type();
 
-notifier.available((err, result) => {
-  console.log(
-    'available: err=' +
-      (err && err.toString()) +
-      ' result=' +
-      JSON.stringify(result)
-  );
-});
+console.log('available: result=' + JSON.stringify(notifier.available()));
 notifier.configured((err, result) => {
   console.log(
     'configured: err=' +
@@ -39,6 +32,9 @@ const example = (title, message, idle, callback) => {
     return (!err && result) || err;
   };
 
+  if (!notifier.available())
+    return report(new Error('notifications not supported'));
+
   if (!title) return report(new Error('missing parameter: title'));
 
   if (!message) return report(new Error('missing parameter: message'));
@@ -58,24 +54,19 @@ const example = (title, message, idle, callback) => {
 
     // Terminal.icns has been updated!
     Darwin: () => {
-      if (notifier.utils.isMountainLion()) {
-        return { actions: 'Open', closeLabel: 'Close' };
-      }
+      return { actions: 'Open', closeLabel: 'Close' };
     },
 
     Windows_NT: () => {
-      if (!notifier.utils.isLessThanWin8()) {
-        return {
-          appID: 'com.squirrel.brave.Brave',
-          icon: path.join(__dirname, 'BAT_icon.png')
-        };
-      }
+      return {
+        appID: 'com.squirrel.brave.Brave',
+        icon: path.join(__dirname, 'BAT_icon.png')
+      };
     }
   }[osType];
   if (extras) extras = extras();
-  if (!extras) return report(new Error('notifications not supported'));
 
-  notifier.notify(Object.assign(options, extras), function() {
+  notifier.notify(Object.assign(options, extras || {}), function() {
     let result = arguments[2] && arguments[2].activationType;
 
     if (!result && arguments[1]) {
