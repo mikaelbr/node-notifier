@@ -91,7 +91,7 @@ WindowsToaster.prototype.notify = function(options, callback) {
     keepNewlines: true,
     noEscape: true
   });
-  utils.fileCommand(
+  utils.command(
     this.options.customPath || notifier,
     argsList,
     actionJackedCallback
