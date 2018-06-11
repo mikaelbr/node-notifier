@@ -67,7 +67,7 @@ const available = () => {
   return (f && f()) || false;
 };
 
-const configured = callback => {
+const configured = (appID, callback) => {
   let result = available();
 
   if (!result) return callback(null, result);
@@ -86,7 +86,7 @@ const configured = callback => {
 
           data = plist.parse(stdout);
           entry = underscore.findWhere(data && data.apps, {
-            'bundle-id': 'com.brave.terminal-notifier'
+            'bundle-id': appID
           });
           callback(null, !!(entry.flags & (1 << 4)));
         });
@@ -94,7 +94,10 @@ const configured = callback => {
     },
 
     Windows_NT: () => {
-      return callback(null, true);
+      WindowsToaster.notify({ n: appID }, function() {
+        console.log('n: ' + JSON.stringify(arguments, null, 2));
+        return callback(null, true);
+      });
     }
   }[osType];
 
@@ -102,8 +105,8 @@ const configured = callback => {
   f();
 };
 
-const enabled = callback => {
-  configured((err, result) => {
+const enabled = (appID, callback) => {
+  configured(appID, (err, result) => {
     if (err) return callback(err, result);
 
     let f = {
@@ -119,7 +122,10 @@ const enabled = callback => {
       },
 
       Windows_NT: () => {
-        return callback(null, true);
+        WindowsToaster.notify({ k: true }, function() {
+          console.log('k: ' + JSON.stringify(arguments, null, 2));
+          return callback(null, true);
+        });
       }
     }[osType];
 

@@ -5,9 +5,13 @@ const os = require('os');
 const path = require('path');
 
 const osType = os.type();
+const appID =
+  osType === 'Darwin'
+    ? 'com.brave.terminal-notifier'
+    : 'com.squirrel.brave.Brave';
 
 console.log('available: result=' + JSON.stringify(notifier.available()));
-notifier.configured((err, result) => {
+notifier.configured(appID, (err, result) => {
   console.log(
     'configured: err=' +
       (err && err.toString()) +
@@ -15,7 +19,7 @@ notifier.configured((err, result) => {
       JSON.stringify(result)
   );
 });
-notifier.enabled((err, result) => {
+notifier.enabled(appID, (err, result) => {
   console.log(
     'enabled: err=' +
       (err && err.toString()) +
@@ -59,7 +63,7 @@ const example = (title, message, idle, callback) => {
 
     Windows_NT: () => {
       return {
-        appID: 'com.squirrel.brave.Brave',
+        appID: appID,
         icon: path.join(__dirname, 'BAT_icon.png')
       };
     }
