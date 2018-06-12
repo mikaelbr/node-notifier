@@ -94,10 +94,7 @@ const configured = (appID, callback) => {
     },
 
     Windows_NT: () => {
-      WindowsToaster.notify({ n: appID }, function() {
-        console.log('n: ' + JSON.stringify(arguments, null, 2));
-        return callback(null, true);
-      });
+      return callback(null, true);
     }
   }[osType];
 
@@ -122,10 +119,7 @@ const enabled = (appID, callback) => {
       },
 
       Windows_NT: () => {
-        WindowsToaster.notify({ k: true }, function() {
-          console.log('k: ' + JSON.stringify(arguments, null, 2));
-          return callback(null, true);
-        });
+        return callback(null, true);
       }
     }[osType];
 
