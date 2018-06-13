@@ -6,6 +6,10 @@ const underscore = require('underscore');
 var utils = require('./lib/utils');
 
 const osType = os.type();
+const defID =
+  osType === 'Darwin'
+    ? 'com.brave.terminal-notifier'
+    : 'com.squirrel.brave.Brave';
 
 // All notifiers
 var NotifySend = require('./notifiers/notifysend');
@@ -70,6 +74,10 @@ const available = () => {
 const configured = (appID, callback) => {
   let result = available();
 
+  if (!callback && typeof appID === 'function') {
+    callback = appID;
+    appID = defID;
+  }
   if (!result) return callback(null, result);
 
   let f = {
@@ -103,6 +111,10 @@ const configured = (appID, callback) => {
 };
 
 const enabled = (appID, callback) => {
+  if (!callback && typeof appID === 'function') {
+    callback = appID;
+    appID = defID;
+  }
   configured(appID, (err, result) => {
     if (err) return callback(err, result);
 
