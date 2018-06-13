@@ -36,8 +36,9 @@ const example = (title, message, idle, callback) => {
     return (!err && result) || err;
   };
 
-  if (!notifier.available())
+  if (!notifier.available()) {
     return report(new Error('notifications not supported'));
+  }
 
   if (!title) return report(new Error('missing parameter: title'));
 

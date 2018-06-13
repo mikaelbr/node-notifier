@@ -88,7 +88,7 @@ const configured = (appID, callback) => {
           entry = underscore.findWhere(data && data.apps, {
             'bundle-id': appID
           });
-          callback(null, !!(entry.flags & (1 << 4)));
+          callback(null, entry && !!(entry.flags & (1 << 4)));
         });
       });
     },
