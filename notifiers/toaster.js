@@ -3,7 +3,17 @@
  */
 var path = require('path');
 var utils = require('../lib/utils');
-var notifier = path.resolve(utils.getVendorDir(), 'snoreToast/SnoreToast.exe');
+var newP = true;
+
+var notifier;
+if (newP) {
+  notifier = path.resolve(
+    utils.getVendorDir(),
+    'windows-notifier/notifier.exe'
+  );
+} else {
+  notifier = path.resolve(utils.getVendorDir(), 'snoreToast/SnoreToast.exe');
+}
 var Balloon = require('./balloon');
 
 var EventEmitter = require('events').EventEmitter;
@@ -75,8 +85,13 @@ WindowsToaster.prototype.notify = function(options, callback) {
     typeof options.message === 'undefined' &&
     typeof options.close === 'undefined'
   ) {
-    callback(new Error('Message or ID to close is required.'));
-    return this;
+    if (
+      !newP ||
+      (typeof options.n === 'undefined' && typeof options.k === 'undefined')
+    ) {
+      callback(new Error('Message or ID to close is required.'));
+      return this;
+    }
   }
 
   if (!utils.isWin8() && !!this.options.withFallback) {
@@ -84,13 +99,21 @@ WindowsToaster.prototype.notify = function(options, callback) {
     return fallback.notify(options, callback);
   }
 
-  options = utils.mapToWin8(options);
-  var argsList = utils.constructArgumentList(options, {
-    explicitTrue: true,
-    wrapper: '',
-    keepNewlines: true,
-    noEscape: true
-  });
+  var argsList;
+  if (
+    newP &&
+    (typeof options.n !== 'undefined' || typeof options.k !== 'undefined')
+  ) {
+    argsList = typeof options.n !== 'undefined' ? ['-n', options.n] : ['-k'];
+  } else {
+    options = utils.mapToWin8(options);
+    argsList = utils.constructArgumentList(options, {
+      explicitTrue: true,
+      wrapper: '',
+      keepNewlines: true,
+      noEscape: true
+    });
+  }
   utils.fileCommand(
     this.options.customPath || notifier,
     argsList,

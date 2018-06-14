@@ -102,7 +102,9 @@ const configured = (appID, callback) => {
     },
 
     Windows_NT: () => {
-      return callback(null, true);
+      module.exports.notify({ n: appID }, function() {
+        return callback(null, arguments[1] === 'enabled');
+      });
     }
   }[osType];
 
@@ -131,7 +133,9 @@ const enabled = (appID, callback) => {
       },
 
       Windows_NT: () => {
-        return callback(null, true);
+        module.exports.notify({ k: true }, function() {
+          return callback(null, arguments[1] === 'enabled');
+        });
       }
     }[osType];
 

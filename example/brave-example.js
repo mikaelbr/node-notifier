@@ -10,24 +10,6 @@ const appID =
     ? 'com.brave.terminal-notifier'
     : 'com.squirrel.brave.Brave';
 
-console.log('available: result=' + JSON.stringify(notifier.available()));
-notifier.configured(appID, (err, result) => {
-  console.log(
-    'configured: err=' +
-      (err && err.toString()) +
-      ' result=' +
-      JSON.stringify(result)
-  );
-});
-notifier.enabled(appID, (err, result) => {
-  console.log(
-    'enabled: err=' +
-      (err && err.toString()) +
-      ' result=' +
-      JSON.stringify(result)
-  );
-});
-
 const example = (title, message, idle, callback) => {
   const report = (err, result) => {
     if (callback) return callback(err, result);
@@ -88,17 +70,36 @@ const example = (title, message, idle, callback) => {
     if (result.indexOf('Clicked') !== -1) result = 'clicked';
     if (result === 'timeout') result = 'ignored';
 
-    console.log(
-      'arguments: ' + require('json-stringify-safe')(arguments, null, 2)
-    );
     report(null, result);
   });
 
   return true;
 };
 
-example('Title', 'Message...', null, (err, result) => {
+console.log('available: result=' + JSON.stringify(notifier.available()));
+notifier.configured(appID, (err, result) => {
   console.log(
-    'err=' + (err && err.toString()) + ' result=' + JSON.stringify(result)
+    'configured: err=' +
+      (err && err.toString()) +
+      ' result=' +
+      JSON.stringify(result)
   );
+
+  notifier.enabled(appID, (err, result) => {
+    console.log(
+      'enabled: err=' +
+        (err && err.toString()) +
+        ' result=' +
+        JSON.stringify(result)
+    );
+
+    example('Title', 'Message...', null, (err, result) => {
+      console.log(
+        'notify: err=' +
+          (err && err.toString()) +
+          ' result=' +
+          JSON.stringify(result)
+      );
+    });
+  });
 });
