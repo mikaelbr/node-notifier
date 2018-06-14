@@ -1,5 +1,6 @@
 const exec = require('child_process').exec;
 var os = require('os');
+const path = require('path');
 const plist = require('plist');
 const underscore = require('underscore');
 
@@ -144,6 +145,77 @@ const enabled = (appID, callback) => {
   });
 };
 
+const inform = (title, message, idle, appID, callback) => {
+  const report = (err, result) => {
+    if (callback) return callback(err, result);
+
+    return (!err && result) || err;
+  };
+
+  if (!callback && typeof appID === 'function') {
+    callback = appID;
+    appID = defID;
+  }
+
+  if (!available()) {
+    return report(new Error('notifications not supported'));
+  }
+
+  if (!title) return report(new Error('missing parameter: title'));
+
+  if (!message) return report(new Error('missing parameter: message'));
+
+  let options = {
+    title: title,
+    message: message,
+    sound: true,
+    wait: true,
+    timeout: idle || 15
+  };
+
+  let extras = {
+    Linux: () => {
+      // TBD: add NotifySend() options here
+    },
+
+    // Terminal.icns has been updated!
+    Darwin: () => {
+      return { actions: 'Open', closeLabel: 'Close' };
+    },
+
+    Windows_NT: () => {
+      return {
+        appID: appID,
+        icon: path.join(__dirname, 'BAT_icon.png')
+      };
+    }
+  }[osType];
+  if (extras) extras = extras();
+
+  module.exports.notify(Object.assign(options, extras || {}), function() {
+    let result = arguments[2] && arguments[2].activationType;
+
+    if (!result && arguments[1]) {
+      result = {
+        'the user clicked on the toast.': 'contentsClicked',
+        'the user activated the notification': 'contentsClicked',
+        'the toast has timed out': 'timeout',
+        'the notification has timed out.': 'timeout',
+        'the user dismissed this toast': 'closed',
+        'the user dismissed the notification.': 'closed'
+      }[arguments[1]];
+    }
+    if (!result) result = 'unknown';
+    if (result.indexOf('Clicked') !== -1) result = 'clicked';
+    if (result === 'timeout') result = 'ignored';
+
+    report(null, result);
+  });
+
+  return true;
+};
+
 module.exports.available = available;
 module.exports.configured = configured;
 module.exports.enabled = enabled;
+module.exports.inform = inform;
