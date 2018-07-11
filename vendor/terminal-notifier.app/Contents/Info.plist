@@ -11,7 +11,7 @@
 	<key>CFBundleIconFile</key>
 	<string>Terminal</string>
 	<key>CFBundleIdentifier</key>
-	<string>nl.superalloy.oss.terminal-notifier</string>
+	<string>com.brave.terminal-notifier</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
