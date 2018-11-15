@@ -10,7 +10,7 @@ nc.notify(
     sound: 'Funk',
     // case sensitive
     wait: true,
-    appIcon: path.join(__dirname, 'coulson.jpg'),
+    icon: path.join(__dirname, 'coulson.jpg'),
     contentImage: path.join(__dirname, 'coulson.jpg'),
     open: 'file://' + path.join(__dirname, 'coulson.jpg')
   },
