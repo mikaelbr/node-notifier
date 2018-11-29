@@ -1,6 +1,5 @@
 var os = require('os');
 var utils = require('./lib/utils');
-var isWSL = require('is-wsl');
 
 // All notifiers
 var NotifySend = require('./notifiers/notifysend');
@@ -11,7 +10,7 @@ var WindowsBalloon = require('./notifiers/balloon');
 
 var options = { withFallback: true };
 
-var osType = isWSL ? 'WSL' : os.type();
+var osType = utils.isWSL() ? 'WSL' : os.type();
 
 switch (osType) {
   case 'Linux':

@@ -79,7 +79,7 @@ WindowsToaster.prototype.notify = function(options, callback) {
     return this;
   }
 
-  if (!utils.isWin8() && !!this.options.withFallback) {
+  if (!utils.isWin8() && !utils.isWSL() && !!this.options.withFallback) {
     fallback = fallback || new Balloon(this.options);
     return fallback.notify(options, callback);
   }
