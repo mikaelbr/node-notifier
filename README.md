@@ -218,7 +218,11 @@ If `sound` is simply `true`, `Bottle` is used.
 `customPath` takes a value of a relative or absolute path to the binary of your
 fork/custom version of **`terminal-notifier`**.
 
-**Example:** `./vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier`
+**Example:** `./vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier`
+
+**Spotlight clarification**
+
+`terminal-notifier.app` resides in a `mac.noindex` folder to prevent Spotlight from indexing the app.
 
 ### Usage: `WindowsToaster`
 
