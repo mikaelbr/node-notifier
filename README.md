@@ -418,6 +418,10 @@ You can do so with the following command:
 asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
 ```
 
+### Using with pkg
+
+For issues using with the pkg module. Check this issue out: https://github.com/mikaelbr/node-notifier/issues/220#issuecomment-425963752
+
 ### Using Webpack
 
 When using `node-notifier` inside of `webpack`, you must add the snippet below to your `webpack.config.js`. 
