@@ -1,5 +1,13 @@
 # Changelog
 
+### `v5.4.0`
+
+- Prevent Spotlight from indexing terminal-notifier.app ([#238](https://github.com/mikaelbr/node-notifier/pull/238))
+- Changes from legacy url.parse api
+- Adds default timeout to notification center
+- Adds mapping from timeout to expire time for linux
+- Enables the use of WindowsToaster when using WSL ([#260](https://github.com/mikaelbr/node-notifier/pull/260))
+
 ### `v5.3.0`
 
 - Re-adds `notifu` update.
