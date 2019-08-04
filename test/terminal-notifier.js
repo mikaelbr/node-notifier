@@ -173,6 +173,8 @@ describe('terminal-notifier', function() {
         '"body"',
         '-tullball',
         '"notValid"',
+        '-timeout',
+        '"10"',
         '-json',
         '"true"'
       ];
@@ -212,6 +214,8 @@ describe('terminal-notifier', function() {
         '"body \\"message\\""',
         '-actions',
         'foo,bar,baz "foo" bar',
+        '-timeout',
+        '"10"',
         '-json',
         '"true"'
       ];
@@ -303,6 +307,8 @@ describe('terminal-notifier', function() {
         '"body \\"message\\""',
         '-tullball',
         '"notValid"',
+        '-timeout',
+        '"10"',
         '-json',
         '"true"'
       ];
