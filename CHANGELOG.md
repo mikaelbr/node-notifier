@@ -1,5 +1,13 @@
 # Changelog
 
+### `v5.4.2`
+
+- Updates dependencies
+
+### `v5.4.1`
+
+- Revers changes to default timeout as they are causing some issues. See [#271](https://github.com/mikaelbr/node-notifier/pull/271)
+
 ### `v5.4.0`
 
 - Prevent Spotlight from indexing terminal-notifier.app ([#238](https://github.com/mikaelbr/node-notifier/pull/238))

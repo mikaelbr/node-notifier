@@ -6,6 +6,7 @@
   },
   "rules": {
     "space-before-function-paren": 0,
+    "no-prototype-builtins": 0,
     "no-control-regex": 0
   }
 }

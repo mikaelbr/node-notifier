@@ -71,7 +71,7 @@ notifier.notify(
   }
 );
 
-notifier.on('click', function(notifierObject, options) {
+notifier.on('click', function(notifierObject, options, event) {
   // Triggers if `wait: true` and user clicks notification
 });
 
