@@ -186,7 +186,11 @@ notifier.notify(
 **Note:** The `wait` option is shorthand for `timeout: 5`. This just sets a timeout
 for 5 seconds. It does _not_ make the notification sticky!
 
-As of 5.4.0, `timeout` defaults to `10`. In order to have a "fire and forgotten" notification, you need to set `timeout` to `false`.
+Without `wait` or `timeout`, notifications are just fired and forgotten. They don't
+wait for any response.
+
+To make notifications wait for a response (like activation/click), you must define
+a `timeout`.
 
 _Exception:_ If `reply` is defined, it's recommended to set `timeout` to a either
 high value, or to nothing at all.
