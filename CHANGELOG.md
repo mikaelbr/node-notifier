@@ -1,12 +1,16 @@
 # Changelog
 
+### `v5.4.3`
+
+- Reverts breaking dependency upgrades from `v5.4.2` as some dependencies has removed Node 6 which is a breaking change.
+
 ### `v5.4.2`
 
 - Updates dependencies
 
 ### `v5.4.1`
 
-- Revers changes to default timeout as they are causing some issues. See [#271](https://github.com/mikaelbr/node-notifier/pull/271)
+- Reverts changes to default timeout as they are causing some issues. See [#271](https://github.com/mikaelbr/node-notifier/pull/271)
 
 ### `v5.4.0`
 
