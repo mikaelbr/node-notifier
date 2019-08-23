@@ -186,6 +186,30 @@ describe('WindowsToaster', function() {
     notifier.notify({ title: 'Heya', message: 'foo bar', sound: 'Frog' });
   });
 
+  it('should use 32 bit snoreToaster if 32 arch', function(done) {
+    os.arch = function() {
+      return 'ia32';
+    };
+    var expected = 'snoretoast-x86.exe';
+    utils.fileCommand = function(notifier, argsList, callback) {
+      expect(notifier).toEndWith(expected);
+      done();
+    };
+    new Notify().notify({ title: 'title', message: 'body' });
+  });
+
+  it('should default to x64 version', function(done) {
+    os.arch = function() {
+      return 'x64';
+    };
+    var expected = 'snoretoast-x64.exe';
+    utils.fileCommand = function(notifier, argsList, callback) {
+      expect(notifier).toEndWith(expected);
+      done();
+    };
+    new Notify().notify({ title: 'title', message: 'body' });
+  });
+
   it('sound as true should select default value', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
       expect(testUtils.getOptionValue(argsList, '-s')).toBe(
