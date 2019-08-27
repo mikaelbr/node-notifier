@@ -186,7 +186,7 @@ notifier.notify(
 **Note:** The `wait` option is shorthand for `timeout: 5`. This just sets a timeout
 for 5 seconds. It does _not_ make the notification sticky!
 
-As of 5.4.0, `timeout` defaults to `10`. In order to have a "fire and forgotten" notification, you need to set `timeout` to `false`.
+As of Version 6.0 there is a default `timeout` set of `10` to ensure that the application closes properly. In order to remove the `timeout` and have an instantly closing notification (does not support actions), set `timeout` to `false`. If you are using `action` it is recommended to set `timeout` to a high value to ensure the user has time to respond.
 
 _Exception:_ If `reply` is defined, it's recommended to set `timeout` to a either
 high value, or to nothing at all.
