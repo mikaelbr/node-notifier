@@ -55,8 +55,18 @@ WindowsToaster.prototype.notify = function(options, callback) {
     this,
     options,
     function cb(err, data) {
-      // Needs to filter out timeout. Not an actual error.
-      if (err && hasText(data, timeoutMessage)) {
+      /* Possible exit statuses from SnoreToast, we only want to include err if it's -1 code
+      Exit Status     :  Exit Code
+      Failed          : -1
+
+      Success         :  0
+      Hidden          :  1
+      Dismissed       :  2
+      TimedOut        :  3
+      ButtonPressed   :  4
+      TextEntered     :  5
+      */
+      if (err && err.code !== -1) {
         return callback(null, data);
       }
       callback(err, data);

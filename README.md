@@ -64,7 +64,7 @@ notifier.notify(
     message: 'Hello from node, Mr. User!',
     icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
     sound: true, // Only Notification Center or Windows Toasters
-    wait: true // Wait with callback, until user action is taken against notification
+    wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait
   },
   function(err, response) {
     // Response is response from notification
@@ -242,18 +242,18 @@ From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify
 
 **Windows 10 Fall Creators Update (Version 1709) Note:**
 
+[**Snoretoast**](https://github.com/KDE/snoretoast) is used to get native Windows Toasts!
+
+The default behaviour is to have the underlying toaster applicaton as `appID`.
+This works as expected, but shows `SnoreToast` as text in the notification.
+
 With the Fall Creators Update, Notifications on Windows 10 will only work as
-expected if the correct `appID` is specified. Your `appID` must be exactly the same
+expected if a valid `appID` is specified. Your `appID` must be exactly the same
 value that was registered during the installation of your app.
 
 You can find the ID of your App by searching the registry for the `appID` you
 specified at installation of your app. For example: If you use the squirrel
 framework, your `appID` will be something like `com.squirrel.your.app`.
-
-The default behaviour is to have the underlying toaster applicaton as `appId`.
-This works as expected, but shows `SnoreToast` as text in the notification.
-
-[**Snoretoast**](https://github.com/KDE/snoretoast) is used to get native Windows Toasts!
 
 ```javascript
 const WindowsToaster = require('node-notifier').WindowsToaster;
