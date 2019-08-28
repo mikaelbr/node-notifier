@@ -1,5 +1,16 @@
 # Changelog
 
+### `v6.0.0`
+
+#### Breaking Changes
+
+- Dropped support for node v6. As of v6 we currently support node versions 8, 10, and 12 (latest).
+- Updated to the latest version of SnoreToast. This removes support for the `wait` option in that environment as it is now always on. Prepares the way for other new features added to the WindowsToaster.
+
+#### Other
+
+- Update to latest version of dependencies.
+
 ### `v5.4.3`
 
 - Reverts breaking dependency upgrades from `v5.4.2` as some dependencies has removed Node 6 which is a breaking change.
