@@ -154,25 +154,25 @@ const NotificationCenter = require('node-notifier').NotificationCenter;
 
 var notifier = new NotificationCenter({
   withFallback: false, // Use Growl Fallback if <= 10.8
-  customPath: void 0 // Relative/Absolute path to binary if you want to use your own fork of terminal-notifier
+  customPath: undefined // Relative/Absolute path to binary if you want to use your own fork of terminal-notifier
 });
 
 notifier.notify(
   {
-    title: void 0,
-    subtitle: void 0,
-    message: void 0,
+    title: undefined,
+    subtitle: undefined,
+    message: undefined,
     sound: false, // Case Sensitive string for location of sound file, or use one of macOS' native sounds (see below)
     icon: 'Terminal Icon', // Absolute Path to Triggering Icon
-    contentImage: void 0, // Absolute Path to Attached Image (Content Image)
-    open: void 0, // URL to open on Click
+    contentImage: undefined, // Absolute Path to Attached Image (Content Image)
+    open: undefined, // URL to open on Click
     wait: false, // Wait for User Action against Notification or times out. Same as timeout = 5 seconds
 
     // New in latest version. See `example/macInput.js` for usage
     timeout: 5, // Takes precedence over wait if both are defined.
-    closeLabel: void 0, // String. Label for cancel button
-    actions: void 0, // String | Array<String>. Action label or list of labels in case of dropdown
-    dropdownLabel: void 0, // String. Label to be used if multiple actions
+    closeLabel: undefined, // String. Label for cancel button
+    actions: undefined, // String | Array<String>. Action label or list of labels in case of dropdown
+    dropdownLabel: undefined, // String. Label to be used if multiple actions
     reply: false // Boolean. If notification should take input. Value passed as third argument in callback and event emitter.
   },
   function(error, response, metadata) {
@@ -260,19 +260,19 @@ const WindowsToaster = require('node-notifier').WindowsToaster;
 
 var notifier = new WindowsToaster({
   withFallback: false, // Fallback to Growl or Balloons?
-  customPath: void 0 // Relative/Absolute path if you want to use your fork of SnoreToast.exe
+  customPath: undefined // Relative/Absolute path if you want to use your fork of SnoreToast.exe
 });
 
 notifier.notify(
   {
-    title: void 0, // String. Required
-    message: void 0, // String. Required if remove is not defined
-    icon: void 0, // String. Absolute path to Icon
+    title: undefined, // String. Required
+    message: undefined, // String. Required if remove is not defined
+    icon: undefined, // String. Absolute path to Icon
     sound: false, // Bool | String (as defined by http://msdn.microsoft.com/en-us/library/windows/apps/hh761492.aspx)
-    id: void 0, // Number. ID to use for closing notification.
-    appID: void 0, // String. App.ID and app Name. Defaults to no value, causing SnoreToast text to be visible.
-    remove: void 0, // Number. Refer to previously created notification to close.
-    install: void 0 // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
+    id: undefined, // Number. ID to use for closing notification.
+    appID: undefined, // String. App.ID and app Name. Defaults to no value, causing SnoreToast text to be visible.
+    remove: undefined, // Number. Refer to previously created notification to close.
+    install: undefined // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
   },
   function(error, response) {
     console.log(response);
@@ -299,8 +299,8 @@ notifier.notify({
 
   // and other growl options like sticky etc.
   sticky: false,
-  label: void 0,
-  priority: void 0
+  label: undefined,
+  priority: undefined
 });
 ```
 
@@ -317,13 +317,13 @@ const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 var notifier = new WindowsBalloon({
   withFallback: false, // Try Windows Toast and Growl first?
-  customPath: void 0 // Relative/Absolute path if you want to use your fork of notifu
+  customPath: undefined // Relative/Absolute path if you want to use your fork of notifu
 });
 
 notifier.notify(
   {
-    title: void 0,
-    message: void 0,
+    title: undefined,
+    message: undefined,
     sound: false, // true | false.
     time: 5000, // How long to show balloon in ms
     wait: false, // Wait for User Action against Notification
@@ -352,10 +352,10 @@ notifier.notify({
   icon: __dirname + '/coulson.jpg',
 
   // .. and other notify-send flags:
-  urgency: void 0,
-  time: void 0,
-  category: void 0,
-  hint: void 0
+  urgency: undefined,
+  time: undefined,
+  category: undefined,
+  hint: undefined
 });
 ```
 

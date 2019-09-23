@@ -9,7 +9,7 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 var notifier = 'notify-send';
-var hasNotifier = void 0;
+var hasNotifier;
 
 module.exports = NotifySend;
 

@@ -13,7 +13,7 @@ var errorMessageNotFound =
 
 module.exports = Growl;
 
-var hasGrowl = void 0;
+var hasGrowl;
 
 function Growl(options) {
   options = utils.clone(options || {});

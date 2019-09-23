@@ -10,7 +10,7 @@ var os = require('os');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var fallback = void 0;
+var fallback;
 
 module.exports = WindowsToaster;
 

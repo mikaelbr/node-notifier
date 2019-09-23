@@ -32,7 +32,7 @@ var os = require('os');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var hasGrowl = void 0;
+var hasGrowl;
 
 module.exports = WindowsBalloon;
 
