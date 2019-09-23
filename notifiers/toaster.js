@@ -2,9 +2,10 @@
  * Wrapper for the toaster (https://github.com/nels-o/toaster)
  */
 var path = require('path');
-var notifier = path.resolve(__dirname, '../vendor/snoreToast/SnoreToast.exe');
+var notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
 var utils = require('../lib/utils');
 var Balloon = require('./balloon');
+var os = require('os');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -37,6 +38,7 @@ function hasText(str, txt) {
 WindowsToaster.prototype.notify = function(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
+  var is64Bit = os.arch() === 'x64';
 
   if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
@@ -53,8 +55,18 @@ WindowsToaster.prototype.notify = function(options, callback) {
     this,
     options,
     function cb(err, data) {
-      // Needs to filter out timeout. Not an actual error.
-      if (err && hasText(data, timeoutMessage)) {
+      /* Possible exit statuses from SnoreToast, we only want to include err if it's -1 code
+      Exit Status     :  Exit Code
+      Failed          : -1
+
+      Success         :  0
+      Hidden          :  1
+      Dismissed       :  2
+      TimedOut        :  3
+      ButtonPressed   :  4
+      TextEntered     :  5
+      */
+      if (err && err.code !== -1) {
         return callback(null, data);
       }
       callback(err, data);
@@ -91,8 +103,10 @@ WindowsToaster.prototype.notify = function(options, callback) {
     keepNewlines: true,
     noEscape: true
   });
+
+  var notifierWithArch = notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
   utils.fileCommand(
-    this.options.customPath || notifier,
+    this.options.customPath || notifierWithArch,
     argsList,
     actionJackedCallback
   );

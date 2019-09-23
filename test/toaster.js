@@ -30,7 +30,6 @@ describe('WindowsToaster', function() {
     utils.fileCommand = function(notifier, argsList, callback) {
       expect(testUtils.argsListHas(argsList, '-t')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-m')).toBeTruthy();
-      expect(testUtils.argsListHas(argsList, '-w')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-p')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-id')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-appID')).toBeTruthy();
@@ -56,14 +55,12 @@ describe('WindowsToaster', function() {
       appID: 123,
       icon: 'file:///C:/node-notifier/test/fixture/coulson.jpg',
       id: 1337,
-      sound: 'Notification.IM',
-      wait: true
+      sound: 'Notification.IM'
     });
   });
 
-  it('should pass wait and silent without parameters', function(done) {
+  it('should pass silent without parameters', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      expect(testUtils.getOptionValue(argsList, '-w')).not.toBe('true');
       expect(testUtils.getOptionValue(argsList, '-silent')).not.toBe('true');
       done();
     };
@@ -72,7 +69,6 @@ describe('WindowsToaster', function() {
     notifier.notify({
       title: 'Heya',
       message: 'foo bar',
-      wait: true,
       silent: true
     });
   });
@@ -184,6 +180,30 @@ describe('WindowsToaster', function() {
     var notifier = new Notify();
 
     notifier.notify({ title: 'Heya', message: 'foo bar', sound: 'Frog' });
+  });
+
+  it('should use 32 bit snoreToaster if 32 arch', function(done) {
+    os.arch = function() {
+      return 'ia32';
+    };
+    var expected = 'snoretoast-x86.exe';
+    utils.fileCommand = function(notifier, argsList, callback) {
+      expect(notifier).toEndWith(expected);
+      done();
+    };
+    new Notify().notify({ title: 'title', message: 'body' });
+  });
+
+  it('should default to x64 version', function(done) {
+    os.arch = function() {
+      return 'x64';
+    };
+    var expected = 'snoretoast-x64.exe';
+    utils.fileCommand = function(notifier, argsList, callback) {
+      expect(notifier).toEndWith(expected);
+      done();
+    };
+    new Notify().notify({ title: 'title', message: 'body' });
   });
 
   it('sound as true should select default value', function(done) {

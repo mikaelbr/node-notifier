@@ -64,7 +64,7 @@ notifier.notify(
     message: 'Hello from node, Mr. User!',
     icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
     sound: true, // Only Notification Center or Windows Toasters
-    wait: true // Wait with callback, until user action is taken against notification
+    wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait
   },
   function(err, response) {
     // Response is response from notification
@@ -186,11 +186,7 @@ notifier.notify(
 **Note:** The `wait` option is shorthand for `timeout: 5`. This just sets a timeout
 for 5 seconds. It does _not_ make the notification sticky!
 
-Without `wait` or `timeout`, notifications are just fired and forgotten. They don't
-wait for any response.
-
-To make notifications wait for a response (like activation/click), you must define
-a `timeout`.
+As of Version 6.0 there is a default `timeout` set of `10` to ensure that the application closes properly. In order to remove the `timeout` and have an instantly closing notification (does not support actions), set `timeout` to `false`. If you are using `action` it is recommended to set `timeout` to a high value to ensure the user has time to respond.
 
 _Exception:_ If `reply` is defined, it's recommended to set `timeout` to a either
 high value, or to nothing at all.
@@ -246,18 +242,18 @@ From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify
 
 **Windows 10 Fall Creators Update (Version 1709) Note:**
 
+[**Snoretoast**](https://github.com/KDE/snoretoast) is used to get native Windows Toasts!
+
+The default behaviour is to have the underlying toaster applicaton as `appID`.
+This works as expected, but shows `SnoreToast` as text in the notification.
+
 With the Fall Creators Update, Notifications on Windows 10 will only work as
-expected if the correct `appID` is specified. Your `appID` must be exactly the same
+expected if a valid `appID` is specified. Your `appID` must be exactly the same
 value that was registered during the installation of your app.
 
 You can find the ID of your App by searching the registry for the `appID` you
 specified at installation of your app. For example: If you use the squirrel
 framework, your `appID` will be something like `com.squirrel.your.app`.
-
-The default behaviour is to have the underlying toaster applicaton as `appId`.
-This works as expected, but shows `SnoreToast` as text in the notification.
-
-[**Snoretoast**](https://github.com/KDE/snoretoast) is used to get native Windows Toasts!
 
 ```javascript
 const WindowsToaster = require('node-notifier').WindowsToaster;
@@ -273,7 +269,6 @@ notifier.notify(
     message: void 0, // String. Required if remove is not defined
     icon: void 0, // String. Absolute path to Icon
     sound: false, // Bool | String (as defined by http://msdn.microsoft.com/en-us/library/windows/apps/hh761492.aspx)
-    wait: false, // Bool. Wait for User Action against Notification or times out
     id: void 0, // Number. ID to use for closing notification.
     appID: void 0, // String. App.ID and app Name. Defaults to no value, causing SnoreToast text to be visible.
     remove: void 0, // Number. Refer to previously created notification to close.
