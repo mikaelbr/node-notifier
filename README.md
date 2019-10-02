@@ -378,7 +378,7 @@ A very special thanks to all the modules `node-notifier` uses.
 ### Windows: `SnoreToast` text
 
 See note on "Windows 10 Fall Creators Update" in Windows section.
-_**Short answer:** update your `appId`._
+_**Short answer:** update your `appID`._
 
 ### Use inside tmux session
 
