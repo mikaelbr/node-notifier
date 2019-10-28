@@ -14,7 +14,7 @@ earlier Windows versions. Growl is used if none of these requirements are met.
 
 ## Actions Example Windows SnoreToast
 
-![Actions Example](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows-actions-example.gif)
+![Actions Example](https://raw.githubusercontent.com/yoavain/node-notifier/master/example/windows-actions-example.gif)
 
 ## Quick Usage
 
