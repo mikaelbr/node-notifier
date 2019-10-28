@@ -12,6 +12,10 @@ earlier Windows versions. Growl is used if none of these requirements are met.
 
 ![Input Example](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/input-example.gif)
 
+## Actions Example Windows SnoreToast
+
+![Actions Example](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows-actions-example.gif)
+
 ## Quick Usage
 
 Show a native notification on macOS, Windows, Linux:
