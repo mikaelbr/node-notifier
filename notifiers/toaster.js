@@ -6,11 +6,15 @@ var notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
 var utils = require('../lib/utils');
 var Balloon = require('./balloon');
 var os = require('os');
+const uuid = require('uuid/v4');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 var fallback;
+
+const PIPE_NAME = 'notifierPipe';
+const PIPE_PATH_PREFIX = '\\\\.\\pipe\\';
 
 module.exports = WindowsToaster;
 
@@ -28,17 +32,29 @@ util.inherits(WindowsToaster, EventEmitter);
 
 function noop() {}
 
-var timeoutMessage = 'the toast has timed out';
-var successMessage = 'user clicked on the toast';
-
-function hasText(str, txt) {
-  return str && str.indexOf(txt) !== -1;
+function parseResult(data) {
+  if (!data) {
+    return {};
+  }
+  return data.split(';').reduce((acc, cur) => {
+    const split = cur.split('=');
+    if (split && split.length === 2) {
+      acc[split[0]] = split[1];
+    }
+    return acc;
+  }, {});
 }
 
-WindowsToaster.prototype.notify = function(options, callback) {
+function getPipeName() {
+  return `${PIPE_PATH_PREFIX}${PIPE_NAME}-${uuid()}`;
+}
+
+WindowsToaster.prototype.notify = async function(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
   var is64Bit = os.arch() === 'x64';
+  var resultBuffer;
+  const namedPipe = getPipeName();
 
   if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
@@ -51,36 +67,45 @@ WindowsToaster.prototype.notify = function(options, callback) {
     );
   }
 
-  var actionJackedCallback = utils.actionJackerDecorator(
-    this,
-    options,
-    function cb(err, data) {
-      /* Possible exit statuses from SnoreToast, we only want to include err if it's -1 code
-      Exit Status     :  Exit Code
-      Failed          : -1
+  var snoreToastResultParser = (err, callback) => {
+    /* Possible exit statuses from SnoreToast, we only want to include err if it's -1 code
+    Exit Status     :  Exit Code
+    Failed          : -1
 
-      Success         :  0
-      Hidden          :  1
-      Dismissed       :  2
-      TimedOut        :  3
-      ButtonPressed   :  4
-      TextEntered     :  5
-      */
-      if (err && err.code !== -1) {
-        return callback(null, data);
-      }
-      callback(err, data);
-    },
-    function mapper(data) {
-      if (hasText(data, successMessage)) {
-        return 'click';
-      }
-      if (hasText(data, timeoutMessage)) {
-        return 'timeout';
-      }
-      return false;
+    Success         :  0
+    Hidden          :  1
+    Dismissed       :  2
+    TimedOut        :  3
+    ButtonPressed   :  4
+    TextEntered     :  5
+    */
+    const result = parseResult(
+      resultBuffer && resultBuffer.toString('utf16le')
+    );
+
+    // parse action
+    if (result.action === 'buttonClicked' && result.button) {
+      result.activationType = result.button;
+    } else if (result.action) {
+      result.activationType = result.action;
     }
-  );
+
+    if (err && err.code === -1) {
+      callback(err, result);
+    }
+    callback(null, result);
+  };
+
+  var actionJackedCallback = err =>
+    snoreToastResultParser(
+      err,
+      utils.actionJackerDecorator(
+        this,
+        options,
+        callback,
+        data => data || false
+      )
+    );
 
   options.title = options.title || 'Node Notification:';
   if (
@@ -95,6 +120,10 @@ WindowsToaster.prototype.notify = function(options, callback) {
     fallback = fallback || new Balloon(this.options);
     return fallback.notify(options, callback);
   }
+
+  // Add pipeName option, to get the output
+  resultBuffer = await utils.createNamedPipe(namedPipe);
+  options.pipeName = namedPipe;
 
   options = utils.mapToWin8(options);
   var argsList = utils.constructArgumentList(options, {

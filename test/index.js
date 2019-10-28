@@ -10,16 +10,16 @@ describe('constructors', function() {
     expect(notifier.notify({ title: 'My notification' }, cb)).toBeTruthy();
   });
 
-  it('should throw error when second parameter is not a function', function() {
+  it('should throw error when second parameter is not a function', async () => {
     var wrongParamOne = 200;
     var wrongParamTwo = 'meaningless string';
     var data = { title: 'My notification' };
 
     var base = notifier.notify.bind(notifier, data);
-    expect(base.bind(notifier, wrongParamOne)).toThrowError(
+    await expect(base.bind(notifier, wrongParamOne)()).rejects.toThrowError(
       /^The second argument/
     );
-    expect(base.bind(notifier, wrongParamTwo)).toThrowError(
+    await expect(base.bind(notifier, wrongParamTwo)()).rejects.toThrowError(
       /^The second argument/
     );
   });
