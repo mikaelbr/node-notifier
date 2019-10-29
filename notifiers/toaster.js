@@ -49,7 +49,7 @@ function getPipeName() {
   return `${PIPE_PATH_PREFIX}${PIPE_NAME}-${uuid()}`;
 }
 
-WindowsToaster.prototype.notify = async function(options, callback) {
+WindowsToaster.prototype.notify = function(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
   var is64Bit = os.arch() === 'x64';
@@ -122,22 +122,24 @@ WindowsToaster.prototype.notify = async function(options, callback) {
   }
 
   // Add pipeName option, to get the output
-  resultBuffer = await utils.createNamedPipe(namedPipe);
-  options.pipeName = namedPipe;
+  utils.createNamedPipe(namedPipe).then(out => {
+    resultBuffer = out;
+    options.pipeName = namedPipe;
 
-  options = utils.mapToWin8(options);
-  var argsList = utils.constructArgumentList(options, {
-    explicitTrue: true,
-    wrapper: '',
-    keepNewlines: true,
-    noEscape: true
+    options = utils.mapToWin8(options);
+    var argsList = utils.constructArgumentList(options, {
+      explicitTrue: true,
+      wrapper: '',
+      keepNewlines: true,
+      noEscape: true
+    });
+
+    var notifierWithArch = notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
+    utils.fileCommand(
+      this.options.customPath || notifierWithArch,
+      argsList,
+      actionJackedCallback
+    );
   });
-
-  var notifierWithArch = notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
-  utils.fileCommand(
-    this.options.customPath || notifierWithArch,
-    argsList,
-    actionJackedCallback
-  );
   return this;
 };
