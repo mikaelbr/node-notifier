@@ -9,6 +9,7 @@
     "example": "node ./example/message.js",
     "example:mac": "node ./example/advanced.js",
     "example:mac:input": "node ./example/macInput.js",
+    "example:input": "node ./example/cross-platform-with-actions.js",
     "example:windows": "node ./example/toaster.js",
     "example:windows:actions": "node ./example/toaster-with-actions.js",
     "lint": "eslint example/*.js lib/*.js notifiers/*.js test/**/*.js index.js"
