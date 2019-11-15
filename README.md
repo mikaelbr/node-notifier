@@ -443,7 +443,9 @@ node: {
 
 ## License
 
-This package is licensed using the [MIT License](http://en.wikipedia.org/wiki/MIT_License). [SnoreToast](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/vendor/snoreToast/LICENSE) and [Notifu](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/vendor/notifu/LICENSE) have licenses in their vendored versions which do not match the MIT license, LGPL-3 and BSD 3-Clause to be specific. We are not lawyers, but have made our best efforts to conform to the terms in those licenses while releasing this package using the license we chose.
+This package is licensed using the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
+
+[SnoreToast](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/vendor/snoreToast/LICENSE) and [Notifu](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/vendor/notifu/LICENSE) have licenses in their vendored versions which do not match the MIT license, LGPL-3 and BSD 3-Clause to be specific. We are not lawyers, but have made our best efforts to conform to the terms in those licenses while releasing this package using the license we chose.
 
 [npm-url]: https://npmjs.org/package/node-notifier
 [npm-image]: http://img.shields.io/npm/v/node-notifier.svg?style=flat
