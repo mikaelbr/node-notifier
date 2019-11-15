@@ -3,9 +3,13 @@ var utils = require('../lib/utils');
 var path = require('path');
 var os = require('os');
 var testUtils = require('./_test-utils');
+jest.mock('uuid/v4', () => {
+  return () => '123456789';
+});
 
 describe('WindowsToaster', function() {
   var original = utils.fileCommand;
+  var createNamedPipe = utils.createNamedPipe;
   var originalType = os.type;
   var originalArch = os.arch;
   var originalRelease = os.release;
@@ -17,10 +21,12 @@ describe('WindowsToaster', function() {
     os.type = function() {
       return 'Windows_NT';
     };
+    utils.createNamedPipe = () => Promise.resolve(Buffer.from('12345'));
   });
 
   afterEach(function() {
     utils.fileCommand = original;
+    utils.createNamedPipe = createNamedPipe;
     os.type = originalType;
     os.arch = originalArch;
     os.release = originalRelease;
@@ -30,9 +36,11 @@ describe('WindowsToaster', function() {
     utils.fileCommand = function(notifier, argsList, callback) {
       expect(testUtils.argsListHas(argsList, '-t')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-m')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-b')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-p')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-id')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-appID')).toBeTruthy();
+      expect(testUtils.argsListHas(argsList, '-pipeName')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-install')).toBeTruthy();
       expect(testUtils.argsListHas(argsList, '-close')).toBeTruthy();
 
@@ -40,6 +48,8 @@ describe('WindowsToaster', function() {
       expect(testUtils.argsListHas(argsList, '-bar')).toBeFalsy();
       expect(testUtils.argsListHas(argsList, '-message')).toBeFalsy();
       expect(testUtils.argsListHas(argsList, '-title')).toBeFalsy();
+      expect(testUtils.argsListHas(argsList, '-tb')).toBeFalsy();
+      expect(testUtils.argsListHas(argsList, '-pid')).toBeFalsy();
       done();
     };
     var notifier = new Notify();
@@ -55,7 +65,8 @@ describe('WindowsToaster', function() {
       appID: 123,
       icon: 'file:///C:/node-notifier/test/fixture/coulson.jpg',
       id: 1337,
-      sound: 'Notification.IM'
+      sound: 'Notification.IM',
+      actions: ['Ok', 'Cancel']
     });
   });
 
@@ -244,7 +255,7 @@ describe('WindowsToaster', function() {
 
   it('should parse file protocol URL of icon', function(done) {
     utils.fileCommand = function(notifier, argsList, callback) {
-      expect(argsList[1]).toBe('C:\\node-notifier\\test\\fixture\\coulson.jpg');
+      expect(argsList[3]).toBe('C:\\node-notifier\\test\\fixture\\coulson.jpg');
       done();
     };
 
@@ -260,7 +271,7 @@ describe('WindowsToaster', function() {
   it('should not parse local path of icon', function(done) {
     var icon = path.join(__dirname, 'fixture', 'coulson.jpg');
     utils.fileCommand = function(notifier, argsList, callback) {
-      expect(argsList[1]).toBe(icon);
+      expect(argsList[3]).toBe(icon);
       done();
     };
 
@@ -271,11 +282,51 @@ describe('WindowsToaster', function() {
   it('should not parse normal URL of icon', function(done) {
     var icon = 'http://csscomb.com/img/csscomb.jpg';
     utils.fileCommand = function(notifier, argsList, callback) {
-      expect(argsList[1]).toBe(icon);
+      expect(argsList[3]).toBe(icon);
       done();
     };
 
     var notifier = new Notify();
     notifier.notify({ title: 'Heya', message: 'foo bar', icon: icon });
+  });
+
+  it('should build command-line argument for actions array properly', () => {
+    utils.fileCommand = function(notifier, argsList, callback) {
+      expect(argsList).toEqual([
+        '-close',
+        '123',
+        '-install',
+        '/dsa/',
+        '-id',
+        '1337',
+        '-pipeName',
+        '\\\\.\\pipe\\notifierPipe-123456789',
+        '-p',
+        'C:\\node-notifier\\test\\fixture\\coulson.jpg',
+        '-m',
+        'foo bar',
+        '-t',
+        'Heya',
+        '-s',
+        'Notification.IM',
+        '-b',
+        'Ok;Cancel'
+      ]);
+    };
+    var notifier = new Notify();
+
+    notifier.notify({
+      title: 'Heya',
+      message: 'foo bar',
+      extra: 'dsakdsa',
+      foo: 'bar',
+      close: 123,
+      bar: true,
+      install: '/dsa/',
+      icon: 'file:///C:/node-notifier/test/fixture/coulson.jpg',
+      id: 1337,
+      sound: 'Notification.IM',
+      actions: ['Ok', 'Cancel']
+    });
   });
 });
