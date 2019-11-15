@@ -14,6 +14,7 @@ Usage
 /q              Do not play a sound when the tooltip is displayed
 /w              Show the tooltip even if the user is in the quiet period that follows his very first login (Windows 7 and up)
 /xp             Use IUserNotification interface event when IUserNotification2 is available
+/l              Display license for notifu
 
 // Kill codes:
   2 = Timeout
