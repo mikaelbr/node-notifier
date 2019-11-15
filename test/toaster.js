@@ -290,7 +290,7 @@ describe('WindowsToaster', function() {
     notifier.notify({ title: 'Heya', message: 'foo bar', icon: icon });
   });
 
-  it('should build command-line properly', () => {
+  it('should build command-line argument for actions array properly', () => {
     utils.fileCommand = function(notifier, argsList, callback) {
       expect(argsList).toEqual([
         '-close',
