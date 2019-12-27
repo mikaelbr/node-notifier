@@ -50,7 +50,7 @@ function WindowsBalloon(options) {
 util.inherits(WindowsBalloon, EventEmitter);
 
 function noop() {}
-WindowsBalloon.prototype.notify = function(options, callback) {
+function notifyRaw(options, callback) {
   var fallback;
   var notifierOptions = this.options;
   options = utils.clone(options || {});
@@ -105,7 +105,14 @@ WindowsBalloon.prototype.notify = function(options, callback) {
   });
 
   return this;
-};
+}
+
+Object.defineProperty(WindowsBalloon.prototype, 'notify', {
+  get: function() {
+    if (!this._notify) this._notify = notifyRaw.bind(this);
+    return this._notify;
+  }
+});
 
 var allowedArguments = ['t', 'd', 'p', 'm', 'i', 'e', 'q', 'w', 'xp'];
 
