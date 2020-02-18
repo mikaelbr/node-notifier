@@ -26,7 +26,7 @@ function NotifySend(options) {
 util.inherits(NotifySend, EventEmitter);
 
 function noop() {}
-NotifySend.prototype.notify = function(options, callback) {
+function notifyRaw(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
 
@@ -70,7 +70,14 @@ NotifySend.prototype.notify = function(options, callback) {
   }
 
   return this;
-};
+}
+
+Object.defineProperty(NotifySend.prototype, 'notify', {
+  get: function() {
+    if (!this._notify) this._notify = notifyRaw.bind(this);
+    return this._notify;
+  }
+});
 
 var allowedArguments = ['urgency', 'expire-time', 'icon', 'category', 'hint'];
 

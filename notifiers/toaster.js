@@ -49,7 +49,7 @@ function getPipeName() {
   return `${PIPE_PATH_PREFIX}${PIPE_NAME}-${uuid()}`;
 }
 
-WindowsToaster.prototype.notify = function(options, callback) {
+function notifyRaw(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
   var is64Bit = os.arch() === 'x64';
@@ -142,4 +142,11 @@ WindowsToaster.prototype.notify = function(options, callback) {
     );
   });
   return this;
-};
+}
+
+Object.defineProperty(WindowsToaster.prototype, 'notify', {
+  get: function() {
+    if (!this._notify) this._notify = notifyRaw.bind(this);
+    return this._notify;
+  }
+});
