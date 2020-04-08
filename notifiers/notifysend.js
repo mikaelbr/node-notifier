@@ -79,7 +79,7 @@ Object.defineProperty(NotifySend.prototype, 'notify', {
   }
 });
 
-var allowedArguments = ['urgency', 'expire-time', 'icon', 'category', 'hint'];
+var allowedArguments = ['urgency', 'expire-time', 'icon', 'category', 'hint', 'app-name'];
 
 function doNotification(options, callback) {
   var initial, argsList;
