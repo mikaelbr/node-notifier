@@ -356,6 +356,7 @@ notifier.notify({
   icon: __dirname + '/coulson.jpg',
 
   // .. and other notify-send flags:
+  'app-name': 'node-notifier',
   urgency: undefined,
   time: undefined,
   category: undefined,
