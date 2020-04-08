@@ -1,5 +1,17 @@
 # Changelog
 
+### `v7.0.0`
+
+#### Features
+
+- NotifySend support for app-name ([#299](https://github.com/mikaelbr/node-notifier/pull/299), see docs)
+
+#### Breaking Changes
+
+- All notify messages now have auto bound context to make it easier to pass as variables/arguments ([#306](https://github.com/mikaelbr/node-notifier/pull/306))
+- Updated snoreToast to version `0.7.0` with new input features ([#293](https://github.com/mikaelbr/node-notifier/pull/293))
+- Breaking snoreToast: Sanitizing data now changes "timedout" to "timeout"
+
 ### `v6.0.0`
 
 #### Breaking Changes
