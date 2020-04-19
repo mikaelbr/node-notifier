@@ -2,7 +2,7 @@
  * Wrapper for the toaster (https://github.com/nels-o/toaster)
  */
 var path = require('path');
-var notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
+var notifier = path.resolve(process.cwd(), 'snoreToast/snoretoast');
 var utils = require('../lib/utils');
 var Balloon = require('./balloon');
 var os = require('os');
