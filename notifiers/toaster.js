@@ -6,7 +6,7 @@ var notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
 var utils = require('../lib/utils');
 var Balloon = require('./balloon');
 var os = require('os');
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
