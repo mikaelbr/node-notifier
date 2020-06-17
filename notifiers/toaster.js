@@ -55,7 +55,7 @@ function notifyRaw(options, callback) {
   var is64Bit = os.arch() === 'x64';
   var resultBuffer;
   const server = {
-    namedPipe: getPipeName(),
+    namedPipe: getPipeName()
   };
 
   if (typeof options === 'string') {
@@ -139,7 +139,7 @@ function notifyRaw(options, callback) {
       explicitTrue: true,
       wrapper: '',
       keepNewlines: true,
-      noEscape: true,
+      noEscape: true
     });
 
     var notifierWithArch = notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
@@ -156,5 +156,5 @@ Object.defineProperty(WindowsToaster.prototype, 'notify', {
   get: function () {
     if (!this._notify) this._notify = notifyRaw.bind(this);
     return this._notify;
-  },
+  }
 });
