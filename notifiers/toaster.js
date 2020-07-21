@@ -54,7 +54,9 @@ function notifyRaw(options, callback) {
   callback = callback || noop;
   var is64Bit = os.arch() === 'x64';
   var resultBuffer;
-  const namedPipe = getPipeName();
+  const server = {
+    namedPipe: getPipeName()
+  };
 
   if (typeof options === 'string') {
     options = { title: 'node-notifier', message: options };
@@ -94,16 +96,22 @@ function notifyRaw(options, callback) {
       callback(err, result);
     }
     callback(null, result);
+
+    // https://github.com/mikaelbr/node-notifier/issues/334
+    // Due to an issue with snoretoast not using stdio and pipe
+    // when notifications are disabled, make sure named pipe server
+    // is closed before exiting.
+    server.instance && server.instance.close();
   };
 
-  var actionJackedCallback = err =>
+  var actionJackedCallback = (err) =>
     snoreToastResultParser(
       err,
       utils.actionJackerDecorator(
         this,
         options,
         callback,
-        data => data || false
+        (data) => data || false
       )
     );
 
@@ -122,9 +130,9 @@ function notifyRaw(options, callback) {
   }
 
   // Add pipeName option, to get the output
-  utils.createNamedPipe(namedPipe).then(out => {
+  utils.createNamedPipe(server).then((out) => {
     resultBuffer = out;
-    options.pipeName = namedPipe;
+    options.pipeName = server.namedPipe;
 
     options = utils.mapToWin8(options);
     var argsList = utils.constructArgumentList(options, {
@@ -145,7 +153,7 @@ function notifyRaw(options, callback) {
 }
 
 Object.defineProperty(WindowsToaster.prototype, 'notify', {
-  get: function() {
+  get: function () {
     if (!this._notify) this._notify = notifyRaw.bind(this);
     return this._notify;
   }
