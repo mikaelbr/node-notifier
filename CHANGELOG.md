@@ -1,5 +1,14 @@
 # Changelog
 
+### `v7.0.2`
+
+- Updates dependencies
+- Fixes issue with haning Windows notifications when disabled ([#335](https://github.com/mikaelbr/node-notifier/pull/335))
+
+### `v7.0.1`
+
+- Fixes import of uuid, removes deprecation warnings
+
 ### `v7.0.0`
 
 #### Features
@@ -238,7 +247,7 @@ notifier.notify();
 
 ```js
 var notifier = require('node-notifier');
-notifier.notify({ wait: true }, function(err, response) {
+notifier.notify({ wait: true }, function (err, response) {
   // response is response after user have interacted
   // with the notification or the notification has timed out.
 });
@@ -249,7 +258,7 @@ notifier.notify({ wait: true }, function(err, response) {
 
 ```js
 var notifier = require('node-notifier');
-notifier.on('click', function(notificationObject, options) {
+notifier.on('click', function (notificationObject, options) {
   // options.someArbitraryData === 'foo'
 });
 notifier.notify({ wait: true, someArbitraryData: 'foo' });
