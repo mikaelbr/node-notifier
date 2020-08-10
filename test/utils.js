@@ -2,9 +2,9 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('../lib/utils');
 
-describe('utils', function() {
-  describe('clone', function() {
-    it('should clone nested objects', function() {
+describe('utils', function () {
+  describe('clone', function () {
+    it('should clone nested objects', function () {
       var obj = { a: { b: 42 }, c: 123 };
       var obj2 = _.clone(obj);
 
@@ -15,9 +15,14 @@ describe('utils', function() {
     });
   });
 
-  describe('mapping', function() {
-    it('should map icon for notify-send', function() {
-      var expected = { title: 'Foo', message: 'Bar', icon: 'foobar' };
+  describe('mapping', function () {
+    it('should map icon for notify-send', function () {
+      var expected = {
+        title: 'Foo',
+        message: 'Bar',
+        icon: 'foobar',
+        'expire-time': 10000
+      };
 
       expect(
         _.mapToNotifySend({ title: 'Foo', message: 'Bar', appIcon: 'foobar' })
@@ -28,7 +33,7 @@ describe('utils', function() {
       ).toEqual(expected);
     });
 
-    it('should map short hand for notify-sned', function() {
+    it('should map short hand for notify-sned', function () {
       var expected = {
         urgency: 'a',
         'expire-time': 'b',
@@ -42,7 +47,7 @@ describe('utils', function() {
       ).toEqual(expected);
     });
 
-    it('should map icon for notification center', function() {
+    it('should map icon for notification center', function () {
       var expected = {
         title: 'Foo',
         message: 'Bar',
@@ -60,7 +65,7 @@ describe('utils', function() {
       );
     });
 
-    it('should map icon for growl', function() {
+    it('should map icon for growl', function () {
       var icon = path.join(__dirname, 'fixture', 'coulson.jpg');
       var iconRead = fs.readFileSync(icon);
 
@@ -78,7 +83,7 @@ describe('utils', function() {
       expect(Buffer.isBuffer(obj.icon)).toBeTruthy();
     });
 
-    it('should not map icon url for growl', function() {
+    it('should not map icon url for growl', function () {
       var icon = 'http://hostname.com/logo.png';
 
       var expected = { title: 'Foo', message: 'Bar', icon: icon };
