@@ -38,7 +38,7 @@
   "author": "Mikael Brevik",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^7.5.0",
+    "eslint": "^7.6.0",
     "eslint-config-semistandard": "^15.0.1",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",
@@ -46,7 +46,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.2.5",
-    "jest": "^26.1.0",
+    "jest": "^26.4.0",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5"
   },
@@ -55,7 +55,7 @@
     "is-wsl": "^2.2.0",
     "semver": "^7.3.2",
     "shellwords": "^0.1.1",
-    "uuid": "^8.2.0",
+    "uuid": "^8.3.0",
     "which": "^2.0.2"
   },
   "husky": {
