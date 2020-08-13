@@ -1,5 +1,11 @@
 # Changelog
 
+### `v8.0.0`
+
+Breaking changes:
+
+- Expire time for notify-send is made to match macOS and Windows with default time of 10 seconds. The API is changed to take seconds as input and converting it to milliseconds before passing it on to notify-send. See [#341](https://github.com/mikaelbr/node-notifier/pull/341).
+
 ### `v7.0.2`
 
 - Updates dependencies

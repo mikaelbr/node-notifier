@@ -70,16 +70,16 @@ notifier.notify(
     sound: true, // Only Notification Center or Windows Toasters
     wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
   },
-  function(err, response) {
+  function (err, response) {
     // Response is response from notification
   }
 );
 
-notifier.on('click', function(notifierObject, options, event) {
+notifier.on('click', function (notifierObject, options, event) {
   // Triggers if `wait: true` and user clicks notification
 });
 
-notifier.on('timeout', function(notifierObject, options) {
+notifier.on('timeout', function (notifierObject, options) {
   // Triggers if `wait: true` and notification closes
 });
 ```
@@ -179,7 +179,7 @@ notifier.notify(
     dropdownLabel: undefined, // String. Label to be used if multiple actions
     reply: false // Boolean. If notification should take input. Value passed as third argument in callback and event emitter.
   },
-  function(error, response, metadata) {
+  function (error, response, metadata) {
     console.log(response, metadata);
   }
 );
@@ -278,7 +278,7 @@ notifier.notify(
     remove: undefined, // Number. Refer to previously created notification to close.
     install: undefined // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
   },
-  function(error, response) {
+  function (error, response) {
     console.log(response);
   }
 );
@@ -333,7 +333,7 @@ notifier.notify(
     wait: false, // Wait for User Action against Notification
     type: 'info' // The notification type : info | warn | error
   },
-  function(error, response) {
+  function (error, response) {
     console.log(response);
   }
 );
@@ -355,10 +355,12 @@ notifier.notify({
   message: 'Hello World',
   icon: __dirname + '/coulson.jpg',
 
+  wait: false, // Defaults no exipre time set. If true expire time of 5 seconds is used
+  timeout: 10, // Alias for expire-time, time etc. Time before notify-send expires. Defaults to 10 seconds.
+
   // .. and other notify-send flags:
   'app-name': 'node-notifier',
   urgency: undefined,
-  time: undefined,
   category: undefined,
   hint: undefined
 });
