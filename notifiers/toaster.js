@@ -15,6 +15,7 @@ var fallback;
 
 const PIPE_NAME = 'notifierPipe';
 const PIPE_PATH_PREFIX = '\\\\.\\pipe\\';
+const PIPE_PATH_PREFIX_WSL = '/tmp/';
 
 module.exports = WindowsToaster;
 
@@ -46,7 +47,8 @@ function parseResult(data) {
 }
 
 function getPipeName() {
-  return `${PIPE_PATH_PREFIX}${PIPE_NAME}-${uuid()}`;
+  var pathPrefix = utils.isWSL() ? PIPE_PATH_PREFIX_WSL : PIPE_PATH_PREFIX;
+  return `${pathPrefix}${PIPE_NAME}-${uuid()}`;
 }
 
 function notifyRaw(options, callback) {
