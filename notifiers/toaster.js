@@ -109,11 +109,8 @@ function notifyRaw(options, callback) {
   var actionJackedCallback = (err) =>
     snoreToastResultParser(
       err,
-      utils.actionJackerDecorator(
-        this,
-        options,
-        callback,
-        (data) => data || false
+      utils.actionJackerDecorator(this, options, callback, (data) =>
+        data === 'activate' ? 'click' : data || false
       )
     );
 
