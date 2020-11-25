@@ -388,6 +388,11 @@ A very special thanks to all the modules `node-notifier` uses.
 See note on "Windows 10 Fall Creators Update" in Windows section.
 _**Short answer:** update your `appID`._
 
+### Windows and WSL2
+
+If you don't see notifications within WSL2, you might have to change premission of exe vendor files (snoreToast).
+[See issue for more info](https://github.com/mikaelbr/node-notifier/issues/353)
+
 ### Use inside tmux session
 
 When using `node-notifier` within a tmux session, it can cause a hang in the system.
