@@ -356,7 +356,7 @@ notifier.notify({
   message: 'Hello World',
   icon: __dirname + '/coulson.jpg',
 
-  wait: false, // Defaults no exipre time set. If true expire time of 5 seconds is used
+  wait: false, // Defaults no expire time set. If true expire time of 5 seconds is used
   timeout: 10, // Alias for expire-time, time etc. Time before notify-send expires. Defaults to 10 seconds.
 
   // .. and other notify-send flags:
