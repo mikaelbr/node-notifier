@@ -1,5 +1,16 @@
 # Changelog
 
+### `v9.0.0`
+
+Breaking changes:
+
+- Corrects mapping on snoretoast activate event. See [#347](https://github.com/mikaelbr/node-notifier/pull/347).
+
+#### Patches
+
+- Fix named pipe in WSL. See [#342](https://github.com/mikaelbr/node-notifier/pull/342).
+- fixes possible injection issue for notify-send
+
 ### `v8.0.0`
 
 Breaking changes:
