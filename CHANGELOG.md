@@ -1,5 +1,9 @@
 # Changelog
 
+### `v8.0.1`
+
+- fixes possible injection issue for notify-send
+
 ### `v8.0.0`
 
 Breaking changes:
