@@ -70,7 +70,7 @@ describe('notify-send', function () {
     notifier.notify({ message: 'some\n "me\'ss`age`"' });
   });
 
-  it.only('should only include strings as arguments', function (done) {
+  it('should only include strings as arguments', function (done) {
     var expected = ['"HACKED"', '--expire-time', '"10000"'];
 
     expectArgsListToBe(expected, done);
