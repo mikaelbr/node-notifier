@@ -12,5 +12,4 @@ module.exports.getOptionValue = function getOptionValue(args, field) {
       return args[i + 1];
     }
   }
-  return void 0;
 };

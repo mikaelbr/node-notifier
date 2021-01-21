@@ -9,7 +9,7 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 var notifier = 'notify-send';
-var hasNotifier = void 0;
+var hasNotifier;
 
 module.exports = NotifySend;
 
@@ -26,7 +26,7 @@ function NotifySend(options) {
 util.inherits(NotifySend, EventEmitter);
 
 function noop() {}
-NotifySend.prototype.notify = function(options, callback) {
+function notifyRaw(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
 
@@ -70,9 +70,16 @@ NotifySend.prototype.notify = function(options, callback) {
   }
 
   return this;
-};
+}
 
-var allowedArguments = ['urgency', 'expire-time', 'icon', 'category', 'hint'];
+Object.defineProperty(NotifySend.prototype, 'notify', {
+  get: function() {
+    if (!this._notify) this._notify = notifyRaw.bind(this);
+    return this._notify;
+  }
+});
+
+var allowedArguments = ['urgency', 'expire-time', 'icon', 'category', 'hint', 'app-name'];
 
 function doNotification(options, callback) {
   var initial, argsList;

@@ -13,7 +13,7 @@ var errorMessageNotFound =
 
 module.exports = Growl;
 
-var hasGrowl = void 0;
+var hasGrowl;
 
 function Growl(options) {
   options = utils.clone(options || {});
@@ -28,7 +28,7 @@ function Growl(options) {
 }
 util.inherits(Growl, EventEmitter);
 
-Growl.prototype.notify = function(options, callback) {
+function notifyRaw(options, callback) {
   growly.setHost(this.options.host, this.options.port);
   options = utils.clone(options || {});
 
@@ -71,6 +71,13 @@ Growl.prototype.notify = function(options, callback) {
     callback();
   });
   return this;
-};
+}
+
+Object.defineProperty(Growl.prototype, 'notify', {
+  get: function() {
+    if (!this._notify) this._notify = notifyRaw.bind(this);
+    return this._notify;
+  }
+});
 
 function noop() {}

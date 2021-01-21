@@ -1,24 +1,23 @@
-var notifier = require('../index');
-var path = require('path');
+const notifier = require('../index');
+const path = require('path');
 
 notifier.notify(
   {
     message: 'Hello. This is a longer text\nWith "some" newlines.',
-    wait: true,
     icon: path.join(__dirname, 'coulson.jpg'),
     sound: true
   },
   function(err, data) {
     // Will also wait until notification is closed.
     console.log('Waited');
-    console.log(err, data);
+    console.log(JSON.stringify({ err, data }));
   }
 );
 
-notifier.on('timeout', function() {
+notifier.on('timeout', () => {
   console.log('Timed out!');
 });
 
-notifier.on('click', function() {
+notifier.on('click', () => {
   console.log('Clicked!');
 });

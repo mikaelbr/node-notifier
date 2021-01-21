@@ -14,6 +14,7 @@ Usage
 /q              Do not play a sound when the tooltip is displayed
 /w              Show the tooltip even if the user is in the quiet period that follows his very first login (Windows 7 and up)
 /xp             Use IUserNotification interface event when IUserNotification2 is available
+/l              Display license for notifu
 
 // Kill codes:
   2 = Timeout
@@ -32,7 +33,7 @@ var os = require('os');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var hasGrowl = void 0;
+var hasGrowl;
 
 module.exports = WindowsBalloon;
 
@@ -49,7 +50,7 @@ function WindowsBalloon(options) {
 util.inherits(WindowsBalloon, EventEmitter);
 
 function noop() {}
-WindowsBalloon.prototype.notify = function(options, callback) {
+function notifyRaw(options, callback) {
   var fallback;
   var notifierOptions = this.options;
   options = utils.clone(options || {});
@@ -104,7 +105,14 @@ WindowsBalloon.prototype.notify = function(options, callback) {
   });
 
   return this;
-};
+}
+
+Object.defineProperty(WindowsBalloon.prototype, 'notify', {
+  get: function() {
+    if (!this._notify) this._notify = notifyRaw.bind(this);
+    return this._notify;
+  }
+});
 
 var allowedArguments = ['t', 'd', 'p', 'm', 'i', 'e', 'q', 'w', 'xp'];
 

@@ -12,7 +12,7 @@ DEBUG="notifier" node index.js
 
 ```
 node-notifier debug info (fileCommandJson):
-[notifier path] /Users/mib/node-notifier/vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier
+[notifier path] /Users/mib/node-notifier/vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier
 [notifier options] -message "Hello" -timeout "5" -json "true"
 ```
 

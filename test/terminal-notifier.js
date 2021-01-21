@@ -173,6 +173,8 @@ describe('terminal-notifier', function() {
         '"body"',
         '-tullball',
         '"notValid"',
+        '-timeout',
+        '"10"',
         '-json',
         '"true"'
       ];
@@ -212,6 +214,8 @@ describe('terminal-notifier', function() {
         '"body \\"message\\""',
         '-actions',
         'foo,bar,baz "foo" bar',
+        '-timeout',
+        '"10"',
         '-json',
         '"true"'
       ];
@@ -273,6 +277,28 @@ describe('terminal-notifier', function() {
       });
     });
 
+    it('should not set a default timeout if explicitly false', function(done) {
+      var expected = [
+        '-title',
+        '"Title"',
+        '-message',
+        '"Message"',
+        '-json',
+        '"true"'
+      ];
+
+      expectArgsListToBe(expected, done);
+      var notifier = new NotificationCenter();
+      notifier.isNotifyChecked = true;
+      notifier.hasNotifier = true;
+
+      notifier.notify({
+        title: 'Title',
+        message: 'Message',
+        timeout: false
+      });
+    });
+
     it('should escape all title and message', function(done) {
       var expected = [
         '-title',
@@ -281,6 +307,8 @@ describe('terminal-notifier', function() {
         '"body \\"message\\""',
         '-tullball',
         '"notValid"',
+        '-timeout',
+        '"10"',
         '-json',
         '"true"'
       ];

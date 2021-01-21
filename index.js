@@ -10,7 +10,9 @@ var WindowsBalloon = require('./notifiers/balloon');
 
 var options = { withFallback: true };
 
-switch (os.type()) {
+var osType = utils.isWSL() ? 'WSL' : os.type();
+
+switch (osType) {
   case 'Linux':
     module.exports = new NotifySend(options);
     module.exports.Notification = NotifySend;
@@ -27,6 +29,10 @@ switch (os.type()) {
       module.exports = new WindowsToaster(options);
       module.exports.Notification = WindowsToaster;
     }
+    break;
+  case 'WSL':
+    module.exports = new WindowsToaster(options);
+    module.exports.Notification = WindowsToaster;
     break;
   default:
     if (os.type().match(/BSD$/)) {

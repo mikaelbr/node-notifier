@@ -6,7 +6,7 @@ var Growl = require('./growl');
 var path = require('path');
 var notifier = path.join(
   __dirname,
-  '../vendor/terminal-notifier.app/Contents/MacOS/terminal-notifier'
+  '../vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier'
 );
 
 var EventEmitter = require('events').EventEmitter;
@@ -31,7 +31,7 @@ util.inherits(NotificationCenter, EventEmitter);
 var activeId = null;
 
 function noop() {}
-NotificationCenter.prototype.notify = function(options, callback) {
+function notifyRaw(options, callback) {
   var fallbackNotifier;
   var id = identificator();
   options = utils.clone(options || {});
@@ -93,7 +93,14 @@ NotificationCenter.prototype.notify = function(options, callback) {
 
   callback(new Error(errorMessageOsX));
   return this;
-};
+}
+
+Object.defineProperty(NotificationCenter.prototype, 'notify', {
+  get: function() {
+    if (!this._notify) this._notify = notifyRaw.bind(this);
+    return this._notify;
+  }
+});
 
 function identificator() {
   return { _ref: 'val' };
