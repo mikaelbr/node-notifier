@@ -375,8 +375,8 @@ node: {
 
 [npm-url]: https://npmjs.org/package/node-notifier
 [npm-image]: http://img.shields.io/npm/v/node-notifier.svg?style=flat
-[size-url]: https://packagephobia.now.sh/result?p=node-notifier
-[size-image]: https://packagephobia.now.sh/badge?p=node-notifier
+[size-url]: https://packagephobia.com/result?p=node-notifier
+[size-image]: https://packagephobia.com/badge?p=node-notifier
 [npm-downloads]: http://img.shields.io/npm/dm/node-notifier.svg?style=flat
 [travis-url]: http://travis-ci.org/mikaelbr/node-notifier
 [travis-image]: http://img.shields.io/travis/mikaelbr/node-notifier.svg?style=flat
