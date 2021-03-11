@@ -1,5 +1,9 @@
 # Changelog
 
+### `v9.0.1`
+
+- Fixes potential security issue with non-escaping input parameters for notify-send.
+
 ### `v9.0.0`
 
 Breaking changes:
@@ -10,6 +14,10 @@ Breaking changes:
 
 - Fix named pipe in WSL. See [#342](https://github.com/mikaelbr/node-notifier/pull/342).
 - fixes possible injection issue for notify-send
+
+### `v8.0.2`
+
+- Fixes potential security issue with non-escaping input parameters for notify-send.
 
 ### `v8.0.0`
 
@@ -48,6 +56,14 @@ Breaking changes:
 #### Other
 
 - Update to latest version of dependencies.
+
+### `v5.4.4`
+
+- Fixes potential security issue with non-escaping input parameters for notify-send.
+
+### `v5.4.3`
+
+- Fixes potential security issue with non-escaping input parameters for notify-send.
 
 ### `v5.4.3`
 
