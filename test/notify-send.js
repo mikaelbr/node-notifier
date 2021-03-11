@@ -70,13 +70,27 @@ describe('notify-send', function () {
     notifier.notify({ message: 'some\n "me\'ss`age`"' });
   });
 
-  it('should only include strings as arguments', function (done) {
-    var expected = ['"HACKED"', '--expire-time', '"10000"'];
+  it('should escape array items as normal items', function (done) {
+    var expected = [
+      '"Hacked"',
+      '"\\`touch HACKED\\`"',
+      '--app-name',
+      '"foo\\`touch exploit\\`"',
+      '--category',
+      '"foo\\`touch exploit\\`"',
+      '--expire-time',
+      '"10000"'
+    ];
 
     expectArgsListToBe(expected, done);
     var notifier = new Notify({ suppressOsdCheck: true });
     var options = JSON.parse(
-      '{"title":"HACKED", "message":["`touch HACKED`"]}'
+      `{
+        "title": "Hacked",
+        "message":["\`touch HACKED\`"],
+        "app-name": ["foo\`touch exploit\`"],
+        "category": ["foo\`touch exploit\`"]
+      }`
     );
     notifier.notify(options);
   });
