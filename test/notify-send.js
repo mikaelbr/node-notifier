@@ -71,6 +71,17 @@ describe('notify-send', function() {
     notifier.notify({ title: 'title', message: 'body', icon: 'icon-string' });
   });
 
+  it('should only include strings as arguments', function(done) {
+    var expected = ['"HACKED"'];
+
+    expectArgsListToBe(expected, done);
+    var notifier = new Notify({ suppressOsdCheck: true });
+    var options = JSON.parse(
+      '{"title":"HACKED", "message":["`touch HACKED`"]}'
+    );
+    notifier.notify(options);
+  });
+
   it('should remove extra options that are not supported by notify-send', function(done) {
     var expected = [
       '"title"',
