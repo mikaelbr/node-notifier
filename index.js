@@ -1,6 +1,3 @@
-var os = require('os');
-var utils = require('./lib/utils');
-
 // All notifiers
 var NotifySend = require('./notifiers/notifysend');
 var NotificationCenter = require('./notifiers/notificationcenter');
@@ -10,39 +7,35 @@ var WindowsBalloon = require('./notifiers/balloon');
 
 var options = { withFallback: true };
 
-var osType = utils.isWSL() ? 'WSL' : os.type();
+function getOsType () {
+  var utils = require('./lib/utils');
+  var osType = require('os').type();
 
-switch (osType) {
-  case 'Linux':
-    module.exports = new NotifySend(options);
-    module.exports.Notification = NotifySend;
-    break;
-  case 'Darwin':
-    module.exports = new NotificationCenter(options);
-    module.exports.Notification = NotificationCenter;
-    break;
-  case 'Windows_NT':
-    if (utils.isLessThanWin8()) {
-      module.exports = new WindowsBalloon(options);
-      module.exports.Notification = WindowsBalloon;
-    } else {
-      module.exports = new WindowsToaster(options);
-      module.exports.Notification = WindowsToaster;
-    }
-    break;
-  case 'WSL':
-    module.exports = new WindowsToaster(options);
-    module.exports.Notification = WindowsToaster;
-    break;
-  default:
-    if (os.type().match(/BSD$/)) {
-      module.exports = new NotifySend(options);
-      module.exports.Notification = NotifySend;
-    } else {
-      module.exports = new Growl(options);
-      module.exports.Notification = Growl;
-    }
+  if (osType.match(/BSD$/)) {
+    osType === 'BSD';
+  } else if (osType === 'Windows_NT' && utils.isLessThanWin8()) {
+    osType === 'Windows_7_and_Below';
+  } else if (utils.isWSL()) {
+    osType = 'WSL';
+  }
+
+  return osType.toLowerCase();
 }
+
+var osMap = {
+  bsd: NotifySend,
+  darwin: NotificationCenter,
+  linux: NotifySend,
+  windows_7_and_below: WindowsBalloon,
+  windows_nt: WindowsToaster,
+  wsl: WindowsToaster
+};
+
+var osNotifier = osMap[getOsType()] || Growl;
+
+// Set the notifier specific to the current OS
+module.exports = new osNotifier(options);
+module.exports.Notification = osNotifier;
 
 // Expose notifiers to give full control.
 module.exports.NotifySend = NotifySend;
