@@ -133,7 +133,9 @@ function notifyRaw(options, callback) {
     resultBuffer = out;
     options.pipeName = server.namedPipe;
 
-    const customPath = options.customPath;
+    const localNotifier = options.customPath
+        || (notifier + '-x' + (is64Bit ? '64' : '86') + '.exe');
+
     options = utils.mapToWin8(options);
     var argsList = utils.constructArgumentList(options, {
       explicitTrue: true,
@@ -142,9 +144,8 @@ function notifyRaw(options, callback) {
       noEscape: true
     });
 
-    var notifierWithArch = notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
     utils.fileCommand(
-      customPath || notifierWithArch,
+      localNotifier,
       argsList,
       actionJackedCallback
     );
