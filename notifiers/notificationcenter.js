@@ -69,8 +69,6 @@ function notifyRaw(options, callback) {
     }
   );
 
-  const localNotifier = options.customPath || notifier;
-
   options = utils.mapToMac(options);
 
   if (!options.message && !options.group && !options.list && !options.remove) {
@@ -81,7 +79,7 @@ function notifyRaw(options, callback) {
   var argsList = utils.constructArgumentList(options);
   if (utils.isMountainLion()) {
     utils.fileCommandJson(
-      localNotifier,
+      this.options.customPath || notifier,
       argsList,
       actionJackedCallback
     );
