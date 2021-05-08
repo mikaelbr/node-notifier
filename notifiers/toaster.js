@@ -133,6 +133,7 @@ function notifyRaw(options, callback) {
     resultBuffer = out;
     options.pipeName = server.namedPipe;
 
+    const customPath = options.customPath;
     options = utils.mapToWin8(options);
     var argsList = utils.constructArgumentList(options, {
       explicitTrue: true,
@@ -143,7 +144,7 @@ function notifyRaw(options, callback) {
 
     var notifierWithArch = notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
     utils.fileCommand(
-      this.options.customPath || notifierWithArch,
+      customPath || notifierWithArch,
       argsList,
       actionJackedCallback
     );
