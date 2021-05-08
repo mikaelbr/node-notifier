@@ -120,12 +120,11 @@ function doNotification(options, notifierOptions, callback) {
   var is64Bit = os.arch() === 'x64';
   options = options || {};
 
-  const localNotifier = notifierOptions.customPath
-    || (notifier + (is64Bit ? '64' : '') + '.exe');
+  const localNotifier = notifierOptions.customPath ||
+    (notifier + (is64Bit ? '64' : '') + '.exe');
 
   options = utils.mapToNotifu(options);
   options.p = options.p || 'Node Notification:';
-
 
   if (!options.m) {
     callback(new Error('Message is required.'));
