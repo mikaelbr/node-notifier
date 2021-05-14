@@ -1,5 +1,15 @@
 # Changelog
 
+### `v10.0.0`
+
+Breaking changes:
+
+Setting `NSAllowsArbitraryLoads` as false for security reasons within terminal-notifier. Meaning non-https images/loads for terminal-notifier will no longer work. See [#362](https://github.com/mikaelbr/node-notifier/pull/362)
+
+#### Fixes
+
+- fix: options.customPath doesn't work for windows toaster. See [#373](https://github.com/mikaelbr/node-notifier/pull/373)
+
 ### `v9.0.1`
 
 - Fixes potential security issue with non-escaping input parameters for notify-send.
