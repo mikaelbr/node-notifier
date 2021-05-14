@@ -1,6 +1,6 @@
-var notifier = require('../');
-var nc = new notifier.NotificationCenter();
-var path = require('path');
+const notifier = require('../');
+const nc = new notifier.NotificationCenter();
+const path = require('path');
 
 nc.notify(
   {

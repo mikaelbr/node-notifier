@@ -1,16 +1,16 @@
-var os = require('os');
-var utils = require('./lib/utils');
+const os = require('os');
+const utils = require('./lib/utils');
 
 // All notifiers
-var NotifySend = require('./notifiers/notifysend');
-var NotificationCenter = require('./notifiers/notificationcenter');
-var WindowsToaster = require('./notifiers/toaster');
-var Growl = require('./notifiers/growl');
-var WindowsBalloon = require('./notifiers/balloon');
+const NotifySend = require('./notifiers/notifysend');
+const NotificationCenter = require('./notifiers/notificationcenter');
+const WindowsToaster = require('./notifiers/toaster');
+const Growl = require('./notifiers/growl');
+const WindowsBalloon = require('./notifiers/balloon');
 
-var options = { withFallback: true };
+const options = { withFallback: true };
 
-var osType = utils.isWSL() ? 'WSL' : os.type();
+const osType = utils.isWSL() ? 'WSL' : os.type();
 
 switch (osType) {
   case 'Linux':

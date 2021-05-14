@@ -1,7 +1,7 @@
-var notifier = require('../');
-var nc = new notifier.NotificationCenter();
+const notifier = require('../');
+const nc = new notifier.NotificationCenter();
 
-var trueAnswer = 'Most def.';
+const trueAnswer = 'Most def.';
 
 nc.notify(
   {

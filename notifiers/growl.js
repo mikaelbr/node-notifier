@@ -1,19 +1,19 @@
 /**
  * Wrapper for the growly module
  */
-var checkGrowl = require('../lib/checkGrowl');
-var utils = require('../lib/utils');
-var growly = require('growly');
+const checkGrowl = require('../lib/checkGrowl');
+const utils = require('../lib/utils');
+const growly = require('growly');
 
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
+const EventEmitter = require('events').EventEmitter;
+const util = require('util');
 
-var errorMessageNotFound =
+const errorMessageNotFound =
   "Couldn't connect to growl (might be used as a fallback). Make sure it is running";
 
 module.exports = Growl;
 
-var hasGrowl;
+let hasGrowl;
 
 function Growl(options) {
   options = utils.clone(options || {});
@@ -58,7 +58,7 @@ function notifyRaw(options, callback) {
   options.title = options.title || 'Node Notification:';
 
   if (hasGrowl || !!options.wait) {
-    var localCallback = options.wait ? callback : noop;
+    const localCallback = options.wait ? callback : noop;
     growly.notify(options.message, options, localCallback);
     if (!options.wait) callback();
     return this;

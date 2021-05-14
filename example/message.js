@@ -1,4 +1,4 @@
-var notifier = require('../index');
+const notifier = require('../index');
 
 notifier
   .notify({ message: 'Hello', wait: true }, function(err, data) {

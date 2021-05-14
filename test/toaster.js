@@ -1,18 +1,18 @@
-var Notify = require('../notifiers/toaster');
-var utils = require('../lib/utils');
-var path = require('path');
-var os = require('os');
-var testUtils = require('./_test-utils');
+const Notify = require('../notifiers/toaster');
+const utils = require('../lib/utils');
+const path = require('path');
+const os = require('os');
+const testUtils = require('./_test-utils');
 jest.mock('uuid', () => {
   return { v4: () => '123456789' };
 });
 
 describe('WindowsToaster', function () {
-  var original = utils.fileCommand;
-  var createNamedPipe = utils.createNamedPipe;
-  var originalType = os.type;
-  var originalArch = os.arch;
-  var originalRelease = os.release;
+  const original = utils.fileCommand;
+  const createNamedPipe = utils.createNamedPipe;
+  const originalType = os.type;
+  const originalArch = os.arch;
+  const originalRelease = os.release;
 
   beforeEach(function () {
     os.release = function () {
@@ -52,7 +52,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.argsListHas(argsList, '-pid')).toBeFalsy();
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({
       title: 'Heya',
@@ -75,7 +75,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.getOptionValue(argsList, '-silent')).not.toBe('true');
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({
       title: 'Heya',
@@ -89,7 +89,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.argsListHas(argsList, '-appId')).toBeFalsy();
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({
       title: 'Heya',
@@ -102,7 +102,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.argsListHas(argsList, '-p')).toBeTruthy();
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({
       message: 'Heya',
@@ -116,13 +116,13 @@ describe('WindowsToaster', function () {
       expect(testUtils.argsListHas(argsList, '-remove')).toBeFalsy();
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({ message: 'Heya', remove: 3 });
   });
 
   it('should fail if neither close or message is defined', function (done) {
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({ title: 'Heya' }, function (err) {
       expect(err.message).toBe('Message or ID to close is required.');
@@ -135,7 +135,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.argsListHas(argsList, '-close')).toBeTruthy();
       callback();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({ close: 3 }, function (err) {
       expect(err).toBeFalsy();
@@ -148,7 +148,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.argsListHas(argsList, '-m')).toBeTruthy();
       callback();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({ message: 'Hello' }, function (err) {
       expect(err).toBeFalsy();
@@ -161,7 +161,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.argsListHas(argsList, '-m')).toBeTruthy();
       callback();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify('hello', function (err) {
       expect(err).toBeFalsy();
@@ -175,7 +175,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.getOptionValue(argsList, '-m')).toBe('foo bar');
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({ title: 'Heya', message: 'foo bar' });
   });
@@ -188,7 +188,7 @@ describe('WindowsToaster', function () {
       );
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({ title: 'Heya', message: 'foo bar', sound: 'Frog' });
   });
@@ -197,7 +197,7 @@ describe('WindowsToaster', function () {
     os.arch = function () {
       return 'ia32';
     };
-    var expected = 'snoretoast-x86.exe';
+    const expected = 'snoretoast-x86.exe';
     utils.fileCommand = function (notifier, argsList, callback) {
       expect(notifier).toEndWith(expected);
       done();
@@ -209,7 +209,7 @@ describe('WindowsToaster', function () {
     os.arch = function () {
       return 'x64';
     };
-    var expected = 'snoretoast-x64.exe';
+    const expected = 'snoretoast-x64.exe';
     utils.fileCommand = function (notifier, argsList, callback) {
       expect(notifier).toEndWith(expected);
       done();
@@ -224,7 +224,7 @@ describe('WindowsToaster', function () {
       );
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({ message: 'foo bar', sound: true });
   });
@@ -234,7 +234,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.argsListHas(argsList, '-silent')).toBeTruthy();
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({ message: 'foo bar', sound: false });
   });
@@ -244,7 +244,7 @@ describe('WindowsToaster', function () {
       expect(testUtils.getOptionValue(argsList, '-s')).toBe('Notification.IM');
       done();
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({
       title: 'Heya',
@@ -259,7 +259,7 @@ describe('WindowsToaster', function () {
       done();
     };
 
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({
       title: 'Heya',
@@ -269,24 +269,24 @@ describe('WindowsToaster', function () {
   });
 
   it('should not parse local path of icon', function (done) {
-    var icon = path.join(__dirname, 'fixture', 'coulson.jpg');
+    const icon = path.join(__dirname, 'fixture', 'coulson.jpg');
     utils.fileCommand = function (notifier, argsList, callback) {
       expect(argsList[3]).toBe(icon);
       done();
     };
 
-    var notifier = new Notify();
+    const notifier = new Notify();
     notifier.notify({ title: 'Heya', message: 'foo bar', icon: icon });
   });
 
   it('should not parse normal URL of icon', function (done) {
-    var icon = 'http://csscomb.com/img/csscomb.jpg';
+    const icon = 'http://csscomb.com/img/csscomb.jpg';
     utils.fileCommand = function (notifier, argsList, callback) {
       expect(argsList[3]).toBe(icon);
       done();
     };
 
-    var notifier = new Notify();
+    const notifier = new Notify();
     notifier.notify({ title: 'Heya', message: 'foo bar', icon: icon });
   });
 
@@ -313,7 +313,7 @@ describe('WindowsToaster', function () {
         'Ok;Cancel',
       ]);
     };
-    var notifier = new Notify();
+    const notifier = new Notify();
 
     notifier.notify({
       title: 'Heya',

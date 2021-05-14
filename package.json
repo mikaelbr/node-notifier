@@ -38,24 +38,23 @@
   "author": "Mikael Brevik",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^7.6.0",
+    "eslint": "^7.26.0",
     "eslint-config-semistandard": "^15.0.1",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "husky": "^4.2.5",
-    "jest": "^26.4.0",
-    "lint-staged": "^10.2.11",
-    "prettier": "^2.0.5"
+    "eslint-plugin-promise": "^4.3.1",
+    "husky": "^6.0.0",
+    "jest": "^26.6.3",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.0"
   },
   "dependencies": {
     "growly": "^1.3.0",
     "is-wsl": "^2.2.0",
-    "semver": "^7.3.2",
+    "semver": "^7.3.5",
     "shellwords": "^0.1.1",
-    "uuid": "^8.3.0",
+    "uuid": "^8.3.2",
     "which": "^2.0.2"
   },
   "husky": {

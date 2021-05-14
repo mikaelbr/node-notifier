@@ -1,17 +1,17 @@
 /**
  * Wrapper for the toaster (https://github.com/nels-o/toaster)
  */
-var path = require('path');
-var notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
-var utils = require('../lib/utils');
-var Balloon = require('./balloon');
-var os = require('os');
+const path = require('path');
+const notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
+const utils = require('../lib/utils');
+const Balloon = require('./balloon');
+const os = require('os');
 const { v4: uuid } = require('uuid');
 
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
+const EventEmitter = require('events').EventEmitter;
+const util = require('util');
 
-var fallback;
+let fallback;
 
 const PIPE_NAME = 'notifierPipe';
 const PIPE_PATH_PREFIX = '\\\\.\\pipe\\';
@@ -47,15 +47,15 @@ function parseResult(data) {
 }
 
 function getPipeName() {
-  var pathPrefix = utils.isWSL() ? PIPE_PATH_PREFIX_WSL : PIPE_PATH_PREFIX;
+  const pathPrefix = utils.isWSL() ? PIPE_PATH_PREFIX_WSL : PIPE_PATH_PREFIX;
   return `${pathPrefix}${PIPE_NAME}-${uuid()}`;
 }
 
 function notifyRaw(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
-  var is64Bit = os.arch() === 'x64';
-  var resultBuffer;
+  const is64Bit = os.arch() === 'x64';
+  let resultBuffer;
   const server = {
     namedPipe: getPipeName()
   };
@@ -71,7 +71,7 @@ function notifyRaw(options, callback) {
     );
   }
 
-  var snoreToastResultParser = (err, callback) => {
+  const snoreToastResultParser = (err, callback) => {
     /* Possible exit statuses from SnoreToast, we only want to include err if it's -1 code
     Exit Status     :  Exit Code
     Failed          : -1
@@ -106,7 +106,7 @@ function notifyRaw(options, callback) {
     server.instance && server.instance.close();
   };
 
-  var actionJackedCallback = (err) =>
+  const actionJackedCallback = (err) =>
     snoreToastResultParser(
       err,
       utils.actionJackerDecorator(this, options, callback, (data) =>
@@ -137,7 +137,7 @@ function notifyRaw(options, callback) {
       (notifier + '-x' + (is64Bit ? '64' : '86') + '.exe');
 
     options = utils.mapToWin8(options);
-    var argsList = utils.constructArgumentList(options, {
+    const argsList = utils.constructArgumentList(options, {
       explicitTrue: true,
       wrapper: '',
       keepNewlines: true,

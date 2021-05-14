@@ -1,4 +1,4 @@
-var notifier = require('../');
+const notifier = require('../');
 
 describe('constructors', function() {
   it('should expose a default selected instance', function() {
@@ -11,11 +11,11 @@ describe('constructors', function() {
   });
 
   it('should throw error when second parameter is not a function', function() {
-    var wrongParamOne = 200;
-    var wrongParamTwo = 'meaningless string';
-    var data = { title: 'My notification' };
+    const wrongParamOne = 200;
+    const wrongParamTwo = 'meaningless string';
+    const data = { title: 'My notification' };
 
-    var base = notifier.notify.bind(notifier, data);
+    const base = notifier.notify.bind(notifier, data);
     expect(base.bind(notifier, wrongParamOne)).toThrowError(
       /^The second argument/
     );

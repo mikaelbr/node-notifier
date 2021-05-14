@@ -7,7 +7,7 @@ module.exports.argsListHas = function argsListHas(args, field) {
 };
 
 module.exports.getOptionValue = function getOptionValue(args, field) {
-  for (var i = 0; i < args.length; i++) {
+  for (let i = 0; i < args.length; i++) {
     if (args[i] === field && i < args.length - 1) {
       return args[i + 1];
     }

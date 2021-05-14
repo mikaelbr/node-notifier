@@ -1,10 +1,10 @@
-var Notify = require('../notifiers/notifysend');
-var utils = require('../lib/utils');
-var os = require('os');
+const Notify = require('../notifiers/notifysend');
+const utils = require('../lib/utils');
+const os = require('os');
 
 describe('notify-send', function () {
-  var original = utils.command;
-  var originalType = os.type;
+  const original = utils.command;
+  const originalType = os.type;
 
   beforeEach(function () {
     os.type = function () {
@@ -25,14 +25,14 @@ describe('notify-send', function () {
   }
 
   it('should pass on title and body', function (done) {
-    var expected = ['"title"', '"body"', '--expire-time', '"10000"'];
+    const expected = ['"title"', '"body"', '--expire-time', '"10000"'];
     expectArgsListToBe(expected, done);
-    var notifier = new Notify({ suppressOsdCheck: true });
+    const notifier = new Notify({ suppressOsdCheck: true });
     notifier.notify({ title: 'title', message: 'body' });
   });
 
   it('should pass have default title', function (done) {
-    var expected = [
+    const expected = [
       '"Node Notification:"',
       '"body"',
       '--expire-time',
@@ -40,7 +40,7 @@ describe('notify-send', function () {
     ];
 
     expectArgsListToBe(expected, done);
-    var notifier = new Notify({ suppressOsdCheck: true });
+    const notifier = new Notify({ suppressOsdCheck: true });
     notifier.notify({ message: 'body' });
   });
 
@@ -49,7 +49,7 @@ describe('notify-send', function () {
       expect(argsList).toBeUndefined();
     };
 
-    var notifier = new Notify({ suppressOsdCheck: true });
+    const notifier = new Notify({ suppressOsdCheck: true });
     notifier.notify({}, function (err) {
       expect(err.message).toBe('Message is required.');
       done();
@@ -57,8 +57,8 @@ describe('notify-send', function () {
   });
 
   it('should escape message input', function (done) {
-    var excapedNewline = process.platform === 'win32' ? '\\r\\n' : '\\n';
-    var expected = [
+    const excapedNewline = process.platform === 'win32' ? '\\r\\n' : '\\n';
+    const expected = [
       '"Node Notification:"',
       '"some' + excapedNewline + ' \\"me\'ss\\`age\\`\\""',
       '--expire-time',
@@ -66,12 +66,12 @@ describe('notify-send', function () {
     ];
 
     expectArgsListToBe(expected, done);
-    var notifier = new Notify({ suppressOsdCheck: true });
+    const notifier = new Notify({ suppressOsdCheck: true });
     notifier.notify({ message: 'some\n "me\'ss`age`"' });
   });
 
   it('should escape array items as normal items', function (done) {
-    var expected = [
+    const expected = [
       '"Hacked"',
       '"\\`touch HACKED\\`"',
       '--app-name',
@@ -83,8 +83,8 @@ describe('notify-send', function () {
     ];
 
     expectArgsListToBe(expected, done);
-    var notifier = new Notify({ suppressOsdCheck: true });
-    var options = JSON.parse(
+    const notifier = new Notify({ suppressOsdCheck: true });
+    const options = JSON.parse(
       `{
         "title": "Hacked",
         "message":["\`touch HACKED\`"],
@@ -96,7 +96,7 @@ describe('notify-send', function () {
   });
 
   it('should send additional parameters as --"keyname"', function (done) {
-    var expected = [
+    const expected = [
       '"title"',
       '"body"',
       '--icon',
@@ -106,12 +106,12 @@ describe('notify-send', function () {
     ];
 
     expectArgsListToBe(expected, done);
-    var notifier = new Notify({ suppressOsdCheck: true });
+    const notifier = new Notify({ suppressOsdCheck: true });
     notifier.notify({ title: 'title', message: 'body', icon: 'icon-string' });
   });
 
   it('should remove extra options that are not supported by notify-send', function (done) {
-    var expected = [
+    const expected = [
       '"title"',
       '"body"',
       '--icon',
@@ -121,7 +121,7 @@ describe('notify-send', function () {
     ];
 
     expectArgsListToBe(expected, done);
-    var notifier = new Notify({ suppressOsdCheck: true });
+    const notifier = new Notify({ suppressOsdCheck: true });
     notifier.notify({
       title: 'title',
       message: 'body',

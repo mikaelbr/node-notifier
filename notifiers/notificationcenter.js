@@ -1,18 +1,18 @@
 /**
  * A Node.js wrapper for terminal-notify (with fallback).
  */
-var utils = require('../lib/utils');
-var Growl = require('./growl');
-var path = require('path');
-var notifier = path.join(
+const utils = require('../lib/utils');
+const Growl = require('./growl');
+const path = require('path');
+const notifier = path.join(
   __dirname,
   '../vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier'
 );
 
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
+const EventEmitter = require('events').EventEmitter;
+const util = require('util');
 
-var errorMessageOsX =
+const errorMessageOsX =
   'You need Mac OS X 10.8 or above to use NotificationCenter,' +
   ' or use Growl fallback with constructor option {withFallback: true}.';
 
@@ -28,12 +28,12 @@ function NotificationCenter(options) {
   EventEmitter.call(this);
 }
 util.inherits(NotificationCenter, EventEmitter);
-var activeId = null;
+let activeId = null;
 
 function noop() {}
 function notifyRaw(options, callback) {
-  var fallbackNotifier;
-  var id = identificator();
+  let fallbackNotifier;
+  const id = identificator();
   options = utils.clone(options || {});
   activeId = id;
 
@@ -49,7 +49,7 @@ function notifyRaw(options, callback) {
     );
   }
 
-  var actionJackedCallback = utils.actionJackerDecorator(
+  const actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,
     callback,
@@ -76,7 +76,7 @@ function notifyRaw(options, callback) {
     return this;
   }
 
-  var argsList = utils.constructArgumentList(options);
+  const argsList = utils.constructArgumentList(options);
   if (utils.isMountainLion()) {
     utils.fileCommandJson(
       this.options.customPath || notifier,

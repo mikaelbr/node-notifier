@@ -17,6 +17,6 @@ function endsWith(subjectString, searchString, position) {
     position = subjectString.length;
   }
   position -= searchString.length;
-  var lastIndex = subjectString.lastIndexOf(searchString, position);
+  const lastIndex = subjectString.lastIndexOf(searchString, position);
   return lastIndex !== -1 && lastIndex === position;
 }

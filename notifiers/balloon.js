@@ -22,18 +22,18 @@ Usage
   4 = Closed or faded out
 
  */
-var path = require('path');
-var notifier = path.resolve(__dirname, '../vendor/notifu/notifu');
-var checkGrowl = require('../lib/checkGrowl');
-var utils = require('../lib/utils');
-var Toaster = require('./toaster');
-var Growl = require('./growl');
-var os = require('os');
+const path = require('path');
+const notifier = path.resolve(__dirname, '../vendor/notifu/notifu');
+const checkGrowl = require('../lib/checkGrowl');
+const utils = require('../lib/utils');
+const Toaster = require('./toaster');
+const Growl = require('./growl');
+const os = require('os');
 
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
+const EventEmitter = require('events').EventEmitter;
+const util = require('util');
 
-var hasGrowl;
+let hasGrowl;
 
 module.exports = WindowsBalloon;
 
@@ -51,8 +51,8 @@ util.inherits(WindowsBalloon, EventEmitter);
 
 function noop() {}
 function notifyRaw(options, callback) {
-  var fallback;
-  var notifierOptions = this.options;
+  let fallback;
+  const notifierOptions = this.options;
   options = utils.clone(options || {});
   callback = callback || noop;
 
@@ -60,7 +60,7 @@ function notifyRaw(options, callback) {
     options = { title: 'node-notifier', message: options };
   }
 
-  var actionJackedCallback = utils.actionJackerDecorator(
+  const actionJackedCallback = utils.actionJackerDecorator(
     this,
     options,
     callback,
@@ -114,23 +114,23 @@ Object.defineProperty(WindowsBalloon.prototype, 'notify', {
   }
 });
 
-var allowedArguments = ['t', 'd', 'p', 'm', 'i', 'e', 'q', 'w', 'xp'];
+const allowedArguments = ['t', 'd', 'p', 'm', 'i', 'e', 'q', 'w', 'xp'];
 
 function doNotification(options, notifierOptions, callback) {
-  var is64Bit = os.arch() === 'x64';
+  const is64Bit = os.arch() === 'x64';
   options = options || {};
   options = utils.mapToNotifu(options);
   options.p = options.p || 'Node Notification:';
 
-  var fullNotifierPath = notifier + (is64Bit ? '64' : '') + '.exe';
-  var localNotifier = notifierOptions.customPath || fullNotifierPath;
+  const fullNotifierPath = notifier + (is64Bit ? '64' : '') + '.exe';
+  const localNotifier = notifierOptions.customPath || fullNotifierPath;
 
   if (!options.m) {
     callback(new Error('Message is required.'));
     return this;
   }
 
-  var argsList = utils.constructArgumentList(options, {
+  const argsList = utils.constructArgumentList(options, {
     wrapper: '',
     noEscape: true,
     explicitTrue: true,
@@ -139,7 +139,7 @@ function doNotification(options, notifierOptions, callback) {
 
   if (options.wait) {
     return utils.fileCommand(localNotifier, argsList, function(error, data) {
-      var action = fromErrorCodeToAction(error.code);
+      const action = fromErrorCodeToAction(error.code);
       if (action === 'error') return callback(error, data);
 
       return callback(null, action);

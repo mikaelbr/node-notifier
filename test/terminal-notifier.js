@@ -1,19 +1,19 @@
-var NotificationCenter = require('../notifiers/notificationcenter');
-var Growl = require('../notifiers/growl');
-var utils = require('../lib/utils');
-var path = require('path');
-var os = require('os');
-var fs = require('fs');
-var testUtils = require('./_test-utils');
+const NotificationCenter = require('../notifiers/notificationcenter');
+const Growl = require('../notifiers/growl');
+const utils = require('../lib/utils');
+const path = require('path');
+const os = require('os');
+const fs = require('fs');
+const testUtils = require('./_test-utils');
 
-var notifier = null;
-var originalUtils = utils.fileCommandJson;
-var originalMacVersion = utils.isMountainLion;
-var originalType = os.type;
+let notifier = null;
+const originalUtils = utils.fileCommandJson;
+const originalMacVersion = utils.isMountainLion;
+const originalType = os.type;
 
 describe('Mac fallback', function () {
-  var original = utils.isMountainLion;
-  var originalMac = utils.isMac;
+  const original = utils.isMountainLion;
+  const originalMac = utils.isMac;
 
   afterEach(function () {
     utils.isMountainLion = original;
@@ -27,7 +27,7 @@ describe('Mac fallback', function () {
     utils.isMac = function () {
       return true;
     };
-    var n = new NotificationCenter({ withFallback: true });
+    const n = new NotificationCenter({ withFallback: true });
     n.notify({ message: 'Hello World' }, function (_, response) {
       expect(this).toBeInstanceOf(Growl);
       done();
@@ -41,7 +41,7 @@ describe('Mac fallback', function () {
     utils.isMac = function () {
       return true;
     };
-    var n = new NotificationCenter();
+    const n = new NotificationCenter();
     n.notify({ message: 'Hello World' }, function (err, response) {
       expect(err).toBeTruthy();
       expect(this).not.toBeInstanceOf(Growl);
@@ -73,7 +73,7 @@ describe('terminal-notifier', function () {
   // Simulate async operation, move to end of message queue.
   function asyncify(fn) {
     return function () {
-      var args = arguments;
+      const args = arguments;
       setTimeout(function () {
         fn.apply(null, args);
       }, 0);
@@ -166,7 +166,7 @@ describe('terminal-notifier', function () {
     }
 
     it('should allow for non-sensical arguments (fail gracefully)', function (done) {
-      var expected = [
+      const expected = [
         '-title',
         '"title"',
         '-message',
@@ -180,7 +180,7 @@ describe('terminal-notifier', function () {
       ];
 
       expectArgsListToBe(expected, done);
-      var notifier = new NotificationCenter();
+      const notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
@@ -198,7 +198,7 @@ describe('terminal-notifier', function () {
         callback();
         done();
       });
-      var notifier = new NotificationCenter();
+      const notifier = new NotificationCenter();
       notifier.notify({
         title: 'Heya',
         message: 'foo bar',
@@ -207,7 +207,7 @@ describe('terminal-notifier', function () {
     });
 
     it('should convert list of actions to flat list', function (done) {
-      var expected = [
+      const expected = [
         '-title',
         '"title \\"message\\""',
         '-message',
@@ -221,7 +221,7 @@ describe('terminal-notifier', function () {
       ];
 
       expectArgsListToBe(expected, done);
-      var notifier = new NotificationCenter();
+      const notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
@@ -233,7 +233,7 @@ describe('terminal-notifier', function () {
     });
 
     it('should still support wait flag with default timeout', function (done) {
-      var expected = [
+      const expected = [
         '-title',
         '"Title"',
         '-message',
@@ -245,7 +245,7 @@ describe('terminal-notifier', function () {
       ];
 
       expectArgsListToBe(expected, done);
-      var notifier = new NotificationCenter();
+      const notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
@@ -253,7 +253,7 @@ describe('terminal-notifier', function () {
     });
 
     it('should let timeout set precedence over wait', function (done) {
-      var expected = [
+      const expected = [
         '-title',
         '"Title"',
         '-message',
@@ -265,7 +265,7 @@ describe('terminal-notifier', function () {
       ];
 
       expectArgsListToBe(expected, done);
-      var notifier = new NotificationCenter();
+      const notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
@@ -278,7 +278,7 @@ describe('terminal-notifier', function () {
     });
 
     it('should not set a default timeout if explicitly false', function (done) {
-      var expected = [
+      const expected = [
         '-title',
         '"Title"',
         '-message',
@@ -288,7 +288,7 @@ describe('terminal-notifier', function () {
       ];
 
       expectArgsListToBe(expected, done);
-      var notifier = new NotificationCenter();
+      const notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 
@@ -300,7 +300,7 @@ describe('terminal-notifier', function () {
     });
 
     it('should escape all title and message', function (done) {
-      var expected = [
+      const expected = [
         '-title',
         '"title \\"message\\""',
         '-message',
@@ -314,7 +314,7 @@ describe('terminal-notifier', function () {
       ];
 
       expectArgsListToBe(expected, done);
-      var notifier = new NotificationCenter();
+      const notifier = new NotificationCenter();
       notifier.isNotifyChecked = true;
       notifier.hasNotifier = true;
 

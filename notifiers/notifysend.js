@@ -1,15 +1,15 @@
 /**
  * Node.js wrapper for "notify-send".
  */
-var os = require('os');
-var which = require('which');
-var utils = require('../lib/utils');
+const os = require('os');
+const which = require('which');
+const utils = require('../lib/utils');
 
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
+const EventEmitter = require('events').EventEmitter;
+const util = require('util');
 
-var notifier = 'notify-send';
-var hasNotifier;
+const notifier = 'notify-send';
+let hasNotifier;
 
 module.exports = NotifySend;
 
@@ -79,19 +79,17 @@ Object.defineProperty(NotifySend.prototype, 'notify', {
   }
 });
 
-var allowedArguments = ['urgency', 'expire-time', 'icon', 'category', 'hint', 'app-name'];
+const allowedArguments = ['urgency', 'expire-time', 'icon', 'category', 'hint', 'app-name'];
 
 function doNotification(options, callback) {
-  var initial, argsList;
-
   options = utils.mapToNotifySend(options);
   options.title = options.title || 'Node Notification:';
 
-  initial = [options.title, options.message];
+  const initial = [options.title, options.message];
   delete options.title;
   delete options.message;
 
-  argsList = utils.constructArgumentList(options, {
+  const argsList = utils.constructArgumentList(options, {
     initial: initial,
     keyExtra: '-',
     allowedArguments: allowedArguments

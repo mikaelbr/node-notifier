@@ -1,5 +1,5 @@
-var Notify = require('../notifiers/growl');
-var growly = require('growly');
+const Notify = require('../notifiers/growl');
+const growly = require('growly');
 
 describe('growl', function() {
   beforeEach(function() {
@@ -11,7 +11,7 @@ describe('growl', function() {
   });
 
   it('should have overridable host and port', function() {
-    var notifier = new Notify();
+    let notifier = new Notify();
     expect(notifier.options.host).toBeUndefined();
     expect(notifier.options.port).toBeUndefined();
 
@@ -27,7 +27,7 @@ describe('growl', function() {
       done();
     };
 
-    var notifier = new Notify({ host: 'foo', port: 'bar' });
+    const notifier = new Notify({ host: 'foo', port: 'bar' });
     notifier.notify({ message: 'foo', wait: true });
   });
 

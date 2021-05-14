@@ -1,11 +1,11 @@
-var Notify = require('../notifiers/balloon');
-var utils = require('../lib/utils');
-var os = require('os');
+const Notify = require('../notifiers/balloon');
+const utils = require('../lib/utils');
+const os = require('os');
 
 describe('WindowsBalloon', function() {
-  var original = utils.immediateFileCommand;
-  var originalType = os.type;
-  var originalArch = os.arch;
+  const original = utils.immediateFileCommand;
+  const originalType = os.type;
+  const originalArch = os.arch;
 
   beforeEach(function() {
     os.type = function() {
@@ -30,7 +30,7 @@ describe('WindowsBalloon', function() {
     os.arch = function() {
       return 'x64';
     };
-    var expected = 'notifu64.exe';
+    const expected = 'notifu64.exe';
     utils.immediateFileCommand = function(notifier, argsList, callback) {
       expect(notifier).toEndWith(expected);
       done();
@@ -43,7 +43,7 @@ describe('WindowsBalloon', function() {
     os.arch = function() {
       return 'ia32';
     };
-    var expected = 'notifu.exe';
+    const expected = 'notifu.exe';
     utils.immediateFileCommand = function(notifier, argsList, callback) {
       expect(notifier).toEndWith(expected);
       done();
@@ -52,13 +52,13 @@ describe('WindowsBalloon', function() {
   });
 
   it('should pass on title and body', function(done) {
-    var expected = ['-m', 'body', '-p', 'title', '-q'];
+    const expected = ['-m', 'body', '-p', 'title', '-q'];
     expectArgsListToBe(expected, done);
     new Notify().notify({ title: 'title', message: 'body' });
   });
 
   it('should pass have default title', function(done) {
-    var expected = ['-m', 'body', '-q', '-p', 'Node Notification:'];
+    const expected = ['-m', 'body', '-q', '-p', 'Node Notification:'];
     expectArgsListToBe(expected, done);
     new Notify().notify({ message: 'body' });
   });
@@ -74,7 +74,7 @@ describe('WindowsBalloon', function() {
   });
 
   it('should escape message input', function(done) {
-    var expected = [
+    const expected = [
       '-m',
       'some "me\'ss`age`"',
       '-q',
@@ -86,26 +86,26 @@ describe('WindowsBalloon', function() {
   });
 
   it('should be able to deactivate silent mode', function(done) {
-    var expected = ['-m', 'body', '-p', 'Node Notification:'];
+    const expected = ['-m', 'body', '-p', 'Node Notification:'];
     expectArgsListToBe(expected, done);
     new Notify().notify({ message: 'body', sound: true });
   });
 
   it('should be able to deactivate silent mode, by doing quiet false', function(done) {
-    var expected = ['-m', 'body', '-p', 'Node Notification:'];
+    const expected = ['-m', 'body', '-p', 'Node Notification:'];
     expectArgsListToBe(expected, done);
     new Notify().notify({ message: 'body', quiet: false });
   });
 
   it('should send set time', function(done) {
-    var expected = ['-m', 'body', '-p', 'title', '-d', '1000', '-q'];
+    const expected = ['-m', 'body', '-p', 'title', '-d', '1000', '-q'];
 
     expectArgsListToBe(expected, done);
     new Notify().notify({ title: 'title', message: 'body', time: '1000' });
   });
 
   it('should not send false flags', function(done) {
-    var expected = [
+    const expected = [
       '-d',
       '1000',
       '-i',
@@ -128,7 +128,7 @@ describe('WindowsBalloon', function() {
   });
 
   it('should send additional parameters as --"keyname"', function(done) {
-    var expected = [
+    const expected = [
       '-d',
       '1000',
       '-w',
@@ -152,7 +152,7 @@ describe('WindowsBalloon', function() {
   });
 
   it('should remove extra options that are not supported by notifu', function(done) {
-    var expected = ['-m', 'body', '-p', 'title', '-q'];
+    const expected = ['-m', 'body', '-p', 'title', '-q'];
     expectArgsListToBe(expected, done);
     new Notify().notify({
       title: 'title',
@@ -162,7 +162,7 @@ describe('WindowsBalloon', function() {
   });
 
   it('should have both type and duration options', function(done) {
-    var expected = [
+    const expected = [
       '-m',
       'body',
       '-p',
@@ -184,7 +184,7 @@ describe('WindowsBalloon', function() {
   });
 
   it('should sanitize wrong string type option to info', function(done) {
-    var expected = ['-m', 'body', '-p', 'title', '-q', '-t', 'info'];
+    const expected = ['-m', 'body', '-p', 'title', '-q', '-t', 'info'];
 
     expectArgsListToBe(expected, done);
     new Notify().notify({
@@ -195,13 +195,13 @@ describe('WindowsBalloon', function() {
   });
 
   it('should sanitize type option to error', function(done) {
-    var expected = ['-m', 'body', '-p', 'title', '-q', '-t', 'error'];
+    const expected = ['-m', 'body', '-p', 'title', '-q', '-t', 'error'];
     expectArgsListToBe(expected, done);
     new Notify().notify({ title: 'title', message: 'body', type: 'ErRoR' });
   });
 
   it('should sanitize wring integer type option to info', function(done) {
-    var expected = ['-m', 'body', '-p', 'title', '-q', '-t', 'info'];
+    const expected = ['-m', 'body', '-p', 'title', '-q', '-t', 'info'];
     expectArgsListToBe(expected, done);
     new Notify().notify({ title: 'title', message: 'body', type: 42 });
   });
