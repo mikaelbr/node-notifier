@@ -432,6 +432,18 @@ You can do so with the following command:
 asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
 ```
 
+Or if you use `electron-builder` without using asar directly, append `build` object to your `package.json` as below:
+
+```bash
+...
+build: {
+  asarUnpack: [
+    './node_modules/node-notifier/**/*',
+  ]
+},
+...
+```
+
 ### Using with pkg
 
 For issues using with the pkg module. Check this issue out: https://github.com/mikaelbr/node-notifier/issues/220#issuecomment-425963752
