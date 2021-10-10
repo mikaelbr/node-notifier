@@ -390,7 +390,7 @@ _**Short answer:** update your `appID`._
 
 ### Windows and WSL2
 
-If you don't see notifications within WSL2, you might have to change premission of exe vendor files (snoreToast).
+If you don't see notifications within WSL2, you might have to change permission of exe vendor files (snoreToast).
 [See issue for more info](https://github.com/mikaelbr/node-notifier/issues/353)
 
 ### Use inside tmux session
@@ -453,7 +453,7 @@ For issues using with the pkg module. Check this issue out: https://github.com/m
 When using `node-notifier` inside of `webpack`, you must add the snippet below to your `webpack.config.js`.
 
 This is necessary because `node-notifier` loads the notifiers from a binary, so it
-needs a relative file path. When webpack compiles the modules, it supresses file
+needs a relative file path. When webpack compiles the modules, it suppresses file
 directories, causing `node-notifier` to error on certain platforms.
 
 To fix this, you can configure webpack to keep the relative file directories.
