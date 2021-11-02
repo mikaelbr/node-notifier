@@ -375,7 +375,7 @@ See flags and options on the man page [`notify-send(1)`](http://manpages.ubuntu.
 A very special thanks to all the modules `node-notifier` uses.
 
 - [`terminal-notifier`](https://github.com/julienXX/terminal-notifier)
-- [`Snoretoast`](https://github.com/KDE/snoretoast)
+- [`Snoretoast`](https://github.com/KDE/snoretoast/releases/tag/v0.7.0)
 - [`notifu`](http://www.paralint.com/projects/notifu/)
 - [`growly`](https://github.com/theabraham/growly/)
 
