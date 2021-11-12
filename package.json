@@ -12,8 +12,9 @@
     "example:windows": "node ./example/toaster.js",
     "example:windows:actions": "node ./example/toaster-with-actions.js",
     "example:windows:custom-path": "cross-env DEBUG=notifier node ./example/toaster-custom-path.js",
+    "copy-resources": "copyfiles -u 2 ./vendor/snoreToast/snoretoast-x64.exe ./dist/example/resources/ && copyfiles -u 1 ./example/coulson.jpg ./dist/example/resources/",
     "preexample:windows:nexe-custom-path": "rimraf dist",
-    "example:windows:nexe-custom-path": "nexe -t windows-x64-14.15.3 -i ./example/toaster-custom-path.js -o ./dist/toaster-custom-path.exe && copyfiles ./example/resources/* ./dist",
+    "example:windows:nexe-custom-path": "nexe -t windows-x64-14.15.3 -i ./example/toaster-custom-path.js -o ./dist/toaster-custom-path.exe && npm run copy-resources",
     "postexample:windows:nexe-custom-path": "cross-env DEBUG=notifier ./dist/toaster-custom-path.exe",
     "lint": "eslint example/*.js lib/*.js notifiers/*.js test/**/*.js index.js"
   },
