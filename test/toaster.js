@@ -329,4 +329,47 @@ describe('WindowsToaster', function () {
       actions: ['Ok', 'Cancel'],
     });
   });
+
+  it('should call custom notifier when customPath is passed via message', (done) => {
+    utils.fileCommand = function (notifier, argsList, callback) {
+      expect(notifier).toEqual('/test/customPath/snoretoast-x64.exe');
+      done();
+    };
+
+    const notifier = new Notify();
+
+    notifier.notify({
+      title: 'Heya',
+      message: 'foo bar',
+      extra: 'dsakdsa',
+      foo: 'bar',
+      close: 123,
+      bar: true,
+      id: 1337,
+      sound: 'Notification.IM',
+      customPath: '/test/customPath/snoretoast-x64.exe',
+      actions: ['Ok', 'Cancel'],
+    });
+  });
+
+  it('should call custom notifier when customPath is passed via constructor', (done) => {
+    utils.fileCommand = function (notifier, argsList, callback) {
+      expect(notifier).toEqual('/test/customPath/snoretoast-x64.exe');
+      done();
+    };
+
+    const notifier = new Notify({ customPath: '/test/customPath/snoretoast-x64.exe' });
+
+    notifier.notify({
+      title: 'Heya',
+      message: 'foo bar',
+      extra: 'dsakdsa',
+      foo: 'bar',
+      close: 123,
+      bar: true,
+      id: 1337,
+      sound: 'Notification.IM',
+      actions: ['Ok', 'Cancel'],
+    });
+  });
 });

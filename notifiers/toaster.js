@@ -133,7 +133,7 @@ function notifyRaw(options, callback) {
     resultBuffer = out;
     options.pipeName = server.namedPipe;
 
-    const localNotifier = options.customPath ||
+    const localNotifier = options.customPath || this.options.customPath ||
       (notifier + '-x' + (is64Bit ? '64' : '86') + '.exe');
 
     options = utils.mapToWin8(options);
