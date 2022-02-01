@@ -1,5 +1,13 @@
 # Changelog
 
+### `v10.0.1`
+
+Fixes:
+
+- Fix custom path for windows [#382](https://github.com/mikaelbr/node-notifier/pull/382)
+
+Thanks to [@yoavain](https://github.com/yoavain)
+
 ### `v10.0.0`
 
 Breaking changes:
