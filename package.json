@@ -16,7 +16,8 @@
     "preexample:windows:nexe-custom-path": "rimraf dist",
     "example:windows:nexe-custom-path": "nexe -t windows-x64-14.15.3 -i ./example/toaster-custom-path.js -o ./dist/toaster-custom-path.exe && npm run copy-resources",
     "postexample:windows:nexe-custom-path": "cross-env DEBUG=notifier ./dist/toaster-custom-path.exe",
-    "lint": "eslint example/*.js lib/*.js notifiers/*.js test/**/*.js index.js"
+    "lint": "eslint example/*.js lib/*.js notifiers/*.js test/**/*.js index.js",
+    "prepare": "husky install"
   },
   "jest": {
     "testRegex": "/test/[^_]*.js",
@@ -51,9 +52,9 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
-    "husky": "^6.0.0",
+    "husky": "^8.0.1",
     "jest": "^26.6.3",
-    "lint-staged": "^11.0.0",
+    "lint-staged": "^13.0.3",
     "nexe": "^4.0.0-beta.19",
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2"
@@ -65,11 +66,6 @@
     "shellwords": "^0.1.1",
     "uuid": "^8.3.2",
     "which": "^2.0.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
