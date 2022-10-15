@@ -3,8 +3,8 @@ const utils = require('../lib/utils');
 const path = require('path');
 const os = require('os');
 const testUtils = require('./_test-utils');
-jest.mock('uuid', () => {
-  return { v4: () => '123456789' };
+jest.mock('crypto', () => {
+  return { randomUUID: () => '123456789' };
 });
 
 describe('WindowsToaster', function () {
@@ -66,7 +66,7 @@ describe('WindowsToaster', function () {
       icon: 'file:///C:/node-notifier/test/fixture/coulson.jpg',
       id: 1337,
       sound: 'Notification.IM',
-      actions: ['Ok', 'Cancel'],
+      actions: ['Ok', 'Cancel']
     });
   });
 
@@ -80,7 +80,7 @@ describe('WindowsToaster', function () {
     notifier.notify({
       title: 'Heya',
       message: 'foo bar',
-      silent: true,
+      silent: true
     });
   });
 
@@ -93,7 +93,7 @@ describe('WindowsToaster', function () {
 
     notifier.notify({
       title: 'Heya',
-      message: 'foo bar',
+      message: 'foo bar'
     });
   });
 
@@ -106,7 +106,7 @@ describe('WindowsToaster', function () {
 
     notifier.notify({
       message: 'Heya',
-      appIcon: 'file:///C:/node-notifier/test/fixture/coulson.jpg',
+      appIcon: 'file:///C:/node-notifier/test/fixture/coulson.jpg'
     });
   });
 
@@ -249,7 +249,7 @@ describe('WindowsToaster', function () {
     notifier.notify({
       title: 'Heya',
       message: 'foo bar',
-      sound: 'Notification.IM',
+      sound: 'Notification.IM'
     });
   });
 
@@ -264,7 +264,7 @@ describe('WindowsToaster', function () {
     notifier.notify({
       title: 'Heya',
       message: 'foo bar',
-      icon: 'file:///C:/node-notifier/test/fixture/coulson.jpg',
+      icon: 'file:///C:/node-notifier/test/fixture/coulson.jpg'
     });
   });
 
@@ -310,7 +310,7 @@ describe('WindowsToaster', function () {
         '-s',
         'Notification.IM',
         '-b',
-        'Ok;Cancel',
+        'Ok;Cancel'
       ]);
     };
     const notifier = new Notify();
@@ -326,7 +326,7 @@ describe('WindowsToaster', function () {
       icon: 'file:///C:/node-notifier/test/fixture/coulson.jpg',
       id: 1337,
       sound: 'Notification.IM',
-      actions: ['Ok', 'Cancel'],
+      actions: ['Ok', 'Cancel']
     });
   });
 
@@ -348,7 +348,7 @@ describe('WindowsToaster', function () {
       id: 1337,
       sound: 'Notification.IM',
       customPath: '/test/customPath/snoretoast-x64.exe',
-      actions: ['Ok', 'Cancel'],
+      actions: ['Ok', 'Cancel']
     });
   });
 
@@ -358,7 +358,9 @@ describe('WindowsToaster', function () {
       done();
     };
 
-    const notifier = new Notify({ customPath: '/test/customPath/snoretoast-x64.exe' });
+    const notifier = new Notify({
+      customPath: '/test/customPath/snoretoast-x64.exe'
+    });
 
     notifier.notify({
       title: 'Heya',
@@ -369,7 +371,7 @@ describe('WindowsToaster', function () {
       bar: true,
       id: 1337,
       sound: 'Notification.IM',
-      actions: ['Ok', 'Cancel'],
+      actions: ['Ok', 'Cancel']
     });
   });
 });
