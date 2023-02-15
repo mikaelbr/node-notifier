@@ -64,7 +64,6 @@
     "is-wsl": "^2.2.0",
     "semver": "^7.3.5",
     "shellwords": "^0.1.1",
-    "uuid": "^8.3.2",
     "which": "^2.0.2"
   },
   "lint-staged": {

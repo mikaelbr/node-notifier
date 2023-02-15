@@ -6,7 +6,7 @@ const notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
 const utils = require('../lib/utils');
 const Balloon = require('./balloon');
 const os = require('os');
-const { v4: uuid } = require('uuid');
+const { randomUUID: uuid } = require('crypto');
 
 const EventEmitter = require('events').EventEmitter;
 const util = require('util');
@@ -133,8 +133,10 @@ function notifyRaw(options, callback) {
     resultBuffer = out;
     options.pipeName = server.namedPipe;
 
-    const localNotifier = options.customPath || this.options.customPath ||
-      (notifier + '-x' + (is64Bit ? '64' : '86') + '.exe');
+    const localNotifier =
+      options.customPath ||
+      this.options.customPath ||
+      notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
 
     options = utils.mapToWin8(options);
     const argsList = utils.constructArgumentList(options, {
@@ -144,11 +146,7 @@ function notifyRaw(options, callback) {
       noEscape: true
     });
 
-    utils.fileCommand(
-      localNotifier,
-      argsList,
-      actionJackedCallback
-    );
+    utils.fileCommand(localNotifier, argsList, actionJackedCallback);
   });
   return this;
 }
