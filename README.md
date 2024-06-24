@@ -457,3 +457,10 @@ This package is licensed using the [MIT License](http://en.wikipedia.org/wiki/MI
 [npm-downloads]: http://img.shields.io/npm/dm/node-notifier.svg?style=flat
 [travis-url]: http://travis-ci.org/mikaelbr/node-notifier
 [travis-image]: http://img.shields.io/travis/mikaelbr/node-notifier.svg?style=flat
+\n## Stale PRs
+
+Stale pull requests (PRs) are those that have not had any activity for a certain period of time. It's important to manage stale PRs to keep the project's pull requests manageable and to ensure that contributions are either moving forward or being closed if they are no longer relevant.
+
+Stale PRs are managed by using the [Stale](https://github.com/actions/stale):
+- PRs with no activity for 30 days are marked as stale
+- stale PRs for 10 days are closed
