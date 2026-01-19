@@ -73,13 +73,21 @@ function notifyRaw(options, callback) {
 }
 
 Object.defineProperty(NotifySend.prototype, 'notify', {
-  get: function() {
+  get: function () {
     if (!this._notify) this._notify = notifyRaw.bind(this);
     return this._notify;
   }
 });
 
-const allowedArguments = ['urgency', 'expire-time', 'icon', 'category', 'hint', 'app-name'];
+const allowedArguments = [
+  'urgency',
+  'expire-time',
+  'icon',
+  'category',
+  'hint',
+  'app-name',
+  'action'
+];
 
 function doNotification(options, callback) {
   options = utils.mapToNotifySend(options);

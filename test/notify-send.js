@@ -116,6 +116,8 @@ describe('notify-send', function () {
       '"body"',
       '--icon',
       '"icon-string"',
+      '--action',
+      '"action_type"',
       '--expire-time',
       '"1000"'
     ];
@@ -127,6 +129,7 @@ describe('notify-send', function () {
       message: 'body',
       icon: 'icon-string',
       time: 1,
+      action: 'action_type',
       tullball: 'notValid'
     });
   });
