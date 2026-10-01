@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x, 24.x, 26.x]
+        node-version: [22, 24, 26]
 
     steps:
       - uses: actions/checkout@v7
@@ -21,3 +21,4 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - run: npm test
+      - run: npm run lint
