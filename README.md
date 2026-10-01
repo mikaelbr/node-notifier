@@ -383,6 +383,10 @@ A very special thanks to all the modules `node-notifier` uses.
 
 ## Common Issues
 
+### How to use SnoreToast with both appID and actions
+
+[See this issue by Araxeus](https://github.com/mikaelbr/node-notifier/issues/424).
+
 ### Windows: `SnoreToast` text
 
 See note on "Windows 10 Fall Creators Update" in Windows section.
