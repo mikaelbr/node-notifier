@@ -21,6 +21,7 @@ Features:
 
 Fixes:
 
+- Windows: `WindowsToaster` now accepts `remove` without a `message`, the same as `close` ([#431](https://github.com/mikaelbr/node-notifier/issues/431)).
 - Windows: updates the bundled 64-bit SnoreToast to 0.9.1, so clicks and action buttons are reported back when using a custom `appID` ([#326](https://github.com/mikaelbr/node-notifier/issues/326), [#332](https://github.com/mikaelbr/node-notifier/issues/332), [#375](https://github.com/mikaelbr/node-notifier/pull/375)). The binary is KDE's own build of the official release. The 32-bit binary stays on 0.7.0, as KDE publishes no 32-bit build. Note that the new binary is not code-signed.
 
 Internal:

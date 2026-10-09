@@ -127,6 +127,21 @@ describe('WindowsToaster', function () {
       notifier.notify({ message: 'Heya', remove: 3 });
     }));
 
+  it('should allow remove without message', () =>
+    new Promise((done) => {
+      utils.fileCommand = function (notifier, argsList, callback) {
+        expect(testUtils.getOptionValue(argsList, '-close')).toBe('3');
+        expect(testUtils.argsListHas(argsList, '-remove')).toBeFalsy();
+        callback(null, '');
+      };
+      const notifier = new Notify();
+
+      notifier.notify({ remove: 3 }, function (err) {
+        expect(err).toBeFalsy();
+        done();
+      });
+    }));
+
   it('should fail if neither close or message is defined', () =>
     new Promise((done) => {
       const notifier = new Notify();
