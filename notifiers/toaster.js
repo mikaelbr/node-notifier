@@ -123,7 +123,11 @@ function notifyRaw(options, callback) {
     );
 
   options.title = options.title || 'Node Notification:';
-  if (options.message === undefined && options.close === undefined) {
+  if (
+    options.message === undefined &&
+    options.close === undefined &&
+    options.remove === undefined
+  ) {
     callback(new Error('Message or ID to close is required.'));
     return this;
   }
