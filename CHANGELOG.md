@@ -14,6 +14,12 @@ Features:
 
 - Adds `clearAll()` to `NotificationCenter` to stop waiting on active notifications, so the application can exit without waiting for their timeouts. See [#210](https://github.com/mikaelbr/node-notifier/pull/210)
 
+Fixes:
+
+- Makes the bundled SnoreToast binaries executable, so `WindowsToaster` works under WSL. See [#458](https://github.com/mikaelbr/node-notifier/pull/458)
+
+Thanks to [@mtsmfm](https://github.com/mtsmfm)
+
 ### `v10.0.1`
 
 Fixes:
