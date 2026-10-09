@@ -315,6 +315,7 @@ notifier.notify(
     id: undefined, // Number. ID to use for closing notification.
     appID: undefined, // String. App.ID and app Name. Defaults to no value, causing SnoreToast text to be visible.
     remove: undefined, // Number. Refer to previously created notification to close.
+    duration: undefined, // 'short' (~7s, default) | 'long' (~25s). How long the toast stays on screen. x64 only with the bundled binary.
     install: undefined // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
   },
   function (error, response) {
@@ -322,6 +323,14 @@ notifier.notify(
   }
 );
 ```
+
+**Note:** `wait` and `timeout` don't change how long a Windows toast stays on
+screen. Use `duration` instead: Windows only offers `'short'` (about 7 seconds)
+or `'long'` (about 25 seconds), and the user's own Windows settings can change
+this. A toast can't stay on screen indefinitely. After it hides it is still
+listed in the Action Center. `duration` is x64 only with the bundled binary, as
+the bundled 32-bit SnoreToast (0.7.0) lacks `-d`. On other architectures it is
+dropped, unless you set `customPath` to a SnoreToast 0.8.0 or newer.
 
 ### Usage: `Growl`
 
