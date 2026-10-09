@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "pnpm run lint",
-    "test": "jest",
+    "test": "vitest run",
     "example": "node ./example/message.js",
     "example:mac": "node ./example/advanced.js",
     "example:mac:input": "node ./example/macInput.js",
@@ -19,13 +19,6 @@
     "lint": "biome check",
     "prepare": "husky install",
     "format": "biome check --write"
-  },
-  "jest": {
-    "testRegex": "/test/[^_]*.js",
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./test/_test-matchers.js"
-    ]
   },
   "repository": {
     "type": "git",
@@ -49,10 +42,10 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "husky": "^8.0.1",
-    "jest": "^26.6.3",
     "lint-staged": "^13.0.3",
     "nexe": "^4.0.0-beta.19",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "vitest": "^5.0.3"
   },
   "dependencies": {
     "growly": "^1.3.0",
