@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Enable Corepack
-        run: npm install -g corepack@latest && corepack enable
+        run: npm install -g corepack@latest --force && corepack enable
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,6 +34,15 @@ jobs:
       - name: Run integration tests (Linux)
         if: runner.os == 'Linux'
         run: xvfb-run -a dbus-run-session -- sh -c 'dunst & sleep 1 && pnpm test:integration'
+
+      - name: Start Notification Center (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          open /System/Library/CoreServices/NotificationCenter.app || true
+          sleep 2
+          pgrep -fl NotificationCenter || echo "NotificationCenter not running"
+          # The first notification after startup is slow and can emit stray output, so warm it up
+          ./vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier -title warmup -message warmup -timeout 1 -json true || true
 
       - name: Run integration tests (macOS, Windows)
         if: runner.os != 'Linux'
