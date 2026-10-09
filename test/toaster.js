@@ -101,6 +101,49 @@ describe('WindowsToaster', function () {
       });
     }));
 
+  it('should pass application', () =>
+    new Promise((done) => {
+      utils.fileCommand = function (notifier, argsList, callback) {
+        expect(testUtils.getOptionValue(argsList, '-application')).toBe(
+          'C:\\path\\to\\app.exe'
+        );
+        done();
+      };
+      const notifier = new Notify();
+
+      notifier.notify({
+        message: 'foo bar',
+        appID: 'com.example.app',
+        application: 'C:\\path\\to\\app.exe'
+      });
+    }));
+
+  it('should drop application without a string value', async () => {
+    for (const application of [true, false, '', 123, null, ['a.exe']]) {
+      const argsList = await new Promise((resolve) => {
+        utils.fileCommand = (notifier, argsList) => resolve(argsList);
+        new Notify().notify({ message: 'foo bar', application });
+      });
+      expect(testUtils.argsListHas(argsList, '-application')).toBeFalsy();
+    }
+  });
+
+  it('should error on application starting with "-"', () =>
+    new Promise((done) => {
+      utils.fileCommand = function () {
+        throw new Error('should not be called');
+      };
+      const notifier = new Notify();
+
+      notifier.notify(
+        { message: 'foo bar', application: '-close' },
+        function (err) {
+          expect(err.message).toBe('Application can not start with "-".');
+          done();
+        }
+      );
+    }));
+
   it('should translate from notification centers appIcon', () =>
     new Promise((done) => {
       utils.fileCommand = function (notifier, argsList, callback) {
@@ -125,6 +168,21 @@ describe('WindowsToaster', function () {
       const notifier = new Notify();
 
       notifier.notify({ message: 'Heya', remove: 3 });
+    }));
+
+  it('should allow remove without message', () =>
+    new Promise((done) => {
+      utils.fileCommand = function (notifier, argsList, callback) {
+        expect(testUtils.getOptionValue(argsList, '-close')).toBe('3');
+        expect(testUtils.argsListHas(argsList, '-remove')).toBeFalsy();
+        callback(null, '');
+      };
+      const notifier = new Notify();
+
+      notifier.notify({ remove: 3 }, function (err) {
+        expect(err).toBeFalsy();
+        done();
+      });
     }));
 
   it('should fail if neither close or message is defined', () =>

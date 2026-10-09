@@ -21,9 +21,11 @@ Features:
 - WSL: set `NODE_NOTIFIER_WSL_NOTIFIER=linux` to use `NotifySend` instead of `WindowsToaster` for the default notifier, e.g. when running an X server with a notification daemon ([#412](https://github.com/mikaelbr/node-notifier/issues/412)). It must be set before `node-notifier` is imported. Unset, WSL keeps using `WindowsToaster`.
 - Windows: adds `duration: 'short' | 'long'` to `WindowsToaster`, passed to SnoreToast as `-d`, to keep a toast on screen for about 25 seconds instead of about 7 ([#401](https://github.com/mikaelbr/node-notifier/issues/401), [#223](https://github.com/mikaelbr/node-notifier/issues/223)). Other values are dropped, and `wait`/`timeout` are unchanged. x64 only with the bundled binary, as the bundled 32-bit SnoreToast (0.7.0) lacks `-d`. On other architectures it is dropped unless `customPath` is set.
 - Linux: adds `transient` to `NotifySend`. `transient: true` passes `--hint=int:transient:1`, so the notification isn't kept in the notification list (e.g. GNOME Shell), and can be combined with `hint` ([#188](https://github.com/mikaelbr/node-notifier/issues/188)).
+- Windows: adds `application` to `WindowsToaster`, passed to SnoreToast as `-application`, so clicking a notification after node-notifier has stopped listening (e.g. from the action center) starts your app ([#430](https://github.com/mikaelbr/node-notifier/issues/430)).
 
 Fixes:
 
+- Windows: `WindowsToaster` now accepts `remove` without a `message`, the same as `close` ([#431](https://github.com/mikaelbr/node-notifier/issues/431)).
 - Windows: updates the bundled 64-bit SnoreToast to 0.9.1, so clicks and action buttons are reported back when using a custom `appID` ([#326](https://github.com/mikaelbr/node-notifier/issues/326), [#332](https://github.com/mikaelbr/node-notifier/issues/332), [#375](https://github.com/mikaelbr/node-notifier/pull/375)). The binary is KDE's own build of the official release. The 32-bit binary stays on 0.7.0, as KDE publishes no 32-bit build. Note that the new binary is not code-signed.
 
 Internal:

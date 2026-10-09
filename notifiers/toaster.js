@@ -123,8 +123,19 @@ function notifyRaw(options, callback) {
     );
 
   options.title = options.title || 'Node Notification:';
-  if (options.message === undefined && options.close === undefined) {
+  if (
+    options.message === undefined &&
+    options.close === undefined &&
+    options.remove === undefined
+  ) {
     callback(new Error('Message or ID to close is required.'));
+    return this;
+  }
+
+  // Arguments are passed as-is, so an application starting with "-" could be
+  // read by SnoreToast as a flag.
+  if (String(options.application ?? '').startsWith('-')) {
+    callback(new Error('Application can not start with "-".'));
     return this;
   }
 
