@@ -2,7 +2,8 @@
  * Node.js wrapper for "notify-send".
  */
 const os = require('os');
-const which = require('which');
+const fs = require('fs');
+const path = require('path');
 const utils = require('../lib/utils');
 
 const EventEmitter = require('events').EventEmitter;
@@ -62,7 +63,7 @@ function notifyRaw(options, callback) {
   }
 
   try {
-    hasNotifier = !!which.sync(notifier);
+    hasNotifier = !!findOnPath(notifier);
     doNotification(options, callback);
   } catch (err) {
     hasNotifier = false;
@@ -70,6 +71,20 @@ function notifyRaw(options, callback) {
   }
 
   return this;
+}
+
+function findOnPath(cmd) {
+  const dirs = (process.env.PATH || '').split(path.delimiter);
+  for (const dir of dirs) {
+    const file = path.join(/^".*"$/.test(dir) ? dir.slice(1, -1) : dir, cmd);
+    try {
+      if (fs.statSync(file).isFile()) {
+        fs.accessSync(file, fs.constants.X_OK);
+        return file;
+      }
+    } catch (_) {}
+  }
+  throw Object.assign(new Error('not found: ' + cmd), { code: 'ENOENT' });
 }
 
 Object.defineProperty(NotifySend.prototype, 'notify', {
