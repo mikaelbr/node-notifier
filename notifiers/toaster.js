@@ -138,12 +138,16 @@ function notifyRaw(options, callback) {
     resultBuffer = out;
     options.pipeName = server.namedPipe;
 
+    const customPath = options.customPath || this.options.customPath;
     const localNotifier =
-      options.customPath ||
-      this.options.customPath ||
-      `${notifier}-x${is64Bit ? '64' : '86'}.exe`;
+      customPath || `${notifier}-x${is64Bit ? '64' : '86'}.exe`;
 
     options = utils.mapToWin8(options);
+
+    // The bundled x86 SnoreToast (0.7.0) lacks `-d` and errors on unknown args.
+    if (!customPath && !is64Bit) {
+      delete options.d;
+    }
     const argsList = utils.constructArgumentList(options, {
       explicitTrue: true,
       wrapper: '',

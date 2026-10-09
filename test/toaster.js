@@ -250,6 +250,68 @@ describe('WindowsToaster', function () {
       new Notify().notify({ title: 'title', message: 'body' });
     }));
 
+  describe('duration', function () {
+    function argsFor(arch, options, constructorOptions) {
+      os.arch = () => arch;
+      return new Promise((resolve) => {
+        utils.fileCommand = (notifier, argsList) => resolve(argsList);
+        new Notify(constructorOptions).notify(options);
+      });
+    }
+
+    it('should pass duration long as -d long on x64', async () => {
+      const args = await argsFor('x64', { message: 'Hi', duration: 'long' });
+      expect(testUtils.getOptionValue(args, '-d')).toBe('long');
+    });
+
+    it('should lowercase duration', async () => {
+      const args = await argsFor('x64', { message: 'Hi', duration: 'SHORT' });
+      expect(testUtils.getOptionValue(args, '-d')).toBe('short');
+    });
+
+    it('should not pass -d by default', async () => {
+      const args = await argsFor('x64', { message: 'Hi' });
+      expect(args).not.toContain('-d');
+    });
+
+    it('should drop invalid duration values', async () => {
+      for (const duration of ['forever', 25, true, '-close', '']) {
+        const args = await argsFor('x64', { message: 'Hi', duration });
+        expect(args).not.toContain('-d');
+      }
+    });
+
+    it('should drop raw d option', async () => {
+      for (const d of ['-close', 'long', 'foo']) {
+        const args = await argsFor('x64', { message: 'Hi', d });
+        expect(args).not.toContain('-d');
+      }
+    });
+
+    it('should drop duration with bundled x86 binary', async () => {
+      for (const arch of ['ia32', 'arm64']) {
+        const args = await argsFor(arch, { message: 'Hi', duration: 'long' });
+        expect(args).not.toContain('-d');
+      }
+    });
+
+    it('should keep duration on non-x64 with customPath', async () => {
+      const perCall = await argsFor('arm64', {
+        message: 'Hi',
+        duration: 'long',
+        customPath: '/test/customPath/snoretoast.exe'
+      });
+      expect(testUtils.getOptionValue(perCall, '-d')).toBe('long');
+
+      const instance = await argsFor(
+        'ia32',
+        { message: 'Hi', duration: 'long' },
+        { customPath: '/test/customPath/snoretoast.exe' }
+      );
+      expect(testUtils.getOptionValue(instance, '-d')).toBe('long');
+    });
+  });
+
   it('sound as true should select default value', () =>
     new Promise((done) => {
       utils.fileCommand = function (notifier, argsList, callback) {
