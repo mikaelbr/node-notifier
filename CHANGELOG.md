@@ -35,6 +35,7 @@ Internal:
 - Tests import from `vitest` explicitly instead of relying on globals.
 - The bundled `terminal-notifier` is checked against the release checksum in CI (`scripts/vendor-terminal-notifier.sh`).
 - The bundled 64-bit SnoreToast is checked against KDE's build checksum in CI (`scripts/vendor-snoretoast.sh`).
+- Adds source and build info for the bundled SnoreToast binaries in `vendor/snoreToast/README.md` ([#381](https://github.com/mikaelbr/node-notifier/issues/381)).
 
 Thanks to [@Sebastian-Webster](https://github.com/Sebastian-Webster) for the original Apple silicon work in [#441](https://github.com/mikaelbr/node-notifier/pull/441), to [@DuBistKomisch](https://github.com/DuBistKomisch) for finding and fixing the SnoreToast `appID` issue in [#375](https://github.com/mikaelbr/node-notifier/pull/375) and upstream, and to [@marmul](https://github.com/marmul) for the original `notify-send` actions work in [#445](https://github.com/mikaelbr/node-notifier/pull/445).
 
