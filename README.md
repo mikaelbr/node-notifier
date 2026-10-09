@@ -462,6 +462,8 @@ _**Short answer:** update your `appID`._
 If you don't see notifications within WSL2, you might have to change permission of exe vendor files (snoreToast).
 [See issue for more info](https://github.com/mikaelbr/node-notifier/issues/353)
 
+SnoreToast can only show icons from a Windows drive. Under WSL, an `icon` on a mounted drive (e.g. `/mnt/c/Users/me/icon.png`) is converted to its Windows path, and other icons (e.g. in your Linux home folder) are skipped.
+
 ### WSL: Use Linux notifications (`notify-send`)
 
 Under WSL, the default notifier is `WindowsToaster`, which shows the notification in Windows. If you run an X server and a notification daemon and want Linux notifications instead, set `NODE_NOTIFIER_WSL_NOTIFIER=linux`:

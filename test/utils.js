@@ -117,4 +117,66 @@ describe('utils', function () {
       });
     });
   });
+
+  describe('mapToWin8 icon', function () {
+    const isWSL = _.isWSL;
+    afterEach(function () {
+      _.isWSL = isWSL;
+    });
+
+    function iconFor(icon, wsl) {
+      _.isWSL = () => wsl;
+      const mapped = _.mapToWin8({ title: 'Foo', message: 'Bar', icon });
+      expect(mapped.icon).toBeUndefined();
+      return mapped.p;
+    }
+
+    it('should convert /mnt/<drive>/ paths under WSL', function () {
+      expect(iconFor('/mnt/c/Users/me/icon.png', true)).toBe(
+        'C:\\Users\\me\\icon.png'
+      );
+    });
+
+    it('should convert file:///mnt/<drive>/ URLs under WSL', function () {
+      expect(iconFor('file:///mnt/d/icons/icon.png', true)).toBe(
+        'D:\\icons\\icon.png'
+      );
+    });
+
+    it('should keep Windows paths under WSL', function () {
+      expect(iconFor('C:\\icon.png', true)).toBe('C:\\icon.png');
+      expect(iconFor('file:///C:/icons/icon.png', true)).toBe(
+        'C:\\icons\\icon.png'
+      );
+    });
+
+    it('should drop icons not on a Windows drive under WSL', function () {
+      for (const icon of [
+        '/home/me/icon.png',
+        'icon.png',
+        './icon.png',
+        'http://example.com/icon.png',
+        'file:///home/me/icon.png',
+        '/mnt/c',
+        '/mnt/c/',
+        '/mnt/cdrom/icon.png',
+        '/mnt/C/icon.png',
+        '/mnt/c/../../etc/icon.png',
+        'file:///mnt/c/../../home/me/icon.png',
+        '\\\\wsl$\\Ubuntu\\home\\me\\icon.png'
+      ]) {
+        expect(iconFor(icon, true), icon).toBeUndefined();
+      }
+    });
+
+    it('should not change icons outside WSL', function () {
+      expect(iconFor('/mnt/c/Users/me/icon.png', false)).toBe(
+        '/mnt/c/Users/me/icon.png'
+      );
+      expect(iconFor('/home/me/icon.png', false)).toBe('/home/me/icon.png');
+      expect(iconFor('file:///C:/icons/icon.png', false)).toBe(
+        'C:\\icons\\icon.png'
+      );
+    });
+  });
 });
