@@ -459,8 +459,7 @@ _**Short answer:** update your `appID`._
 
 ### Windows and WSL2
 
-If you don't see notifications within WSL2, you might have to change permission of exe vendor files (snoreToast).
-[See issue for more info](https://github.com/mikaelbr/node-notifier/issues/353)
+The bundled `.exe` files are executable since v11.0.0. If you copied the package without keeping file permissions and see no notifications, run `chmod +x` on the `.exe` files in `vendor/`.
 
 SnoreToast can only show icons from a Windows drive. Under WSL, an `icon` on a mounted drive (e.g. `/mnt/c/Users/me/icon.png`) is converted to its Windows path, and other icons (e.g. in your Linux home folder) are skipped.
 
