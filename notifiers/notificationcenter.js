@@ -94,6 +94,14 @@ function notifyRaw(options, callback) {
     return this;
   }
 
+  // Action titles are passed unquoted (see constructArgumentList), and
+  // terminal-notifier matches flags like -help or -reply anywhere in argv, so a
+  // title starting with "-" could change what it does.
+  if (options.actions?.some((action) => String(action).startsWith('-'))) {
+    callback(new Error('Action titles can not start with "-".'));
+    return this;
+  }
+
   const argsList = constructArgumentList(options);
   if (utils.isMojaveOrLater()) {
     let finished = false;

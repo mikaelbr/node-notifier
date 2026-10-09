@@ -465,6 +465,19 @@ describe('terminal-notifier', function () {
       expect(result.events).toEqual(['timeout']);
     });
 
+    it('should reject action titles that look like flags', async function () {
+      const spawned = vi.fn();
+      utils.fileCommand = spawned;
+      const result = await new Promise((resolve) =>
+        new NotificationCenter().notify(
+          { message: 'Hi', actions: ['OK', '-help'] },
+          (err) => resolve(err)
+        )
+      );
+      expect(result).toBeInstanceOf(Error);
+      expect(spawned).not.toHaveBeenCalled();
+    });
+
     it('should pass other failures as errors', async function () {
       const error = Object.assign(new Error('Command failed'), { code: 3 });
       const result = await respond({ message: 'Hi' }, error, '');

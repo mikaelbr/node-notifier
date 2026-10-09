@@ -12,7 +12,7 @@ TARGET="$(cd "$(dirname "$0")/.." && pwd)/vendor/mac.noindex/terminal-notifier.a
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
-curl -fsSL -o "$tmp/release.zip" "$URL"
+curl --proto =https --tlsv1.2 -fsSL -o "$tmp/release.zip" "$URL"
 echo "$SHA256  $tmp/release.zip" | shasum -a 256 -c -
 unzip -q "$tmp/release.zip" -d "$tmp"
 
