@@ -506,6 +506,22 @@ point `customPath` to it.
 See [Issue #71 for more info](https://github.com/mikaelbr/node-notifier/issues/71)
 <https://github.com/mikaelbr/node-notifier/issues/71>.
 
+### Notifications from cron, PM2 or services
+
+Notifications are shown on the desktop of the logged-in user, so the process must run as that same user, while they are logged in.
+
+**Linux:** cron and some process managers start without the user's session environment, so `notify-send` can't reach the session bus. Set `XDG_RUNTIME_DIR`, and `DBUS_SESSION_BUS_ADDRESS` if that isn't enough. On a standard systemd user session they are:
+
+```sh
+* * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus node /path/to/app.js
+```
+
+With PM2, start it as the desktop user (not root), or set the same variables in its environment.
+
+**Windows:** services running as `SYSTEM` can't show notifications on the user's desktop. Set the service (or PM2) to log on as the logged-in user's account.
+
+See [#226](https://github.com/mikaelbr/node-notifier/issues/226) and [#333](https://github.com/mikaelbr/node-notifier/issues/333).
+
 ### Within Electron Packaging
 
 If packaging your Electron app as an `asar`, you will find `node-notifier` will fail to load.
