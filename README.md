@@ -300,6 +300,6 @@ source of the bundled SnoreToast binaries.
 [npm-url]: https://npmjs.org/package/node-notifier
 [npm-image]: https://img.shields.io/npm/v/node-notifier.svg?style=flat
 [size-url]: https://packagephobia.com/result?p=node-notifier
-[size-image]: https://packagephobia.com/badge?p=node-notifier
+[size-image]: https://badgen.net/packagephobia/install/node-notifier
 [ci-url]: https://github.com/mikaelbr/node-notifier/actions/workflows/test.yml
 [ci-image]: https://github.com/mikaelbr/node-notifier/actions/workflows/test.yml/badge.svg
