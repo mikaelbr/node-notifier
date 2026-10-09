@@ -413,7 +413,7 @@ See flags and options on the man page [`notify-send(1)`](http://manpages.ubuntu.
 A very special thanks to all the modules `node-notifier` uses.
 
 - [`terminal-notifier`](https://github.com/julienXX/terminal-notifier)
-- [`Snoretoast`](https://github.com/KDE/snoretoast/releases/tag/v0.7.0)
+- [`Snoretoast`](https://invent.kde.org/libraries/snoretoast)
 - [`notifu`](http://www.paralint.com/projects/notifu/)
 - [`growly`](https://github.com/theabraham/growly/)
 
@@ -423,7 +423,7 @@ A very special thanks to all the modules `node-notifier` uses.
 
 ### How to use SnoreToast with both appID and actions
 
-[See this issue by Araxeus](https://github.com/mikaelbr/node-notifier/issues/424).
+The bundled 64-bit SnoreToast (0.9.1) reports clicks and action buttons back when using a custom `appID`. On 32-bit Windows, [see this issue by Araxeus](https://github.com/mikaelbr/node-notifier/issues/424).
 
 ### Windows: `SnoreToast` text
 

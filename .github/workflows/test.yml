@@ -29,10 +29,11 @@ jobs:
       - run: pnpm test
 
   vendor:
-    name: Verify vendored terminal-notifier
+    name: Verify vendored binaries
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - run: ./scripts/vendor-terminal-notifier.sh --check
+      - run: ./scripts/vendor-snoretoast.sh --check
