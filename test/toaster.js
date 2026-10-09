@@ -1,16 +1,8 @@
-// vi.mock does not intercept require(), so stub uuid through the require cache
-const uuidPath = require.resolve('uuid');
-require.cache[uuidPath] = {
-  id: uuidPath,
-  filename: uuidPath,
-  loaded: true,
-  exports: { v4: () => '123456789' }
-};
-
 const Notify = require('../notifiers/toaster');
 const utils = require('../lib/utils');
 const path = require('path');
 const os = require('os');
+const crypto = require('crypto');
 const testUtils = require('./_test-utils');
 
 describe('WindowsToaster', function () {
@@ -28,6 +20,7 @@ describe('WindowsToaster', function () {
       return 'Windows_NT';
     };
     utils.createNamedPipe = () => Promise.resolve(Buffer.from('12345'));
+    vi.spyOn(crypto, 'randomUUID').mockReturnValue('123456789');
   });
 
   afterEach(function () {
@@ -36,6 +29,7 @@ describe('WindowsToaster', function () {
     os.type = originalType;
     os.arch = originalArch;
     os.release = originalRelease;
+    vi.restoreAllMocks();
   });
 
   it('should only pass allowed options and proper named properties', () =>

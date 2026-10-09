@@ -6,7 +6,7 @@ const notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
 const utils = require('../lib/utils');
 const Balloon = require('./balloon');
 const os = require('os');
-const { v4: uuid } = require('uuid');
+const crypto = require('crypto');
 
 const EventEmitter = require('events').EventEmitter;
 const util = require('util');
@@ -48,7 +48,7 @@ function parseResult(data) {
 
 function getPipeName() {
   const pathPrefix = utils.isWSL() ? PIPE_PATH_PREFIX_WSL : PIPE_PATH_PREFIX;
-  return `${pathPrefix}${PIPE_NAME}-${uuid()}`;
+  return `${pathPrefix}${PIPE_NAME}-${crypto.randomUUID()}`;
 }
 
 function notifyRaw(options, callback) {
