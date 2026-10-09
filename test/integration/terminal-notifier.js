@@ -1,5 +1,15 @@
 const os = require('os');
+const { execSync } = require('child_process');
 const { NotificationCenter } = require('../../');
+
+function hasNotificationCenter() {
+  try {
+    execSync('pgrep -x NotificationCenter', { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function notify(options) {
   return new Promise((resolve, reject) => {
@@ -9,7 +19,7 @@ function notify(options) {
   });
 }
 
-describe.runIf(os.type() === 'Darwin')(
+describe.runIf(os.type() === 'Darwin' && hasNotificationCenter())(
   'terminal-notifier (integration)',
   () => {
     it('sends a notification without waiting', async () => {
