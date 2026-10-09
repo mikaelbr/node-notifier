@@ -22,36 +22,42 @@ Usage
   4 = Closed or faded out
 
  */
-const path = require('path');
-const notifier = path.resolve(__dirname, '../vendor/notifu/notifu');
-const checkGrowl = require('../lib/checkGrowl');
-const utils = require('../lib/utils');
-const Toaster = require('./toaster');
-const Growl = require('./growl');
-const os = require('os');
+import { EventEmitter } from 'node:events';
+import os from 'node:os';
+import path from 'node:path';
+import callableClass from '../lib/callableClass.js';
+import checkGrowl from '../lib/checkGrowl.js';
+import utils from '../lib/utils.js';
+import Growl from './growl.js';
+import Toaster from './toaster.js';
 
-const EventEmitter = require('events').EventEmitter;
-const util = require('util');
+const notifier = path.resolve(import.meta.dirname, '../vendor/notifu/notifu');
 
 let hasGrowl;
 
-module.exports = WindowsBalloon;
+class WindowsBalloon extends EventEmitter {
+  #notify;
 
-function WindowsBalloon(options) {
-  options = utils.clone(options || {});
-  if (!(this instanceof WindowsBalloon)) {
-    return new WindowsBalloon(options);
+  constructor(options) {
+    super();
+    this.options = utils.clone(options || {});
   }
 
-  this.options = options;
-
-  EventEmitter.call(this);
+  // A getter returning a bound function, so `notify` can be detached.
+  get notify() {
+    this.#notify ??= notifyRaw.bind(this);
+    return this.#notify;
+  }
 }
-util.inherits(WindowsBalloon, EventEmitter);
+
+const Notifier = callableClass(WindowsBalloon);
+
+export default Notifier;
+// `require()` of this file keeps returning the class itself.
+export { Notifier as 'module.exports' };
 
 function noop() {}
 function notifyRaw(options, callback) {
-  let fallback;
   const notifierOptions = this.options;
   options = utils.clone(options || {});
   callback = callback || noop;
@@ -64,7 +70,7 @@ function notifyRaw(options, callback) {
     this,
     options,
     callback,
-    function (data) {
+    (data) => {
       if (data === 'activate') {
         return 'click';
       }
@@ -76,16 +82,14 @@ function notifyRaw(options, callback) {
   );
 
   if (this.options.withFallback && utils.isWin8()) {
-    fallback = fallback || new Toaster(notifierOptions);
-    return fallback.notify(options, callback);
+    return new Toaster(notifierOptions).notify(options, callback);
   }
 
   if (
     this.options.withFallback &&
     (!utils.isLessThanWin8() || hasGrowl === true)
   ) {
-    fallback = fallback || new Growl(notifierOptions);
-    return fallback.notify(options, callback);
+    return new Growl(notifierOptions).notify(options, callback);
   }
 
   if (!this.options.withFallback || hasGrowl === false) {
@@ -93,12 +97,11 @@ function notifyRaw(options, callback) {
     return this;
   }
 
-  checkGrowl(notifierOptions, function (_, hasGrowlResult) {
+  checkGrowl(notifierOptions, (_, hasGrowlResult) => {
     hasGrowl = hasGrowlResult;
 
     if (hasGrowl) {
-      fallback = fallback || new Growl(notifierOptions);
-      return fallback.notify(options, callback);
+      return new Growl(notifierOptions).notify(options, callback);
     }
 
     doNotification(options, notifierOptions, actionJackedCallback);
@@ -106,13 +109,6 @@ function notifyRaw(options, callback) {
 
   return this;
 }
-
-Object.defineProperty(WindowsBalloon.prototype, 'notify', {
-  get: function () {
-    if (!this._notify) this._notify = notifyRaw.bind(this);
-    return this._notify;
-  }
-});
 
 const allowedArguments = ['t', 'd', 'p', 'm', 'i', 'e', 'q', 'w', 'xp'];
 
@@ -122,23 +118,23 @@ function doNotification(options, notifierOptions, callback) {
   options = utils.mapToNotifu(options);
   options.p = options.p || 'Node Notification:';
 
-  const fullNotifierPath = notifier + (is64Bit ? '64' : '') + '.exe';
+  const fullNotifierPath = `${notifier + (is64Bit ? '64' : '')}.exe`;
   const localNotifier = notifierOptions.customPath || fullNotifierPath;
 
   if (!options.m) {
     callback(new Error('Message is required.'));
-    return this;
+    return;
   }
 
   const argsList = utils.constructArgumentList(options, {
     wrapper: '',
     noEscape: true,
     explicitTrue: true,
-    allowedArguments: allowedArguments
+    allowedArguments
   });
 
   if (options.wait) {
-    return utils.fileCommand(localNotifier, argsList, function (error, data) {
+    return utils.fileCommand(localNotifier, argsList, (error, data) => {
       const action = fromErrorCodeToAction(error.code);
       if (action === 'error') return callback(error, data);
 

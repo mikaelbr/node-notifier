@@ -1,30 +1,36 @@
 /**
  * Node.js wrapper for "notify-send".
  */
-const os = require('os');
-const fs = require('fs');
-const path = require('path');
-const utils = require('../lib/utils');
-
-const EventEmitter = require('events').EventEmitter;
-const util = require('util');
+import { EventEmitter } from 'node:events';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import callableClass from '../lib/callableClass.js';
+import utils from '../lib/utils.js';
 
 const notifier = 'notify-send';
 let hasNotifier;
 
-module.exports = NotifySend;
+class NotifySend extends EventEmitter {
+  #notify;
 
-function NotifySend(options) {
-  options = utils.clone(options || {});
-  if (!(this instanceof NotifySend)) {
-    return new NotifySend(options);
+  constructor(options) {
+    super();
+    this.options = utils.clone(options || {});
   }
 
-  this.options = options;
-
-  EventEmitter.call(this);
+  // A getter returning a bound function, so `notify` can be detached.
+  get notify() {
+    this.#notify ??= notifyRaw.bind(this);
+    return this.#notify;
+  }
 }
-util.inherits(NotifySend, EventEmitter);
+
+const Notifier = callableClass(NotifySend);
+
+export default Notifier;
+// `require()` of this file keeps returning the class itself.
+export { Notifier as 'module.exports' };
 
 function noop() {}
 function notifyRaw(options, callback) {
@@ -33,8 +39,7 @@ function notifyRaw(options, callback) {
 
   if (typeof callback !== 'function') {
     throw new TypeError(
-      'The second argument must be a function callback. You have passed ' +
-        typeof callback
+      `The second argument must be a function callback. You have passed ${typeof callback}`
     );
   }
 
@@ -82,17 +87,10 @@ function findOnPath(cmd) {
         fs.accessSync(file, fs.constants.X_OK);
         return file;
       }
-    } catch (_) {}
+    } catch {}
   }
-  throw Object.assign(new Error('not found: ' + cmd), { code: 'ENOENT' });
+  throw Object.assign(new Error(`not found: ${cmd}`), { code: 'ENOENT' });
 }
-
-Object.defineProperty(NotifySend.prototype, 'notify', {
-  get: function () {
-    if (!this._notify) this._notify = notifyRaw.bind(this);
-    return this._notify;
-  }
-});
 
 const allowedArguments = [
   'urgency',
@@ -114,24 +112,16 @@ function doNotification(options, callback) {
   // Executed without a shell, so values are passed verbatim (no quoting or
   // escaping). Title and message go after `--` so values starting with a dash
   // can't be parsed as notify-send options.
-  const argsList = utils
-    .constructArgumentList(options, {
+  const argsList = [
+    ...utils.constructArgumentList(options, {
       keyExtra: '-',
-      allowedArguments: allowedArguments,
+      allowedArguments,
       noEscape: true,
       wrapper: ''
-    })
-    .concat(
-      '--',
-      utils.constructArgumentList(
-        {},
-        {
-          initial: initial,
-          noEscape: true,
-          wrapper: ''
-        }
-      )
-    );
+    }),
+    '--',
+    ...utils.constructArgumentList({}, { initial, noEscape: true, wrapper: '' })
+  ];
 
   utils.commandWithoutShell(notifier, argsList, callback);
 }

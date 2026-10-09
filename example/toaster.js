@@ -1,13 +1,13 @@
-const notifier = require('../index');
-const path = require('path');
+import path from 'node:path';
+import notifier from '../index.js';
 
 notifier.notify(
   {
     message: 'Hello. This is a longer text\nWith "some" newlines.',
-    icon: path.join(__dirname, 'coulson.jpg'),
+    icon: path.join(import.meta.dirname, 'coulson.jpg'),
     sound: true
   },
-  function (err, data) {
+  (err, data) => {
     // Will also wait until notification is closed.
     console.log('Waited');
     console.log(JSON.stringify({ err, data }));

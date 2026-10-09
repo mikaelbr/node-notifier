@@ -21,7 +21,7 @@ earlier Windows versions. Growl is used if none of these requirements are met.
 Show a native notification on macOS, Windows, Linux:
 
 ```javascript
-const notifier = require('node-notifier');
+import notifier from 'node-notifier';
 // String
 notifier.notify('Message');
 
@@ -47,6 +47,15 @@ See [documentation and flow chart for reporter choice](./DECISION_FLOW.md).
 npm install --save node-notifier
 ```
 
+`node-notifier` is published as ES modules only. Use `import` (named exports
+such as `{ notify, NotificationCenter }` are also available). CommonJS still works
+through Node's `require(esm)` support, and `require('node-notifier')` returns the
+same notifier instance as before:
+
+```javascript
+const notifier = require('node-notifier');
+```
+
 ## <abbr title="Command Line Interface">CLI</abbr>
 
 <abbr title="Command Line Interface">CLI</abbr> has moved to separate project:
@@ -59,14 +68,14 @@ Standard usage, with cross-platform fallbacks as defined in the
 below will work in some way or another on most platforms.
 
 ```javascript
-const notifier = require('node-notifier');
-const path = require('path');
+import path from 'node:path';
+import notifier from 'node-notifier';
 
 notifier.notify(
   {
     title: 'My awesome title',
     message: 'Hello from node, Mr. User!',
-    icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
+    icon: path.join(import.meta.dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
     sound: true, // Only Notification Center or Windows Toasters
     wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
   },
@@ -93,27 +102,27 @@ See below for documentation on each reporter.
 **Example:**
 
 ```javascript
-const NotificationCenter = require('node-notifier/notifiers/notificationcenter');
+import NotificationCenter from 'node-notifier/notifiers/notificationcenter';
 new NotificationCenter(options).notify();
 
-const NotifySend = require('node-notifier/notifiers/notifysend');
+import NotifySend from 'node-notifier/notifiers/notifysend';
 new NotifySend(options).notify();
 
-const WindowsToaster = require('node-notifier/notifiers/toaster');
+import WindowsToaster from 'node-notifier/notifiers/toaster';
 new WindowsToaster(options).notify();
 
-const Growl = require('node-notifier/notifiers/growl');
+import Growl from 'node-notifier/notifiers/growl';
 new Growl(options).notify();
 
-const WindowsBalloon = require('node-notifier/notifiers/balloon');
+import WindowsBalloon from 'node-notifier/notifiers/balloon';
 new WindowsBalloon(options).notify();
 ```
 
 Or, if you are using several reporters (or you're lazy):
 
 ```javascript
-// NOTE: Technically, this takes longer to require
-const nn = require('node-notifier');
+// NOTE: Technically, this takes longer to load
+import nn from 'node-notifier';
 
 new nn.NotificationCenter(options).notify();
 new nn.NotifySend(options).notify();
@@ -155,9 +164,9 @@ but they aren't documented.
 ### All notification options with their defaults:
 
 ```javascript
-const NotificationCenter = require('node-notifier').NotificationCenter;
+import { NotificationCenter } from 'node-notifier';
 
-var notifier = new NotificationCenter({
+const notifier = new NotificationCenter({
   withFallback: false, // Use Growl Fallback if <= 10.8
   customPath: undefined // Relative/Absolute path to binary if you want to use your own fork of terminal-notifier
 });
@@ -275,9 +284,9 @@ specified at installation of your app. For example: If you use the squirrel
 framework, your `appID` will be something like `com.squirrel.your.app`.
 
 ```javascript
-const WindowsToaster = require('node-notifier').WindowsToaster;
+import { WindowsToaster } from 'node-notifier';
 
-var notifier = new WindowsToaster({
+const notifier = new WindowsToaster({
   withFallback: false, // Fallback to Growl or Balloons?
   customPath: undefined // Relative/Absolute path if you want to use your fork of SnoreToast.exe
 });
@@ -302,9 +311,9 @@ notifier.notify(
 ### Usage: `Growl`
 
 ```javascript
-const Growl = require('node-notifier').Growl;
+import { Growl } from 'node-notifier';
 
-var notifier = new Growl({
+const notifier = new Growl({
   name: 'Growl Name Used', // Defaults as 'Node'
   host: 'localhost',
   port: 23053
@@ -313,7 +322,7 @@ var notifier = new Growl({
 notifier.notify({
   title: 'Foo',
   message: 'Hello World',
-  icon: fs.readFileSync(__dirname + '/coulson.jpg'),
+  icon: fs.readFileSync(path.join(import.meta.dirname, 'coulson.jpg')),
   wait: false, // Wait for User Action against Notification
 
   // and other growl options like sticky etc.
@@ -332,9 +341,9 @@ fallback is activated and Growl is running). The balloons notifier uses a great
 project called [**`notifu`**](http://www.paralint.com/projects/notifu/).
 
 ```javascript
-const WindowsBalloon = require('node-notifier').WindowsBalloon;
+import { WindowsBalloon } from 'node-notifier';
 
-var notifier = new WindowsBalloon({
+const notifier = new WindowsBalloon({
   withFallback: false, // Try Windows Toast and Growl first?
   customPath: undefined // Relative/Absolute path if you want to use your fork of notifu
 });
@@ -361,14 +370,14 @@ See full usage on the [project homepage: **`notifu`**](http://www.paralint.com/p
 **Note:** `notify-send` doesn't support the `wait` flag.
 
 ```javascript
-const NotifySend = require('node-notifier').NotifySend;
+import { NotifySend } from 'node-notifier';
 
-var notifier = new NotifySend();
+const notifier = new NotifySend();
 
 notifier.notify({
   title: 'Foo',
   message: 'Hello World',
-  icon: __dirname + '/coulson.jpg',
+  icon: path.join(import.meta.dirname, 'coulson.jpg'),
 
   wait: false, // Defaults no expire time set. If true expire time of 5 seconds is used
   timeout: 10, // Alias for expire-time, time etc. Time before notify-send expires. Defaults to 10 seconds.
@@ -470,17 +479,17 @@ For issues using with the pkg module. Check this issue out: https://github.com/m
 
 When using `node-notifier` inside of `webpack`, you must add the snippet below to your `webpack.config.js`.
 
-This is necessary because `node-notifier` loads the notifiers from a binary, so it
-needs a relative file path. When webpack compiles the modules, it suppresses file
-directories, causing `node-notifier` to error on certain platforms.
+This is necessary because `node-notifier` runs bundled binaries from its `vendor/`
+folder, which it finds relative to its own files (`import.meta.dirname`). When
+webpack bundles the module, those paths no longer point at the binaries, causing
+`node-notifier` to error on certain platforms.
 
-To fix this, you can configure webpack to keep the relative file directories.
-Do so by append the following code to your `webpack.config.js`:
+To fix this, keep `node-notifier` out of the bundle so it is loaded from
+`node_modules` at runtime. Add the following to your `webpack.config.js`:
 
 ```javascript
-node: {
-  __filename: true,
-  __dirname: true
+externals: {
+  'node-notifier': 'commonjs node-notifier'
 }
 ```
 

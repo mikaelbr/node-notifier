@@ -1,6 +1,7 @@
-const Notify = require('../notifiers/notifysend');
-const utils = require('../lib/utils');
-const os = require('os');
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import Notify from '../notifiers/notifysend.js';
+import utils from '../lib/utils.js';
+import os from 'node:os';
 
 describe('notify-send', function () {
   const original = utils.commandWithoutShell;

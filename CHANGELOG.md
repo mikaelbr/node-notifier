@@ -1,6 +1,19 @@
 # Changelog
 
 
+### Unreleased
+
+Breaking changes:
+
+- `node-notifier` is now ES modules only (`"type": "module"`). Use `import notifier from 'node-notifier'`, or named exports like `import { notify, NotificationCenter } from 'node-notifier'`. `require('node-notifier')` keeps working through Node's `require(esm)` and returns the same notifier instance as before, and `require('node-notifier/notifiers/<name>')` still returns the notifier class.
+- The package now has an `exports` map. Only the root and `node-notifier/notifiers/*` can be imported; internal files such as `node-notifier/lib/utils` are no longer reachable.
+
+Internal:
+
+- Notifiers are now classes extending `EventEmitter` (they can still be called without `new`).
+- Uses a `files` allowlist instead of `.npmignore`, and drops the outdated `nexe` example build scripts.
+- Tests import from `vitest` explicitly instead of relying on globals.
+
 ### `v11.0.0`
 
 Even though this is a major version, there are no real breaking changes for most people.

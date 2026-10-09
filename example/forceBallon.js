@@ -1,9 +1,9 @@
-const notifier = require('../index');
-const balloon = notifier.WindowsBalloon();
-balloon
-  .notify({ message: 'Hello' }, function (err, data) {
+import { WindowsBalloon } from '../index.js';
+
+new WindowsBalloon()
+  .notify({ message: 'Hello' }, (err, data) => {
     console.log(err, data);
   })
-  .on('click', function () {
-    console.log(arguments);
+  .on('click', (...args) => {
+    console.log(args);
   });

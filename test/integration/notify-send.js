@@ -1,10 +1,11 @@
 // Requires notify-send, a running dunst daemon and a D-Bus session, e.g.:
 //   xvfb-run -a dbus-run-session -- sh -c 'dunst & sleep 1; pnpm test:integration'
-const cp = require('child_process');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const { NotifySend } = require('../../');
+import { describe, expect, it } from 'vitest';
+import cp from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { NotifySend } from 'node-notifier';
 
 function notify(options) {
   return new Promise((resolve, reject) => {

@@ -1,4 +1,5 @@
-const notifier = require('../');
+import { describe, expect, it } from 'vitest';
+import notifier from '../index.js';
 
 describe('constructors', function () {
   it('should expose a default selected instance', function () {

@@ -1,32 +1,39 @@
 /**
  * Wrapper for the growly module
  */
-const checkGrowl = require('../lib/checkGrowl');
-const utils = require('../lib/utils');
-const growly = require('growly');
-
-const EventEmitter = require('events').EventEmitter;
-const util = require('util');
+import { EventEmitter } from 'node:events';
+import growly from 'growly';
+import callableClass from '../lib/callableClass.js';
+import checkGrowl from '../lib/checkGrowl.js';
+import utils from '../lib/utils.js';
 
 const errorMessageNotFound =
   "Couldn't connect to growl (might be used as a fallback). Make sure it is running";
 
-module.exports = Growl;
-
 let hasGrowl;
 
-function Growl(options) {
-  options = utils.clone(options || {});
-  if (!(this instanceof Growl)) {
-    return new Growl(options);
+class Growl extends EventEmitter {
+  #notify;
+
+  constructor(options) {
+    super();
+    options = utils.clone(options || {});
+    growly.appname = stripCarriageReturns(options.name) || 'Node';
+    this.options = options;
   }
 
-  growly.appname = stripCarriageReturns(options.name) || 'Node';
-  this.options = options;
-
-  EventEmitter.call(this);
+  // A getter returning a bound function, so `notify` can be detached.
+  get notify() {
+    this.#notify ??= notifyRaw.bind(this);
+    return this.#notify;
+  }
 }
-util.inherits(Growl, EventEmitter);
+
+const Notifier = callableClass(Growl);
+
+export default Notifier;
+// `require()` of this file keeps returning the class itself.
+export { Notifier as 'module.exports' };
 
 function notifyRaw(options, callback) {
   growly.setHost(this.options.host, this.options.port);
@@ -36,20 +43,15 @@ function notifyRaw(options, callback) {
     options = { title: 'node-notifier', message: options };
   }
 
-  callback = utils.actionJackerDecorator(
-    this,
-    options,
-    callback,
-    function (data) {
-      if (data === 'click') {
-        return 'click';
-      }
-      if (data === 'timedout') {
-        return 'timeout';
-      }
-      return false;
+  callback = utils.actionJackerDecorator(this, options, callback, (data) => {
+    if (data === 'click') {
+      return 'click';
     }
-  );
+    if (data === 'timedout') {
+      return 'timeout';
+    }
+    return false;
+  });
 
   options = utils.mapToGrowl(options);
 
@@ -62,9 +64,9 @@ function notifyRaw(options, callback) {
 
   // GNTP headers are CRLF delimited. Prevent values from injecting extra
   // headers (e.g. a Notification-Callback-Target URL) into the request.
-  GNTP_HEADER_OPTIONS.forEach(function (key) {
+  for (const key of GNTP_HEADER_OPTIONS) {
     options[key] = stripCarriageReturns(options[key]);
-  });
+  }
 
   if (hasGrowl || options.wait) {
     const localCallback = options.wait ? callback : noop;
@@ -73,7 +75,7 @@ function notifyRaw(options, callback) {
     return this;
   }
 
-  checkGrowl(growly, function (_, didHaveGrowl) {
+  checkGrowl(growly, (_, didHaveGrowl) => {
     hasGrowl = didHaveGrowl;
     if (!didHaveGrowl) return callback(new Error(errorMessageNotFound));
     growly.notify(options.message, options);
@@ -81,13 +83,6 @@ function notifyRaw(options, callback) {
   });
   return this;
 }
-
-Object.defineProperty(Growl.prototype, 'notify', {
-  get: function () {
-    if (!this._notify) this._notify = notifyRaw.bind(this);
-    return this._notify;
-  }
-});
 
 const GNTP_HEADER_OPTIONS = [
   'title',

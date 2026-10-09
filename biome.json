@@ -16,17 +16,6 @@
     "lineWidth": 80
   },
   "javascript": {
-    "globals": [
-      "describe",
-      "it",
-      "test",
-      "expect",
-      "vi",
-      "beforeEach",
-      "afterEach",
-      "beforeAll",
-      "afterAll"
-    ],
     "formatter": {
       "quoteStyle": "single",
       "trailingCommas": "none",

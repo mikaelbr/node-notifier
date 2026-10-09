@@ -6,7 +6,6 @@ export default defineConfig({
   test: {
     include: ['test/integration/*.js'],
     environment: 'node',
-    globals: true,
     testTimeout: 30000
   }
 });

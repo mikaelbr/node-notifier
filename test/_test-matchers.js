@@ -1,3 +1,4 @@
+import { expect } from 'vitest';
 expect.extend({
   toEndWith(received, actual) {
     const pass = endsWith(received, actual);

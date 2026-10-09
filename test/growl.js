@@ -1,5 +1,6 @@
-const Notify = require('../notifiers/growl');
-const growly = require('growly');
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import Notify from '../notifiers/growl.js';
+import growly from 'growly';
 
 describe('growl', function () {
   let original;

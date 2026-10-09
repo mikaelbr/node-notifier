@@ -1,15 +1,18 @@
 /**
  * Wrapper for the toaster (https://github.com/nels-o/toaster)
  */
-const path = require('path');
-const notifier = path.resolve(__dirname, '../vendor/snoreToast/snoretoast');
-const utils = require('../lib/utils');
-const Balloon = require('./balloon');
-const os = require('os');
-const crypto = require('crypto');
+import crypto from 'node:crypto';
+import { EventEmitter } from 'node:events';
+import os from 'node:os';
+import path from 'node:path';
+import callableClass from '../lib/callableClass.js';
+import utils from '../lib/utils.js';
+import Balloon from './balloon.js';
 
-const EventEmitter = require('events').EventEmitter;
-const util = require('util');
+const notifier = path.resolve(
+  import.meta.dirname,
+  '../vendor/snoreToast/snoretoast'
+);
 
 let fallback;
 
@@ -17,19 +20,26 @@ const PIPE_NAME = 'notifierPipe';
 const PIPE_PATH_PREFIX = '\\\\.\\pipe\\';
 const PIPE_PATH_PREFIX_WSL = '/tmp/';
 
-module.exports = WindowsToaster;
+class WindowsToaster extends EventEmitter {
+  #notify;
 
-function WindowsToaster(options) {
-  options = utils.clone(options || {});
-  if (!(this instanceof WindowsToaster)) {
-    return new WindowsToaster(options);
+  constructor(options) {
+    super();
+    this.options = utils.clone(options || {});
   }
 
-  this.options = options;
-
-  EventEmitter.call(this);
+  // A getter returning a bound function, so `notify` can be detached.
+  get notify() {
+    this.#notify ??= notifyRaw.bind(this);
+    return this.#notify;
+  }
 }
-util.inherits(WindowsToaster, EventEmitter);
+
+const Notifier = callableClass(WindowsToaster);
+
+export default Notifier;
+// `require()` of this file keeps returning the class itself.
+export { Notifier as 'module.exports' };
 
 function noop() {}
 
@@ -66,8 +76,7 @@ function notifyRaw(options, callback) {
 
   if (typeof callback !== 'function') {
     throw new TypeError(
-      'The second argument must be a function callback. You have passed ' +
-        typeof callback
+      `The second argument must be a function callback. You have passed ${typeof callback}`
     );
   }
 
@@ -83,9 +92,7 @@ function notifyRaw(options, callback) {
     ButtonPressed   :  4
     TextEntered     :  5
     */
-    const result = parseResult(
-      resultBuffer && resultBuffer.toString('utf16le')
-    );
+    const result = parseResult(resultBuffer?.toString('utf16le'));
 
     // parse action
     if (result.action === 'buttonClicked' && result.button) {
@@ -104,7 +111,7 @@ function notifyRaw(options, callback) {
     // Due to an issue with snoretoast not using stdio and pipe
     // when notifications are disabled, make sure named pipe server
     // is closed before exiting.
-    server.instance && server.instance.close();
+    server.instance?.close();
   };
 
   const actionJackedCallback = (err) =>
@@ -116,10 +123,7 @@ function notifyRaw(options, callback) {
     );
 
   options.title = options.title || 'Node Notification:';
-  if (
-    typeof options.message === 'undefined' &&
-    typeof options.close === 'undefined'
-  ) {
+  if (options.message === undefined && options.close === undefined) {
     callback(new Error('Message or ID to close is required.'));
     return this;
   }
@@ -137,7 +141,7 @@ function notifyRaw(options, callback) {
     const localNotifier =
       options.customPath ||
       this.options.customPath ||
-      notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
+      `${notifier}-x${is64Bit ? '64' : '86'}.exe`;
 
     options = utils.mapToWin8(options);
     const argsList = utils.constructArgumentList(options, {
@@ -151,10 +155,3 @@ function notifyRaw(options, callback) {
   });
   return this;
 }
-
-Object.defineProperty(WindowsToaster.prototype, 'notify', {
-  get: function () {
-    if (!this._notify) this._notify = notifyRaw.bind(this);
-    return this._notify;
-  }
-});

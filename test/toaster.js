@@ -1,9 +1,10 @@
-const Notify = require('../notifiers/toaster');
-const utils = require('../lib/utils');
-const path = require('path');
-const os = require('os');
-const crypto = require('crypto');
-const testUtils = require('./_test-utils');
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import Notify from '../notifiers/toaster.js';
+import utils from '../lib/utils.js';
+import path from 'node:path';
+import os from 'node:os';
+import crypto from 'node:crypto';
+import * as testUtils from './_test-utils.js';
 
 describe('WindowsToaster', function () {
   const original = utils.fileCommand;
@@ -310,7 +311,7 @@ describe('WindowsToaster', function () {
 
   it('should not parse local path of icon', () =>
     new Promise((done) => {
-      const icon = path.join(__dirname, 'fixture', 'coulson.jpg');
+      const icon = path.join(import.meta.dirname, 'fixture', 'coulson.jpg');
       utils.fileCommand = function (notifier, argsList, callback) {
         expect(argsList[3]).toBe(icon);
         done();

@@ -1,6 +1,7 @@
-const os = require('os');
-const { execSync } = require('child_process');
-const { NotificationCenter } = require('../../');
+import { describe, expect, it, test } from 'vitest';
+import os from 'node:os';
+import { execSync } from 'node:child_process';
+import { NotificationCenter } from 'node-notifier';
 
 function hasNotificationCenter() {
   try {

@@ -1,6 +1,8 @@
-const notifier = require('../');
-const nc = new notifier.NotificationCenter();
-const path = require('path');
+import path from 'node:path';
+import { NotificationCenter } from '../index.js';
+
+const nc = new NotificationCenter();
+const image = path.join(import.meta.dirname, 'coulson.jpg');
 
 nc.notify(
   {
@@ -10,11 +12,11 @@ nc.notify(
     sound: 'Funk',
     // case sensitive
     wait: true,
-    icon: path.join(__dirname, 'coulson.jpg'),
-    contentImage: path.join(__dirname, 'coulson.jpg'),
-    open: 'file://' + path.join(__dirname, 'coulson.jpg')
+    icon: image,
+    contentImage: image,
+    open: `file://${image}`
   },
-  function () {
-    console.log(arguments);
+  (...args) => {
+    console.log(args);
   }
 );

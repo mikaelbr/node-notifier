@@ -1,10 +1,10 @@
-const notifier = require('../index');
-const path = require('path');
+import path from 'node:path';
+import notifier from '../index.js';
 
 notifier.notify(
   {
     message: 'Are you sure you want to continue?',
-    icon: path.join(__dirname, 'coulson.jpg'),
+    icon: path.join(import.meta.dirname, 'coulson.jpg'),
     actions: ['OK', 'Cancel']
   },
   (err, data) => {

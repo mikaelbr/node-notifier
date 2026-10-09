@@ -1,17 +1,21 @@
-const { WindowsToaster } = require('../');
-const path = require('path');
+import path from 'node:path';
+import { WindowsToaster } from '../index.js';
 
-const customPath = path.join(__dirname, 'resources', 'snoretoast-x64.exe');
+const customPath = path.join(
+  import.meta.dirname,
+  'resources',
+  'snoretoast-x64.exe'
+);
 const notifierOptions = { withFallback: false, customPath };
 const notifier = new WindowsToaster(notifierOptions);
 
 notifier.notify(
   {
     message: 'Hello!',
-    icon: path.join(__dirname, 'resources', 'coulson.jpg'),
+    icon: path.join(import.meta.dirname, 'resources', 'coulson.jpg'),
     sound: true
   },
-  function (err, data) {
+  (err, data) => {
     // Will also wait until notification is closed.
     console.log('Waited');
     console.log(JSON.stringify({ err, data }));

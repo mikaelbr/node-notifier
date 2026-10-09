@@ -1,6 +1,7 @@
-const path = require('path');
-const fs = require('fs');
-const _ = require('../lib/utils');
+import { describe, expect, it } from 'vitest';
+import path from 'node:path';
+import fs from 'node:fs';
+import _ from '../lib/utils.js';
 
 describe('utils', function () {
   describe('clone', function () {
@@ -66,7 +67,7 @@ describe('utils', function () {
     });
 
     it('should map icon for growl', function () {
-      const icon = path.join(__dirname, 'fixture', 'coulson.jpg');
+      const icon = path.join(import.meta.dirname, 'fixture', 'coulson.jpg');
       const iconRead = fs.readFileSync(icon);
 
       const expected = { title: 'Foo', message: 'Bar', icon: iconRead };

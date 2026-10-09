@@ -1,5 +1,6 @@
-const os = require('os');
-const { WindowsToaster } = require('../../');
+import { describe, expect, it } from 'vitest';
+import os from 'node:os';
+import { WindowsToaster } from 'node-notifier';
 
 describe.runIf(os.type() === 'Windows_NT')('snoretoast (integration)', () => {
   it('shows a toast and reports the result over the named pipe', async () => {

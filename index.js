@@ -1,52 +1,55 @@
-const os = require('os');
-const utils = require('./lib/utils');
+import os from 'node:os';
+import utils from './lib/utils.js';
+import WindowsBalloon from './notifiers/balloon.js';
+import Growl from './notifiers/growl.js';
+import NotificationCenter from './notifiers/notificationcenter.js';
+import NotifySend from './notifiers/notifysend.js';
+import WindowsToaster from './notifiers/toaster.js';
 
-// All notifiers
-const NotifySend = require('./notifiers/notifysend');
-const NotificationCenter = require('./notifiers/notificationcenter');
-const WindowsToaster = require('./notifiers/toaster');
-const Growl = require('./notifiers/growl');
-const WindowsBalloon = require('./notifiers/balloon');
+function selectNotifier() {
+  const osType = utils.isWSL() ? 'WSL' : os.type();
 
-const options = { withFallback: true };
-
-const osType = utils.isWSL() ? 'WSL' : os.type();
-
-switch (osType) {
-  case 'Linux':
-    module.exports = new NotifySend(options);
-    module.exports.Notification = NotifySend;
-    break;
-  case 'Darwin':
-    module.exports = new NotificationCenter(options);
-    module.exports.Notification = NotificationCenter;
-    break;
-  case 'Windows_NT':
-    if (utils.isLessThanWin8()) {
-      module.exports = new WindowsBalloon(options);
-      module.exports.Notification = WindowsBalloon;
-    } else {
-      module.exports = new WindowsToaster(options);
-      module.exports.Notification = WindowsToaster;
-    }
-    break;
-  case 'WSL':
-    module.exports = new WindowsToaster(options);
-    module.exports.Notification = WindowsToaster;
-    break;
-  default:
-    if (os.type().match(/BSD$/)) {
-      module.exports = new NotifySend(options);
-      module.exports.Notification = NotifySend;
-    } else {
-      module.exports = new Growl(options);
-      module.exports.Notification = Growl;
-    }
+  switch (osType) {
+    case 'Linux':
+      return NotifySend;
+    case 'Darwin':
+      return NotificationCenter;
+    case 'Windows_NT':
+      return utils.isLessThanWin8() ? WindowsBalloon : WindowsToaster;
+    case 'WSL':
+      return WindowsToaster;
+    default:
+      return /BSD$/.test(os.type()) ? NotifySend : Growl;
+  }
 }
 
-// Expose notifiers to give full control.
-module.exports.NotifySend = NotifySend;
-module.exports.NotificationCenter = NotificationCenter;
-module.exports.WindowsToaster = WindowsToaster;
-module.exports.WindowsBalloon = WindowsBalloon;
-module.exports.Growl = Growl;
+/** The notifier class picked for the current platform. */
+const Notification = selectNotifier();
+
+/** A ready-to-use instance of the notifier for the current platform. */
+const notifier = new Notification({ withFallback: true });
+
+// Expose notifiers on the instance to give full control.
+Object.assign(notifier, {
+  Notification,
+  NotifySend,
+  NotificationCenter,
+  WindowsToaster,
+  WindowsBalloon,
+  Growl
+});
+
+/** `notify` of the default instance, bound so it can be used on its own. */
+export const notify = notifier.notify;
+
+export default notifier;
+export {
+  Notification,
+  NotifySend,
+  NotificationCenter,
+  WindowsToaster,
+  WindowsBalloon,
+  Growl,
+  // `require('node-notifier')` keeps returning the instance itself.
+  notifier as 'module.exports'
+};

@@ -1,50 +1,58 @@
 /**
  * A Node.js wrapper for terminal-notify (with fallback).
  */
-const utils = require('../lib/utils');
-const Growl = require('./growl');
-const path = require('path');
+import { EventEmitter } from 'node:events';
+import path from 'node:path';
+import callableClass from '../lib/callableClass.js';
+import utils from '../lib/utils.js';
+import Growl from './growl.js';
+
 const notifier = path.join(
-  __dirname,
+  import.meta.dirname,
   '../vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier'
 );
-
-const EventEmitter = require('events').EventEmitter;
-const util = require('util');
 
 const errorMessageOsX =
   'You need Mac OS X 10.8 or above to use NotificationCenter,' +
   ' or use Growl fallback with constructor option {withFallback: true}.';
 
-module.exports = NotificationCenter;
+class NotificationCenter extends EventEmitter {
+  #notify;
 
-function NotificationCenter(options) {
-  options = utils.clone(options || {});
-  if (!(this instanceof NotificationCenter)) {
-    return new NotificationCenter(options);
+  constructor(options) {
+    super();
+    this.options = utils.clone(options || {});
+    this._activeNotifications = new Set();
   }
-  this.options = options;
-  this._activeNotifications = new Set();
 
-  EventEmitter.call(this);
+  // A getter returning a bound function, so `notify` can be detached.
+  get notify() {
+    this.#notify ??= notifyRaw.bind(this);
+    return this.#notify;
+  }
+
+  /**
+   * Kill all running terminal-notifier processes started by this instance, so
+   * the application can exit without waiting for their timeouts. Callbacks of
+   * cleared notifications are called without an error or response.
+   */
+  clearAll() {
+    for (const clear of this._activeNotifications) clear();
+    this._activeNotifications.clear();
+  }
 }
-util.inherits(NotificationCenter, EventEmitter);
-let activeId = null;
 
-/**
- * Kill all running terminal-notifier processes started by this instance, so
- * the application can exit without waiting for their timeouts. Callbacks of
- * cleared notifications are called without an error or response.
- */
-NotificationCenter.prototype.clearAll = function () {
-  for (const clear of this._activeNotifications) clear();
-  this._activeNotifications.clear();
-};
+const Notifier = callableClass(NotificationCenter);
+
+export default Notifier;
+// `require()` of this file keeps returning the class itself.
+export { Notifier as 'module.exports' };
+
+let activeId = null;
 
 function noop() {}
 function notifyRaw(options, callback) {
-  let fallbackNotifier;
-  const id = identificator();
+  const id = {};
   options = utils.clone(options || {});
   activeId = id;
 
@@ -55,8 +63,7 @@ function notifyRaw(options, callback) {
 
   if (typeof callback !== 'function') {
     throw new TypeError(
-      'The second argument must be a function callback. You have passed ' +
-        typeof callback
+      `The second argument must be a function callback. You have passed ${typeof callback}`
     );
   }
 
@@ -64,7 +71,7 @@ function notifyRaw(options, callback) {
     this,
     options,
     callback,
-    function (data) {
+    (data) => {
       if (activeId !== id) return false;
 
       if (data === 'activate') {
@@ -91,7 +98,7 @@ function notifyRaw(options, callback) {
   if (utils.isMountainLion()) {
     let finished = false;
     let cleared = false;
-    const clear = function () {
+    const clear = () => {
       cleared = true;
       child.kill();
     };
@@ -110,22 +117,10 @@ function notifyRaw(options, callback) {
     return this;
   }
 
-  if (fallbackNotifier || this.options.withFallback) {
-    fallbackNotifier = fallbackNotifier || new Growl(this.options);
-    return fallbackNotifier.notify(options, callback);
+  if (this.options.withFallback) {
+    return new Growl(this.options).notify(options, callback);
   }
 
   callback(new Error(errorMessageOsX));
   return this;
-}
-
-Object.defineProperty(NotificationCenter.prototype, 'notify', {
-  get: function () {
-    if (!this._notify) this._notify = notifyRaw.bind(this);
-    return this._notify;
-  }
-});
-
-function identificator() {
-  return { _ref: 'val' };
 }

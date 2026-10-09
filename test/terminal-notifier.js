@@ -1,10 +1,11 @@
-const NotificationCenter = require('../notifiers/notificationcenter');
-const Growl = require('../notifiers/growl');
-const utils = require('../lib/utils');
-const path = require('path');
-const os = require('os');
-const fs = require('fs');
-const testUtils = require('./_test-utils');
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import NotificationCenter from '../notifiers/notificationcenter.js';
+import Growl from '../notifiers/growl.js';
+import utils from '../lib/utils.js';
+import path from 'node:path';
+import os from 'node:os';
+import fs from 'node:fs';
+import * as testUtils from './_test-utils.js';
 
 let notifier = null;
 const originalUtils = utils.fileCommandJson;
@@ -117,7 +118,9 @@ describe('terminal-notifier', function () {
           cb(
             null,
             fs
-              .readFileSync(path.join(__dirname, '/fixture/listAll.txt'))
+              .readFileSync(
+                path.join(import.meta.dirname, '/fixture/listAll.txt')
+              )
               .toString()
           );
         });
@@ -134,7 +137,9 @@ describe('terminal-notifier', function () {
           cb(
             null,
             fs
-              .readFileSync(path.join(__dirname, '/fixture/removeAll.txt'))
+              .readFileSync(
+                path.join(import.meta.dirname, '/fixture/removeAll.txt')
+              )
               .toString()
           );
         });
