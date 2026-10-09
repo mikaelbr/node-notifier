@@ -561,6 +561,8 @@ This package is licensed using the [MIT License](http://en.wikipedia.org/wiki/MI
 
 [SnoreToast](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/vendor/snoreToast/LICENSE) and [Notifu](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/vendor/notifu/LICENSE) have licenses in their vendored versions which do not match the MIT license, LGPL-3 and BSD 3-Clause to be specific. We are not lawyers, but have made our best efforts to conform to the terms in those licenses while releasing this package using the license we chose.
 
+The versions, origin and corresponding source of the bundled SnoreToast binaries are listed in [`vendor/snoreToast/README.md`](vendor/snoreToast/README.md).
+
 [npm-url]: https://npmjs.org/package/node-notifier
 [npm-image]: http://img.shields.io/npm/v/node-notifier.svg?style=flat
 [size-url]: https://packagephobia.com/result?p=node-notifier
