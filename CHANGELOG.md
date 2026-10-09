@@ -18,6 +18,7 @@ Breaking changes:
 Features:
 
 - Linux: adds `actions` to `NotifySend`, using the action buttons in `notify-send` (libnotify) 0.7.10+ ([#445](https://github.com/mikaelbr/node-notifier/pull/445)). The notification waits for the user, choosing an action emits `click` with the label as `metadata.activationValue`, and running out of time emits `timeout`, the same as macOS.
+- Windows: adds `application` to `WindowsToaster`, passed to SnoreToast as `-application`, so clicking a notification after node-notifier has stopped listening (e.g. from the action center) starts your app ([#430](https://github.com/mikaelbr/node-notifier/issues/430)).
 
 Fixes:
 

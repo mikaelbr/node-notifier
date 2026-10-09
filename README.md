@@ -315,7 +315,8 @@ notifier.notify(
     id: undefined, // Number. ID to use for closing notification.
     appID: undefined, // String. App.ID and app Name. Defaults to no value, causing SnoreToast text to be visible.
     remove: undefined, // Number. Refer to previously created notification to close.
-    install: undefined // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
+    install: undefined, // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
+    application: undefined // String. Absolute path to an executable to start when the notification is clicked and node-notifier is no longer listening (e.g. from the action center).
   },
   function (error, response) {
     console.log(response);
