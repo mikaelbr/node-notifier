@@ -21,7 +21,7 @@ function Growl(options) {
     return new Growl(options);
   }
 
-  growly.appname = options.name || 'Node';
+  growly.appname = stripCarriageReturns(options.name) || 'Node';
   this.options = options;
 
   EventEmitter.call(this);
@@ -60,6 +60,12 @@ function notifyRaw(options, callback) {
 
   options.title = options.title || 'Node Notification:';
 
+  // GNTP headers are CRLF delimited. Prevent values from injecting extra
+  // headers (e.g. a Notification-Callback-Target URL) into the request.
+  GNTP_HEADER_OPTIONS.forEach(function (key) {
+    options[key] = stripCarriageReturns(options[key]);
+  });
+
   if (hasGrowl || options.wait) {
     const localCallback = options.wait ? callback : noop;
     growly.notify(options.message, options, localCallback);
@@ -82,5 +88,19 @@ Object.defineProperty(Growl.prototype, 'notify', {
     return this._notify;
   }
 });
+
+const GNTP_HEADER_OPTIONS = [
+  'title',
+  'message',
+  'label',
+  'priority',
+  'coalescingId'
+];
+
+// Keeps line feeds (multi-line text) but removes the CR needed to end a header.
+function stripCarriageReturns(value) {
+  if (typeof value !== 'string') return value;
+  return value.replace(/\r\n?/g, '\n');
+}
 
 function noop() {}

@@ -1,5 +1,15 @@
 # Changelog
 
+
+### `v11.0.0`
+
+Even though this is a major version, there are no real breaking changes for most people.
+This removes uneeded external dependencies and updates the internal dependencies to the latest versions.
+
+But it now only checks and verifies node versions 20.x, 22.x, 24.x. So if you are on older versions, this might break.
+
+There will be an upcoming major version that has bigger breaking changes, so this is an intermediate major version to clean up the codebase and dependencies.
+
 ### `v10.0.1`
 
 Fixes:

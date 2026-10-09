@@ -111,11 +111,27 @@ function doNotification(options, callback) {
   delete options.title;
   delete options.message;
 
-  const argsList = utils.constructArgumentList(options, {
-    initial: initial,
-    keyExtra: '-',
-    allowedArguments: allowedArguments
-  });
+  // Executed without a shell, so values are passed verbatim (no quoting or
+  // escaping). Title and message go after `--` so values starting with a dash
+  // can't be parsed as notify-send options.
+  const argsList = utils
+    .constructArgumentList(options, {
+      keyExtra: '-',
+      allowedArguments: allowedArguments,
+      noEscape: true,
+      wrapper: ''
+    })
+    .concat(
+      '--',
+      utils.constructArgumentList(
+        {},
+        {
+          initial: initial,
+          noEscape: true,
+          wrapper: ''
+        }
+      )
+    );
 
-  utils.command(notifier, argsList, callback);
+  utils.commandWithoutShell(notifier, argsList, callback);
 }

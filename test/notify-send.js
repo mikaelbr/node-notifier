@@ -3,7 +3,7 @@ const utils = require('../lib/utils');
 const os = require('os');
 
 describe('notify-send', function () {
-  const original = utils.command;
+  const original = utils.commandWithoutShell;
   const originalType = os.type;
 
   beforeEach(function () {
@@ -13,12 +13,12 @@ describe('notify-send', function () {
   });
 
   afterEach(function () {
-    utils.command = original;
+    utils.commandWithoutShell = original;
     os.type = originalType;
   });
 
   function expectArgsListToBe(expected, done) {
-    utils.command = function (notifier, argsList, callback) {
+    utils.commandWithoutShell = function (notifier, argsList, callback) {
       expect(argsList).toEqual(expected);
       done();
     };
@@ -26,7 +26,7 @@ describe('notify-send', function () {
 
   it('should pass on title and body', () =>
     new Promise((done) => {
-      const expected = ['"title"', '"body"', '--expire-time', '"10000"'];
+      const expected = ['--expire-time', '10000', '--', 'title', 'body'];
       expectArgsListToBe(expected, done);
       const notifier = new Notify({ suppressOsdCheck: true });
       notifier.notify({ title: 'title', message: 'body' });
@@ -35,10 +35,11 @@ describe('notify-send', function () {
   it('should pass have default title', () =>
     new Promise((done) => {
       const expected = [
-        '"Node Notification:"',
-        '"body"',
         '--expire-time',
-        '"10000"'
+        '10000',
+        '--',
+        'Node Notification:',
+        'body'
       ];
 
       expectArgsListToBe(expected, done);
@@ -48,7 +49,7 @@ describe('notify-send', function () {
 
   it('should throw error if no message is passed', () =>
     new Promise((done) => {
-      utils.command = function (notifier, argsList, callback) {
+      utils.commandWithoutShell = function (notifier, argsList, callback) {
         expect(argsList).toBeUndefined();
       };
 
@@ -63,10 +64,11 @@ describe('notify-send', function () {
     new Promise((done) => {
       const excapedNewline = process.platform === 'win32' ? '\\r\\n' : '\\n';
       const expected = [
-        '"Node Notification:"',
-        '"some' + excapedNewline + ' \\"me\'ss\\`age\\`\\""',
         '--expire-time',
-        '"10000"'
+        '10000',
+        '--',
+        'Node Notification:',
+        'some' + excapedNewline + ' "me\'ss`age`"'
       ];
 
       expectArgsListToBe(expected, done);
@@ -77,14 +79,15 @@ describe('notify-send', function () {
   it('should escape array items as normal items', () =>
     new Promise((done) => {
       const expected = [
-        '"Hacked"',
-        '"\\`touch HACKED\\`"',
         '--app-name',
-        '"foo\\`touch exploit\\`"',
+        'foo`touch exploit`',
         '--category',
-        '"foo\\`touch exploit\\`"',
+        'foo`touch exploit`',
         '--expire-time',
-        '"10000"'
+        '10000',
+        '--',
+        'Hacked',
+        '`touch HACKED`'
       ];
 
       expectArgsListToBe(expected, done);
@@ -103,12 +106,13 @@ describe('notify-send', function () {
   it('should send additional parameters as --"keyname"', () =>
     new Promise((done) => {
       const expected = [
-        '"title"',
-        '"body"',
         '--icon',
-        '"icon-string"',
+        'icon-string',
         '--expire-time',
-        '"10000"'
+        '10000',
+        '--',
+        'title',
+        'body'
       ];
 
       expectArgsListToBe(expected, done);
@@ -119,12 +123,13 @@ describe('notify-send', function () {
   it('should remove extra options that are not supported by notify-send', () =>
     new Promise((done) => {
       const expected = [
-        '"title"',
-        '"body"',
         '--icon',
-        '"icon-string"',
+        'icon-string',
         '--expire-time',
-        '"1000"'
+        '1000',
+        '--',
+        'title',
+        'body'
       ];
 
       expectArgsListToBe(expected, done);
@@ -136,5 +141,29 @@ describe('notify-send', function () {
         time: 1,
         tullball: 'notValid'
       });
+    }));
+
+  it('should pass values starting with a dash as positional arguments', () =>
+    new Promise((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--',
+        '--title',
+        '-u critical'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: '--title', message: '-u critical' });
+    }));
+
+  it('should not fail on an option named hasOwnProperty', () =>
+    new Promise((done) => {
+      const expected = ['--expire-time', '10000', '--', 'title', 'body'];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', hasOwnProperty: 'x' });
     }));
 });

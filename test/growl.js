@@ -43,4 +43,18 @@ describe('growl', function () {
       };
       new Notify().notify({ message: 'foo', wait: true });
     }));
+
+  it('should not allow header injection through CRLF', () =>
+    new Promise((done) => {
+      growly.notify = function (text, opts) {
+        expect(text).toBe('foo\nNotification-Callback-Target: http://evil');
+        expect(opts.title).toBe('bar\nbaz');
+        done();
+      };
+      new Notify().notify({
+        title: 'bar\r\nbaz',
+        message: 'foo\r\nNotification-Callback-Target: http://evil',
+        wait: true
+      });
+    }));
 });
