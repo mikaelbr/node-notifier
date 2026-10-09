@@ -167,4 +167,138 @@ describe('notify-send', function () {
       const notifier = new Notify({ suppressOsdCheck: true });
       notifier.notify({ title: 'title', message: 'body', hasOwnProperty: 'x' });
     }));
+  it('should pass each action as a single named --action argument', () =>
+    new Promise((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--action=0=Yes',
+        '--action=1=a=b',
+        '--action=2=--wait',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        actions: ['Yes', 'a=b', '--wait']
+      });
+    }));
+
+  it('should accept a single action as a string', () =>
+    new Promise((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--action=0=OK',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', actions: 'OK' });
+    }));
+
+  it('should not pass --wait for wait: true', () =>
+    new Promise((done) => {
+      const expected = ['--expire-time', '5000', '--', 'title', 'body'];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', wait: true });
+    }));
+
+  function respondWith(stderr, stdout) {
+    utils.commandWithoutShell = function (notifier, argsList, callback) {
+      callback(stderr, stdout);
+    };
+  }
+
+  it('should report the chosen action and emit click', () =>
+    new Promise((done) => {
+      respondWith('', '1\n');
+      const notifier = new Notify({ suppressOsdCheck: true });
+      let clicked;
+      notifier.on('click', (emitter, options, metadata) => {
+        clicked = metadata;
+      });
+      notifier.on('cancel', () => {
+        throw new Error('Should not emit events named after actions');
+      });
+
+      notifier.notify(
+        { message: 'body', actions: ['OK', 'Cancel'] },
+        (err, response, metadata) => {
+          expect(err).toBeNull();
+          expect(response).toBe('activate');
+          expect(metadata).toEqual({
+            activationType: 'actionClicked',
+            activationValue: 'Cancel'
+          });
+          setImmediate(() => {
+            expect(clicked).toEqual(metadata);
+            done();
+          });
+        }
+      );
+    }));
+
+  it('should ignore output that is not one of the actions', () =>
+    new Promise((done) => {
+      respondWith('', '7\n');
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.on('click', () => {
+        throw new Error('Should not emit click');
+      });
+
+      notifier.notify(
+        { message: 'body', actions: ['OK'] },
+        (err, response, metadata) => {
+          expect(err).toBeNull();
+          expect(metadata).toEqual({ activationType: 'closed' });
+          done();
+        }
+      );
+    }));
+
+  it('should report timeout when notify-send stops waiting', () =>
+    new Promise((done) => {
+      respondWith('Wait timeout expired\n', '');
+      const notifier = new Notify({ suppressOsdCheck: true });
+      let timedOut = false;
+      notifier.on('timeout', () => {
+        timedOut = true;
+      });
+
+      notifier.notify(
+        { message: 'body', actions: ['OK'] },
+        (err, response, metadata) => {
+          expect(err).toBeNull();
+          expect(response).toBe('timeout');
+          expect(metadata).toEqual({ activationType: 'timeout' });
+          setImmediate(() => {
+            expect(timedOut).toBe(true);
+            done();
+          });
+        }
+      );
+    }));
+
+  it('should pass on errors from notify-send', () =>
+    new Promise((done) => {
+      const error = new Error('Unknown option --action=0=OK');
+      respondWith(error, '');
+      const notifier = new Notify({ suppressOsdCheck: true });
+
+      notifier.notify({ message: 'body', actions: ['OK'] }, (err) => {
+        expect(err).toBe(error);
+        done();
+      });
+    }));
 });

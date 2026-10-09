@@ -47,4 +47,14 @@ describe.runIf(os.type() === 'Linux')('notify-send (integration)', () => {
       body: message
     });
   });
+  it('waits for actions and reports when nobody responds', async () => {
+    const metadata = await new Promise((resolve, reject) => {
+      new NotifySend().notify(
+        { message: 'Continue?', actions: ['Yes', 'No'], timeout: 1 },
+        (err, response, metadata) => (err ? reject(err) : resolve(metadata))
+      );
+    });
+
+    expect(metadata).toEqual({ activationType: 'timeout' });
+  });
 });
