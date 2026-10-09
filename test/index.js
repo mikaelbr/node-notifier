@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import os from 'node:os';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import notifier from '../index.js';
 
 describe('constructors', function () {
@@ -43,5 +44,62 @@ describe('constructors', function () {
 
   it('should expose constructor for Growl', function () {
     expect(notifier.Growl).toBeTruthy();
+  });
+});
+
+describe('notifier selection', function () {
+  const originalType = os.type;
+
+  // Re-imports index.js so `selectNotifier()` runs again for the given platform.
+  async function importWith({ wsl, type, env }) {
+    vi.resetModules();
+    vi.doMock('../lib/utils.js', async function (importOriginal) {
+      const { default: utils } = await importOriginal();
+      return {
+        default: { ...utils, isWSL: () => wsl, isLessThanWin8: () => false }
+      };
+    });
+    os.type = () => type;
+    vi.stubEnv('NODE_NOTIFIER_WSL_NOTIFIER', env);
+    return import('../index.js');
+  }
+
+  afterEach(function () {
+    os.type = originalType;
+    vi.doUnmock('../lib/utils.js');
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  it('should use WindowsToaster under WSL by default', async function () {
+    const mod = await importWith({ wsl: true, type: 'Linux' });
+    expect(mod.Notification).toBe(mod.WindowsToaster);
+  });
+
+  it('should use NotifySend under WSL with NODE_NOTIFIER_WSL_NOTIFIER=linux', async function () {
+    const mod = await importWith({ wsl: true, type: 'Linux', env: 'linux' });
+    expect(mod.Notification).toBe(mod.NotifySend);
+    expect(mod.default).toBeInstanceOf(mod.NotifySend);
+  });
+
+  it('should ignore other NODE_NOTIFIER_WSL_NOTIFIER values under WSL', async function () {
+    for (const env of ['Linux', 'LINUX', '1', 'true', ' linux', '']) {
+      const mod = await importWith({ wsl: true, type: 'Linux', env });
+      expect(mod.Notification).toBe(mod.WindowsToaster);
+    }
+  });
+
+  it('should not let NODE_NOTIFIER_WSL_NOTIFIER affect native Windows', async function () {
+    const mod = await importWith({
+      wsl: false,
+      type: 'Windows_NT',
+      env: 'linux'
+    });
+    expect(mod.Notification).toBe(mod.WindowsToaster);
+  });
+
+  it('should not let NODE_NOTIFIER_WSL_NOTIFIER affect macOS', async function () {
+    const mod = await importWith({ wsl: false, type: 'Darwin', env: 'linux' });
+    expect(mod.Notification).toBe(mod.NotificationCenter);
   });
 });
