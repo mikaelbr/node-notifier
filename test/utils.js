@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import path from 'node:path';
 import fs from 'node:fs';
+import net from 'node:net';
 import _ from '../lib/utils.js';
 
 describe('utils', function () {
@@ -90,6 +91,30 @@ describe('utils', function () {
       expect(
         _.mapToGrowl({ title: 'Foo', message: 'Bar', appIcon: icon })
       ).toEqual(expected);
+    });
+  });
+
+  describe('createNamedPipe', function () {
+    afterEach(function () {
+      vi.restoreAllMocks();
+    });
+
+    it('should listen exclusively on the pipe path', async function () {
+      const listen = vi
+        .spyOn(net.Server.prototype, 'listen')
+        .mockImplementation(function (options, cb) {
+          cb();
+          return this;
+        });
+      const server = { namedPipe: '\\\\.\\pipe\\notifierPipe-123' };
+
+      await _.createNamedPipe(server);
+
+      expect(listen).toHaveBeenCalledTimes(1);
+      expect(listen.mock.calls[0][0]).toEqual({
+        path: '\\\\.\\pipe\\notifierPipe-123',
+        exclusive: true
+      });
     });
   });
 });
