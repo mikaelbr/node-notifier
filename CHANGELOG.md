@@ -10,6 +10,10 @@ But it now only checks and verifies node versions 20.x, 22.x, 24.x. So if you ar
 
 There will be an upcoming major version that has bigger breaking changes, so this is an intermediate major version to clean up the codebase and dependencies.
 
+Features:
+
+- Adds `clearAll()` to `NotificationCenter` to stop waiting on active notifications, so the application can exit without waiting for their timeouts. See [#210](https://github.com/mikaelbr/node-notifier/pull/210)
+
 ### `v10.0.1`
 
 Fixes:

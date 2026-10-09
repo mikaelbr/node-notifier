@@ -344,4 +344,138 @@ describe('terminal-notifier', function () {
         });
       }));
   });
+
+  describe('#clearAll()', function () {
+    let processes;
+
+    // Fake child process that, like execFile, calls back asynchronously
+    // with an error when killed.
+    function fakeProcess(cb) {
+      const p = {
+        running: true,
+        kill: vi.fn(function () {
+          p.finish(
+            Object.assign(new Error('Command failed'), {
+              killed: true,
+              signal: 'SIGTERM'
+            })
+          );
+        }),
+        finish: function (err, data) {
+          if (!p.running) return;
+          p.running = false;
+          setTimeout(function () {
+            cb(err || null, data || {});
+          }, 0);
+        }
+      };
+      return p;
+    }
+
+    beforeEach(function () {
+      processes = [];
+      utils.fileCommandJson = function (n, o, cb) {
+        const p = fakeProcess(cb);
+        processes.push(p);
+        return p;
+      };
+    });
+
+    afterEach(function () {
+      utils.fileCommandJson = originalUtils;
+    });
+
+    function tick() {
+      return new Promise((resolve) => setTimeout(resolve, 5));
+    }
+
+    it('should kill all running terminal-notifier processes', function () {
+      notifier.notify({ message: 'First' });
+      notifier.notify({ message: 'Second' });
+      notifier.clearAll();
+      expect(processes.map((p) => p.kill.mock.calls.length)).toEqual([1, 1]);
+    });
+
+    it('should not kill finished processes', async function () {
+      notifier.notify({ message: 'A' });
+      notifier.notify({ message: 'B' });
+      notifier.notify({ message: 'C' });
+      processes[0].finish();
+      await tick();
+      processes[1].finish();
+      await tick();
+
+      notifier.clearAll();
+      expect(processes.map((p) => p.kill.mock.calls.length)).toEqual([0, 0, 1]);
+    });
+
+    it('should call back without error for cleared notifications', async function () {
+      const callback = vi.fn();
+      const onTimeout = vi.fn();
+      notifier.on('timeout', onTimeout);
+      notifier.notify({ message: 'Hello World' }, callback);
+      notifier.clearAll();
+      await tick();
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback.mock.calls[0][0]).toBeNull();
+      expect(callback.mock.calls[0][1]).toBeUndefined();
+      expect(onTimeout).not.toHaveBeenCalled();
+    });
+
+    it('should still pass errors from processes that were not cleared', async function () {
+      const callback = vi.fn();
+      notifier.notify({ message: 'Hello World' }, callback);
+      const error = new Error('Command failed');
+      processes[0].finish(error);
+      await tick();
+      expect(callback.mock.calls[0][0]).toBe(error);
+    });
+
+    it('should track notifications sent right after clearing', async function () {
+      notifier.notify({ message: 'Old' });
+      notifier.clearAll();
+      notifier.notify({ message: 'New' });
+      await tick();
+
+      notifier.clearAll();
+      expect(processes[1].kill).toHaveBeenCalledTimes(1);
+    });
+
+    it('should only clear notifications from its own instance', function () {
+      const other = new NotificationCenter();
+      notifier.notify({ message: 'Mine' });
+      other.notify({ message: 'Theirs' });
+      notifier.clearAll();
+      expect(processes[0].kill).toHaveBeenCalledTimes(1);
+      expect(processes[1].kill).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing without notifications', function () {
+      expect(() => notifier.clearAll()).not.toThrow();
+    });
+
+    it('should stop a real waiting process', async function () {
+      utils.fileCommandJson = originalUtils;
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'node-notifier-'));
+      const script = path.join(dir, 'terminal-notifier');
+      fs.writeFileSync(script, '#!/bin/sh\nexec sleep 30\n', { mode: 0o755 });
+
+      try {
+        const n = new NotificationCenter({ customPath: script });
+        const started = Date.now();
+        const result = new Promise((resolve) => {
+          n.notify({ message: 'Hello World', timeout: 30 }, function (err) {
+            resolve(err);
+          });
+        });
+        n.clearAll();
+
+        expect(await result).toBeNull();
+        expect(Date.now() - started).toBeLessThan(5000);
+      } finally {
+        fs.rmSync(dir, { recursive: true, force: true });
+      }
+    });
+  });
 });

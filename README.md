@@ -196,6 +196,20 @@ As of Version 6.0 there is a default `timeout` set of `10` to ensure that the ap
 _Exception:_ If `reply` is defined, it's recommended to set `timeout` to a either
 high value, or to nothing at all.
 
+While a notification waits for its timeout, the `terminal-notifier` process keeps
+your application running. Call `clearAll()` to stop waiting on every notification
+sent from that notifier instance, for example when your program is done:
+
+```javascript
+notifier.notify({ message: 'Working…', open: 'https://example.com', timeout: 600 });
+await doLongRunningTask();
+notifier.clearAll(); // Lets the process exit without waiting for the timeout
+```
+
+Callbacks of cleared notifications are called without an error or response, and no
+events are emitted for them. `clearAll()` is only available on `NotificationCenter`
+and does not affect notifications sent through the Growl fallback.
+
 ---
 
 **For macOS notifications: `icon`, `contentImage`, and all forms of `reply`/`actions` require macOS 10.9.**

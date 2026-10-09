@@ -24,11 +24,22 @@ function NotificationCenter(options) {
     return new NotificationCenter(options);
   }
   this.options = options;
+  this._activeNotifications = new Set();
 
   EventEmitter.call(this);
 }
 util.inherits(NotificationCenter, EventEmitter);
 let activeId = null;
+
+/**
+ * Kill all running terminal-notifier processes started by this instance, so
+ * the application can exit without waiting for their timeouts. Callbacks of
+ * cleared notifications are called without an error or response.
+ */
+NotificationCenter.prototype.clearAll = function () {
+  for (const clear of this._activeNotifications) clear();
+  this._activeNotifications.clear();
+};
 
 function noop() {}
 function notifyRaw(options, callback) {
@@ -78,11 +89,24 @@ function notifyRaw(options, callback) {
 
   const argsList = utils.constructArgumentList(options);
   if (utils.isMountainLion()) {
-    utils.fileCommandJson(
+    let finished = false;
+    let cleared = false;
+    const clear = function () {
+      cleared = true;
+      child.kill();
+    };
+    const child = utils.fileCommandJson(
       this.options.customPath || notifier,
       argsList,
-      actionJackedCallback
+      (err, data) => {
+        finished = true;
+        this._activeNotifications.delete(clear);
+        // Being killed by clearAll is expected, not an error.
+        if (cleared) return actionJackedCallback(null);
+        actionJackedCallback(err, data);
+      }
     );
+    if (child && !finished) this._activeNotifications.add(clear);
     return this;
   }
 
