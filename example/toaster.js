@@ -7,7 +7,7 @@ notifier.notify(
     icon: path.join(__dirname, 'coulson.jpg'),
     sound: true
   },
-  function(err, data) {
+  function (err, data) {
     // Will also wait until notification is closed.
     console.log('Waited');
     console.log(JSON.stringify({ err, data }));

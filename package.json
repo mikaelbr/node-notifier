@@ -16,8 +16,9 @@
     "preexample:windows:nexe-custom-path": "rimraf dist",
     "example:windows:nexe-custom-path": "nexe -t windows-x64-14.15.3 -i ./example/toaster-custom-path.js -o ./dist/toaster-custom-path.exe && pnpm run copy-resources",
     "postexample:windows:nexe-custom-path": "cross-env DEBUG=notifier ./dist/toaster-custom-path.exe",
-    "lint": "eslint example/*.js lib/*.js notifiers/*.js test/**/*.js index.js",
-    "prepare": "husky install"
+    "lint": "biome check",
+    "prepare": "husky install",
+    "format": "biome check --write"
   },
   "jest": {
     "testRegex": "/test/[^_]*.js",
@@ -44,19 +45,13 @@
   "author": "Mikael Brevik",
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "2.5.15",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
-    "eslint": "^7.26.0",
-    "eslint-config-semistandard": "^15.0.1",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
     "husky": "^8.0.1",
     "jest": "^26.6.3",
     "lint-staged": "^13.0.3",
     "nexe": "^4.0.0-beta.19",
-    "prettier": "^2.3.0",
     "rimraf": "^3.0.2"
   },
   "dependencies": {
@@ -68,9 +63,8 @@
     "which": "^2.0.2"
   },
   "lint-staged": {
-    "*.{js,json,css,md}": [
-      "prettier --write",
-      "git add"
+    "*.{js,json,css}": [
+      "biome check --write --no-errors-on-unmatched"
     ]
   },
   "bugs": {

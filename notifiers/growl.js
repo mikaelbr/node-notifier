@@ -36,17 +36,20 @@ function notifyRaw(options, callback) {
     options = { title: 'node-notifier', message: options };
   }
 
-  callback = utils.actionJackerDecorator(this, options, callback, function(
-    data
-  ) {
-    if (data === 'click') {
-      return 'click';
+  callback = utils.actionJackerDecorator(
+    this,
+    options,
+    callback,
+    function (data) {
+      if (data === 'click') {
+        return 'click';
+      }
+      if (data === 'timedout') {
+        return 'timeout';
+      }
+      return false;
     }
-    if (data === 'timedout') {
-      return 'timeout';
-    }
-    return false;
-  });
+  );
 
   options = utils.mapToGrowl(options);
 
@@ -57,14 +60,14 @@ function notifyRaw(options, callback) {
 
   options.title = options.title || 'Node Notification:';
 
-  if (hasGrowl || !!options.wait) {
+  if (hasGrowl || options.wait) {
     const localCallback = options.wait ? callback : noop;
     growly.notify(options.message, options, localCallback);
     if (!options.wait) callback();
     return this;
   }
 
-  checkGrowl(growly, function(_, didHaveGrowl) {
+  checkGrowl(growly, function (_, didHaveGrowl) {
     hasGrowl = didHaveGrowl;
     if (!didHaveGrowl) return callback(new Error(errorMessageNotFound));
     growly.notify(options.message, options);
@@ -74,7 +77,7 @@ function notifyRaw(options, callback) {
 }
 
 Object.defineProperty(Growl.prototype, 'notify', {
-  get: function() {
+  get: function () {
     if (!this._notify) this._notify = notifyRaw.bind(this);
     return this._notify;
   }

@@ -14,7 +14,7 @@ nc.notify(
     contentImage: path.join(__dirname, 'coulson.jpg'),
     open: 'file://' + path.join(__dirname, 'coulson.jpg')
   },
-  function() {
+  function () {
     console.log(arguments);
   }
 );

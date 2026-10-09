@@ -12,7 +12,7 @@ nc.notify(
     closeLabel: 'Absolutely not',
     actions: trueAnswer
   },
-  function(err, response, metadata) {
+  function (err, response, metadata) {
     if (err) throw err;
     console.log(metadata);
 
@@ -28,7 +28,7 @@ nc.notify(
         // case sensitive
         reply: true
       },
-      function(err, response, metadata) {
+      function (err, response, metadata) {
         if (err) throw err;
         console.log(metadata);
       }
@@ -36,6 +36,6 @@ nc.notify(
   }
 );
 
-nc.on('replied', function(obj, options, metadata) {
+nc.on('replied', function (obj, options, metadata) {
   console.log('User replied', metadata);
 });

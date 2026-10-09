@@ -67,7 +67,7 @@ function notifyRaw(options, callback) {
   if (typeof callback !== 'function') {
     throw new TypeError(
       'The second argument must be a function callback. You have passed ' +
-        typeof fn
+        typeof callback
     );
   }
 
@@ -123,7 +123,7 @@ function notifyRaw(options, callback) {
     return this;
   }
 
-  if (!utils.isWin8() && !utils.isWSL() && !!this.options.withFallback) {
+  if (!utils.isWin8() && !utils.isWSL() && this.options.withFallback) {
     fallback = fallback || new Balloon(this.options);
     return fallback.notify(options, callback);
   }
@@ -133,8 +133,10 @@ function notifyRaw(options, callback) {
     resultBuffer = out;
     options.pipeName = server.namedPipe;
 
-    const localNotifier = options.customPath || this.options.customPath ||
-      (notifier + '-x' + (is64Bit ? '64' : '86') + '.exe');
+    const localNotifier =
+      options.customPath ||
+      this.options.customPath ||
+      notifier + '-x' + (is64Bit ? '64' : '86') + '.exe';
 
     options = utils.mapToWin8(options);
     const argsList = utils.constructArgumentList(options, {
@@ -144,11 +146,7 @@ function notifyRaw(options, callback) {
       noEscape: true
     });
 
-    utils.fileCommand(
-      localNotifier,
-      argsList,
-      actionJackedCallback
-    );
+    utils.fileCommand(localNotifier, argsList, actionJackedCallback);
   });
   return this;
 }

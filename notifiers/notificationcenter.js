@@ -45,7 +45,7 @@ function notifyRaw(options, callback) {
   if (typeof callback !== 'function') {
     throw new TypeError(
       'The second argument must be a function callback. You have passed ' +
-        typeof fn
+        typeof callback
     );
   }
 
@@ -53,7 +53,7 @@ function notifyRaw(options, callback) {
     this,
     options,
     callback,
-    function(data) {
+    function (data) {
       if (activeId !== id) return false;
 
       if (data === 'activate') {
@@ -86,7 +86,7 @@ function notifyRaw(options, callback) {
     return this;
   }
 
-  if (fallbackNotifier || !!this.options.withFallback) {
+  if (fallbackNotifier || this.options.withFallback) {
     fallbackNotifier = fallbackNotifier || new Growl(this.options);
     return fallbackNotifier.notify(options, callback);
   }
@@ -96,7 +96,7 @@ function notifyRaw(options, callback) {
 }
 
 Object.defineProperty(NotificationCenter.prototype, 'notify', {
-  get: function() {
+  get: function () {
     if (!this._notify) this._notify = notifyRaw.bind(this);
     return this._notify;
   }

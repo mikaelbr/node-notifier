@@ -1,6 +1,6 @@
 module.exports.argsListHas = function argsListHas(args, field) {
   return (
-    args.filter(function(item) {
+    args.filter(function (item) {
       return item === field;
     }).length > 0
   );
