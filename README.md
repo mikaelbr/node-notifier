@@ -1,174 +1,83 @@
-# node-notifier [![NPM version][npm-image]][npm-url] [![Install size][size-image]][size-url] [![Build Status][travis-image]][travis-url]
+# node-notifier [![NPM version][npm-image]][npm-url] [![Install size][size-image]][size-url] [![Build Status][ci-image]][ci-url]
 
-Send cross platform native notifications using Node.js. Notification Center for macOS,
-`notify-osd`/`libnotify-bin` for Linux, Toasters for Windows 8/10, or taskbar balloons for
-earlier Windows versions. Growl is used if none of these requirements are met.
-[Works well with Electron](#within-electron-packaging).
+Send native desktop notifications from Node.js on macOS, Windows and Linux.
+Uses Notification Center on macOS, Toasts on Windows 8+ (taskbar balloons on older
+Windows) and `notify-send` on Linux, with Growl as a fallback.
+[Works with Electron](#electron).
 
 ![macOS Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/mac.png)
 ![Native Windows Screenshot](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows.png)
 
-## Input Example macOS Notification Center
-
-![Input Example](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/input-example.gif)
-
-## Actions Example Windows SnoreToast
-
-![Actions Example](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/example/windows-actions-example.gif)
-
-## Quick Usage
-
-Show a native notification on macOS, Windows, Linux:
-
-```javascript
-import notifier from 'node-notifier';
-// String
-notifier.notify('Message');
-
-// Object
-notifier.notify({
-  title: 'My notification',
-  message: 'Hello, there!'
-});
-```
-
-## Requirements
-
-- **macOS**: >= 10.14 for native notifications, or Growl if earlier.
-- **Linux**: `notify-osd` or `libnotify-bin` installed (Ubuntu should have this by default)
-- **Windows**: >= 8, or task bar balloons for Windows < 8. Growl as fallback. Growl takes precedence over Windows balloons.
-- **General Fallback**: Growl
-
-See [documentation and flow chart for reporter choice](./DECISION_FLOW.md).
-
 ## Install
 
 ```shell
-npm install --save node-notifier
+npm install node-notifier
 ```
 
-`node-notifier` is published as ES modules only. Use `import` (named exports
-such as `{ notify, NotificationCenter }` are also available). CommonJS still works
-through Node's `require(esm)` support, and `require('node-notifier')` returns the
-same notifier instance as before:
+Requires Node.js 22.22+, 24.15+ or 26+. The package is ES modules only, but
+`require('node-notifier')` still works through Node's `require(esm)` support.
+
+Looking for a CLI? See [node-notifier-cli](https://github.com/mikaelbr/node-notifier-cli).
+
+## Usage
 
 ```javascript
-const notifier = require('node-notifier');
-```
-
-## <abbr title="Command Line Interface">CLI</abbr>
-
-<abbr title="Command Line Interface">CLI</abbr> has moved to separate project:
-<https://github.com/mikaelbr/node-notifier-cli>
-
-## Cross-Platform Advanced Usage
-
-Standard usage, with cross-platform fallbacks as defined in the
-[reporter flow chart](./DECISION_FLOW.md). All of the options
-below will work in some way or another on most platforms.
-
-```javascript
-import path from 'node:path';
 import notifier from 'node-notifier';
+
+notifier.notify('Message');
 
 notifier.notify(
   {
-    title: 'My awesome title',
-    message: 'Hello from node, Mr. User!',
-    icon: path.join(import.meta.dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons or macOS)
-    sound: true, // Only Notification Center or Windows Toasters
-    wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait, or macOS and notify-send without actions
+    title: 'My notification',
+    message: 'Hello, there!',
+    icon: '/absolute/path/to/icon.png', // Not supported on macOS or balloons
+    sound: true,
+    actions: ['OK', 'Cancel'] // Waits for the user (macOS, Windows, Linux)
   },
-  function (err, response, metadata) {
-    // Response is response from notification
-    // Metadata contains activationType, and activationValue for actions or replies
+  (error, response, metadata) => {
+    // metadata.activationType, and metadata.activationValue for actions and replies
   }
 );
 
-notifier.on('click', function (notifierObject, options, event) {
-  // Triggers if `wait: true` and user clicks notification
-});
-
-notifier.on('timeout', function (notifierObject, options) {
-  // Triggers if `wait: true` and notification closes
-});
+notifier.on('click', (notifierObject, options, event) => {});
+notifier.on('timeout', (notifierObject, options) => {});
 ```
 
-If you want super fine-grained control, you can customize each reporter individually,
-allowing you to tune specific options for different systems.
-
-See below for documentation on each reporter.
-
-**Example:**
+The default `notifier` picks the right notifier for your platform (see the
+[decision flow](./DECISION_FLOW.md)). Options that a platform doesn't support are
+ignored. To tune options per platform, use a notifier directly:
 
 ```javascript
-import NotificationCenter from 'node-notifier/notifiers/notificationcenter';
-new NotificationCenter(options).notify();
+import {
+  NotificationCenter, // macOS
+  WindowsToaster, // Windows 8+
+  WindowsBalloon, // Windows < 8
+  NotifySend, // Linux
+  Growl
+} from 'node-notifier';
 
-import NotifySend from 'node-notifier/notifiers/notifysend';
-new NotifySend(options).notify();
-
-import WindowsToaster from 'node-notifier/notifiers/toaster';
-new WindowsToaster(options).notify();
-
-import Growl from 'node-notifier/notifiers/growl';
-new Growl(options).notify();
-
-import WindowsBalloon from 'node-notifier/notifiers/balloon';
-new WindowsBalloon(options).notify();
+new NotifySend(options).notify(notification, callback);
 ```
 
-Or, if you are using several reporters (or you're lazy):
+### Requirements
 
-```javascript
-// NOTE: Technically, this takes longer to load
-import nn from 'node-notifier';
+- **macOS**: 10.14 or newer.
+- **Windows**: 8 or newer for Toasts. Earlier versions use taskbar balloons.
+- **Linux**: `notify-send` (`libnotify-bin` on Debian/Ubuntu).
+- **Other**: [Growl](https://github.com/growl/growl) running.
 
-new nn.NotificationCenter(options).notify();
-new nn.NotifySend(options).notify();
-new nn.WindowsToaster(options).notify(options);
-new nn.WindowsBalloon(options).notify(options);
-new nn.Growl(options).notify(options);
-```
+## `NotificationCenter` (macOS)
 
-## Contents
-
-- [Notification Center documentation](#usage-notificationcenter)
-- [Windows Toaster documentation](#usage-windowstoaster)
-- [Windows Balloon documentation](#usage-windowsballoon)
-- [Growl documentation](#usage-growl)
-- [Notify-send documentation](#usage-notifysend)
-
-### Usage: `NotificationCenter`
-
-Same usage and parameter setup as [**`terminal-notifier`**](https://github.com/julienXX/terminal-notifier).
-
-Native Notification Center requires macOS version 10.14 or higher. If you have
-an earlier version, Growl will be the fallback. If Growl isn't installed, an
-error will be returned in the callback.
-
-#### Example
-
-Because `node-notifier` wraps around [**`terminal-notifier`**](https://github.com/julienXX/terminal-notifier),
-you can do anything `terminal-notifier` can, just by passing properties to the `notify`
-method.
-
-For example:
-
-- if `terminal-notifier` says `-message`, you can do `{message: 'Foo'}`
-- if `terminal-notifier` says `-list ALL`, you can do `{list: 'ALL'}`.
-
-Notification is the primary focus of this module, so listing and activating do work,
-but they aren't documented.
-
-### All notification options with their defaults:
+Wraps the bundled [`terminal-notifier`](https://github.com/julienXX/terminal-notifier) 3.0.0
+(universal binary for Intel and Apple silicon). Other `terminal-notifier` flags can be
+passed as options, e.g. `-group` becomes `{ group: 'id' }`.
 
 ```javascript
 import { NotificationCenter } from 'node-notifier';
 
 const notifier = new NotificationCenter({
-  withFallback: false, // Use Growl Fallback if < 10.14
-  customPath: undefined // Relative/Absolute path to binary if you want to use your own fork of terminal-notifier
+  withFallback: false, // Use Growl on macOS < 10.14
+  customPath: undefined // Path to your own terminal-notifier binary
 });
 
 notifier.notify(
@@ -176,395 +85,195 @@ notifier.notify(
     title: undefined,
     subtitle: undefined,
     message: undefined,
-    sound: false, // Case Sensitive string for location of sound file, or use one of macOS' native sounds (see below)
-    contentImage: undefined, // Absolute Path to Attached Image (Content Image). Local files only
-    open: undefined, // URL to open on Click
-    group: undefined, // String. Notifications with the same group replace each other
-
-    // See `example/macInput.js` for usage
-    actions: undefined, // String | Array<String>. Action button label(s)
-    reply: false, // Boolean | String. Adds a text field, a string is used as placeholder. Value passed as third argument in callback and event emitter.
-    wait: false, // Same as timeout = 5 seconds
-    timeout: 10 // Seconds to wait for a response to actions or reply. Takes precedence over wait if both are defined.
+    sound: false, // true ('Bottle') or a name: Basso, Blow, Bottle, Frog, Funk, Glass, Hero, Morse, Ping, Pop, Purr, Sosumi, Submarine, Tink
+    contentImage: undefined, // Absolute path to a local image
+    open: undefined, // URL to open on click
+    group: undefined, // Notifications in the same group replace each other
+    actions: undefined, // String | Array<String>. Action buttons
+    reply: false, // Boolean | String. Adds a text field, a string is used as placeholder
+    timeout: 10, // Seconds to wait for actions/reply, or false to wait forever
+    wait: false // Shorthand for timeout: 5
   },
-  function (error, response, metadata) {
-    console.log(response, metadata);
-  }
+  (error, response, metadata) => {}
 );
 ```
 
----
+- Only notifications with `actions` or `reply` wait for the user. Others call the
+  callback right away and emit no `click` or `timeout` events.
+- `metadata.activationType` is `contentsClicked`, `actionClicked`, `replied`,
+  `closed` or `timeout`.
+- A waiting notification keeps your process alive. Call `notifier.clearAll()` to
+  stop waiting on all notifications from that instance.
+- `icon` is not supported. macOS always shows the icon of the sending app. For a
+  custom icon, build `terminal-notifier` with your icon
+  (`make icon ICON=logo.png APP_NAME=my-tool`) and point `customPath` to it.
+- macOS asks for notification permission the first time a notification is sent.
 
-**Note:** Only notifications with `actions` or `reply` wait for the user. Other
-notifications are sent and the callback is called right away, so `click` and
-`timeout` events are only emitted for notifications with `actions` or `reply`.
-Clicking the notification itself is reported as a `click`, unless `open`,
-`execute` or `activate` is set, in which case that is run instead.
+See [`example/macInput.js`](./example/macInput.js) for actions and reply.
 
-For those notifications `timeout` (default `10`) is how many seconds to wait for a
-response before the notification is withdrawn and `timeout` is reported. `wait` is
-shorthand for `timeout: 5`. Set `timeout` to `false` to wait until the user responds.
+## `WindowsToaster` (Windows 8+)
 
-The callback metadata contains `activationType` (`contentsClicked`, `actionClicked`,
-`replied`, `closed` or `timeout`) and, for actions and replies, `activationValue`.
-
-While a notification waits for its timeout, the `terminal-notifier` process keeps
-your application running. Call `clearAll()` to stop waiting on every notification
-sent from that notifier instance, for example when your program is done:
-
-```javascript
-notifier.notify({ message: 'Working…', open: 'https://example.com', timeout: 600 });
-await doLongRunningTask();
-notifier.clearAll(); // Lets the process exit without waiting for the timeout
-```
-
-Callbacks of cleared notifications are called without an error or response, and no
-events are emitted for them. `clearAll()` is only available on `NotificationCenter`
-and does not affect notifications sent through the Growl fallback.
-
----
-
-**For macOS notifications: `icon`, `sender`, `closeLabel` and `dropdownLabel` are
-not supported by `terminal-notifier` 3 and are ignored.** See [custom icon](#macos-custom-icon-without-terminal-icon).
-
-Sound can be one of these: `Basso`, `Blow`, `Bottle`, `Frog`, `Funk`, `Glass`,
-`Hero`, `Morse`, `Ping`, `Pop`, `Purr`, `Sosumi`, `Submarine`, `Tink`.
-
-If `sound` is simply `true`, `Bottle` is used.
-
----
-
-**See Also:**
-
-- [Example: specific Notification Centers](./example/advanced.js)
-- [Example: input](./example/macInput.js).
-
----
-
-**Custom Path clarification**
-
-`customPath` takes a value of a relative or absolute path to the binary of your
-fork/custom version of **`terminal-notifier`**.
-
-**Example:** `./vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier`
-
-**Bundled `terminal-notifier`**
-
-The bundled `terminal-notifier.app` is the unmodified official
-[`terminal-notifier` 3.0.0 release](https://github.com/julienXX/terminal-notifier/releases/tag/3.0.0),
-a universal binary for Intel and Apple silicon. CI checks it against the release's
-pinned SHA-256 checksum with `./scripts/vendor-terminal-notifier.sh --check`, and the
-same script is used to update it.
-
-Notification permission is granted per app, so macOS asks for it again the first
-time `terminal-notifier` 3 sends a notification.
-
-**Spotlight clarification**
-
-`terminal-notifier.app` resides in a `mac.noindex` folder to prevent Spotlight from indexing the app.
-
-### Usage: `WindowsToaster`
-
-**Note:** There are some limitations for images in native Windows 8 notifications:
-
-- The image must be a PNG image
-- The image must be smaller than 1024×1024 px
-- The image must be less than 200kb
-- The image must be specified using an absolute path
-
-These limitations are due to the Toast notification system. A good tip is to use
-something like `path.join` or `path.delimiter` to keep your paths cross-platform.
-
-From [mikaelbr/gulp-notify#90 (comment)](https://github.com/mikaelbr/gulp-notify/issues/90#issuecomment-129333034)
-
-> You can make it work by going to System > Notifications & Actions. The 'toast'
-> app needs to have Banners enabled. (You can activate banners by clicking on the
-> 'toast' app and setting the 'Show notification banners' to On)
-
----
-
-**Windows 10 Fall Creators Update (Version 1709) Note:**
-
-[**Snoretoast**](https://github.com/KDE/snoretoast) is used to get native Windows Toasts!
-
-The default behaviour is to have the underlying toaster applicaton as `appID`.
-This works as expected, but shows `SnoreToast` as text in the notification.
-
-With the Fall Creators Update, Notifications on Windows 10 will only work as
-expected if a valid `appID` is specified. Your `appID` must be exactly the same
-value that was registered during the installation of your app.
-
-You can find the ID of your App by searching the registry for the `appID` you
-specified at installation of your app. For example: If you use the squirrel
-framework, your `appID` will be something like `com.squirrel.your.app`.
+Uses [SnoreToast](https://invent.kde.org/libraries/snoretoast).
 
 ```javascript
 import { WindowsToaster } from 'node-notifier';
 
 const notifier = new WindowsToaster({
-  withFallback: false, // Fallback to Growl or Balloons?
-  customPath: undefined // Relative/Absolute path if you want to use your fork of SnoreToast.exe
-});
-
-notifier.notify(
-  {
-    title: undefined, // String. Required
-    message: undefined, // String. Required if remove is not defined
-    icon: undefined, // String. Absolute path to Icon
-    sound: false, // Bool | String (as defined by http://msdn.microsoft.com/en-us/library/windows/apps/hh761492.aspx)
-    id: undefined, // Number. ID to use for closing notification.
-    appID: undefined, // String. App.ID and app Name. Defaults to no value, causing SnoreToast text to be visible.
-    remove: undefined, // Number. Refer to previously created notification to close.
-    duration: undefined, // 'short' (~7s, default) | 'long' (~25s). How long the toast stays on screen. x64 only with the bundled binary.
-    install: undefined, // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
-    application: undefined // String. Absolute path to an executable to start when the notification is clicked and node-notifier is no longer listening (e.g. from the action center).
-  },
-  function (error, response) {
-    console.log(response);
-  }
-);
-```
-
-**Note:** `wait` and `timeout` don't change how long a Windows toast stays on
-screen. Use `duration` instead: Windows only offers `'short'` (about 7 seconds)
-or `'long'` (about 25 seconds), and the user's own Windows settings can change
-this. A toast can't stay on screen indefinitely. After it hides it is still
-listed in the Action Center. `duration` is x64 only with the bundled binary, as
-the bundled 32-bit SnoreToast (0.7.0) lacks `-d`. On other architectures it is
-dropped, unless you set `customPath` to a SnoreToast 0.8.0 or newer.
-
-### Usage: `Growl`
-
-```javascript
-import { Growl } from 'node-notifier';
-
-const notifier = new Growl({
-  name: 'Growl Name Used', // Defaults as 'Node'
-  host: 'localhost',
-  port: 23053
-});
-
-notifier.notify({
-  title: 'Foo',
-  message: 'Hello World',
-  icon: fs.readFileSync(path.join(import.meta.dirname, 'coulson.jpg')),
-  wait: false, // Wait for User Action against Notification
-
-  // and other growl options like sticky etc.
-  sticky: false,
-  label: undefined,
-  priority: undefined
-});
-```
-
-See more information about using [growly](https://github.com/theabraham/growly/).
-
-### Usage: `WindowsBalloon`
-
-For earlier versions of Windows, taskbar balloons are used (unless
-fallback is activated and Growl is running). The balloons notifier uses a great
-project called [**`notifu`**](http://www.paralint.com/projects/notifu/).
-
-```javascript
-import { WindowsBalloon } from 'node-notifier';
-
-const notifier = new WindowsBalloon({
-  withFallback: false, // Try Windows Toast and Growl first?
-  customPath: undefined // Relative/Absolute path if you want to use your fork of notifu
+  withFallback: false, // Use balloons on Windows < 8
+  customPath: undefined // Path to your own SnoreToast.exe
 });
 
 notifier.notify(
   {
     title: undefined,
-    message: undefined,
-    sound: false, // true | false.
-    time: 5000, // How long to show balloon in ms
-    wait: false, // Wait for User Action against Notification
-    type: 'info' // The notification type : info | warn | error
+    message: undefined, // Required unless `remove` is set
+    icon: undefined, // Absolute path to a PNG, max 1024×1024 px and 200 KB
+    sound: false, // true, or a Windows sound such as 'Notification.Mail'
+    actions: undefined, // Array<String>. Action buttons
+    appID: undefined, // Your app's ID. Without it the toast shows "SnoreToast"
+    id: undefined, // Number. ID to use with `remove`
+    remove: undefined, // Number. ID of a notification to close
+    duration: undefined, // 'short' (~7s, default) or 'long' (~25s)
+    install: undefined, // Creates a Start menu shortcut for `appID`
+    application: undefined // Executable to start when clicked after node-notifier stopped listening
   },
-  function (error, response) {
-    console.log(response);
-  }
+  (error, response, metadata) => {}
 );
 ```
 
-See full usage on the [project homepage: **`notifu`**](http://www.paralint.com/projects/notifu/).
+- **Set `appID`** to the ID your app registered at install (e.g.
+  `com.squirrel.your.app` with Squirrel). Otherwise the toast shows "SnoreToast".
+- Toasts always wait for the user. `wait` and `timeout` don't change how long a
+  toast is shown, use `duration`. After that it stays in the Action Center.
+- Choosing an action emits an event named after the lower-cased label. See
+  [`example/toaster-with-actions.js`](./example/toaster-with-actions.js).
+- On 32-bit Windows the bundled SnoreToast is 0.7.0: `duration` is ignored, and
+  clicks with a custom `appID` aren't reported. Use `customPath` with a newer
+  SnoreToast to get both.
+- No toasts? Check that banners are enabled for the app under
+  Settings › System › Notifications.
 
-### Usage: `NotifySend`
+## `WindowsBalloon` (Windows < 8)
 
-**Note:** `notify-send` doesn't support the `wait` flag. Only notifications with `actions` wait for the user.
+Uses [notifu](http://www.paralint.com/projects/notifu/).
+
+```javascript
+import { WindowsBalloon } from 'node-notifier';
+
+new WindowsBalloon({ withFallback: false, customPath: undefined }).notify(
+  {
+    title: undefined,
+    message: undefined,
+    sound: false,
+    time: 5000, // Milliseconds to show the balloon
+    wait: false,
+    type: 'info' // info | warn | error
+  },
+  (error, response) => {}
+);
+```
+
+## `NotifySend` (Linux)
 
 ```javascript
 import { NotifySend } from 'node-notifier';
 
-const notifier = new NotifySend();
-
-notifier.notify(
+new NotifySend().notify(
   {
     title: 'Foo',
     message: 'Hello World',
-    icon: path.join(import.meta.dirname, 'coulson.jpg'),
-
-    wait: false, // Defaults no expire time set. If true expire time of 5 seconds is used
-    timeout: 10, // Alias for expire-time, time etc. Time before notify-send expires. Defaults to 10 seconds.
-    actions: undefined, // String | Array<String>. Action button label(s). Requires notify-send 0.7.10+
-    transient: false, // Don't keep the notification in the notification list/history (e.g. GNOME Shell)
-
-    // .. and other notify-send flags:
+    icon: '/absolute/path/to/icon.png',
+    timeout: 10, // Seconds before the notification expires
+    actions: undefined, // String | Array<String>. Requires notify-send 0.7.10+
+    transient: false, // Don't keep it in the notification history
     'app-name': 'node-notifier',
-    urgency: undefined,
+    urgency: undefined, // low | normal | critical
     category: undefined,
     hint: undefined
   },
-  function (error, response, metadata) {
-    console.log(response, metadata);
-  }
+  (error, response, metadata) => {}
 );
 ```
 
-With `actions`, `notify-send` keeps running until an action is chosen, the
-notification is closed or `timeout` has passed, and then calls the callback. Choosing
-an action emits `click`, and running out of time emits `timeout`. The callback metadata
-contains `activationType` (`actionClicked`, `closed` or `timeout`) and, for actions,
-`activationValue` with the label of the chosen action. See `example/notify-send-actions.js`.
+- Only notifications with `actions` wait for the user. Choosing an action emits
+  `click` with the label in `metadata.activationValue`, running out of time emits
+  `timeout`. See [`example/notify-send-actions.js`](./example/notify-send-actions.js).
+- `actions` needs libnotify 0.7.10+ (e.g. Ubuntu 24.04, Debian 12) and a
+  notification daemon that supports actions.
+- See [`notify-send(1)`](https://man.archlinux.org/man/notify-send.1) for all flags.
 
-`actions` needs `notify-send` (libnotify) 0.7.10 or newer, for example Ubuntu 24.04 or
-Debian 12, and a notification daemon that supports actions. Older versions of
-`notify-send` fail with an error.
+## `Growl`
 
-See flags and options on the man page [`notify-send(1)`](http://manpages.ubuntu.com/manpages/gutsy/man1/notify-send.1.html)
+```javascript
+import fs from 'node:fs';
+import { Growl } from 'node-notifier';
 
-## Thanks to OSS
+new Growl({ name: 'My App', host: 'localhost', port: 23053 }).notify({
+  title: 'Foo',
+  message: 'Hello World',
+  icon: fs.readFileSync('/path/to/icon.png'),
+  sticky: false
+});
+```
 
-`node-notifier` is made possible through Open Source Software.
-A very special thanks to all the modules `node-notifier` uses.
+See [growly](https://github.com/theabraham/growly/) for more options.
 
-- [`terminal-notifier`](https://github.com/julienXX/terminal-notifier)
-- [`Snoretoast`](https://invent.kde.org/libraries/snoretoast)
-- [`notifu`](http://www.paralint.com/projects/notifu/)
-- [`growly`](https://github.com/theabraham/growly/)
+## Common issues
 
-[![NPM downloads][npm-downloads]][npm-url]
+### WSL
 
-## Common Issues
-
-### How to use SnoreToast with both appID and actions
-
-The bundled 64-bit SnoreToast (0.9.1) reports clicks and action buttons back when using a custom `appID`. On 32-bit Windows, [see this issue by Araxeus](https://github.com/mikaelbr/node-notifier/issues/424).
-
-### Windows: `SnoreToast` text
-
-See note on "Windows 10 Fall Creators Update" in Windows section.
-_**Short answer:** update your `appID`._
-
-### Windows and WSL2
-
-The bundled `.exe` files are executable since v11.0.0. If you copied the package without keeping file permissions and see no notifications, run `chmod +x` on the `.exe` files in `vendor/`.
-
-SnoreToast can only show icons from a Windows drive. Under WSL, an `icon` on a mounted drive (e.g. `/mnt/c/Users/me/icon.png`) is converted to its Windows path, and other icons (e.g. in your Linux home folder) are skipped.
-
-### WSL: Use Linux notifications (`notify-send`)
-
-Under WSL, the default notifier is `WindowsToaster`, which shows the notification in Windows. If you run an X server and a notification daemon and want Linux notifications instead, set `NODE_NOTIFIER_WSL_NOTIFIER=linux`:
+Under WSL, notifications are shown in Windows. To use Linux notifications instead
+(with an X server and a notification daemon), start the process with:
 
 ```sh
 NODE_NOTIFIER_WSL_NOTIFIER=linux node app.js
 ```
 
-The only accepted value is `linux` (lowercase). Any other value keeps the default. The variable only has an effect under WSL, and it is read when `node-notifier` is imported, so set it before the process starts. Setting `process.env` after the import has no effect.
+It is read when `node-notifier` is imported, so setting `process.env` later has no
+effect. You can also use `NotifySend` directly.
 
-You can also skip the default instance and use `NotifySend` directly:
+Windows can only show icons from a Windows drive. An `icon` on a mounted drive
+(e.g. `/mnt/c/Users/me/icon.png`) is converted to its Windows path, other icons are
+skipped. If you copied the package without keeping file permissions, run
+`chmod +x` on the `.exe` files in `vendor/`.
 
-```js
-import { NotifySend } from 'node-notifier';
+### Cron, PM2 and services
 
-new NotifySend().notify({ title: 'Hello', message: 'From WSL' });
-```
+Notifications are shown on the desktop of the logged-in user, so the process must
+run as that user while they are logged in.
 
-### Use inside tmux session
+- **Linux:** cron and some process managers start without the session environment,
+  so `notify-send` can't reach the session bus. Set `XDG_RUNTIME_DIR` (and
+  `DBUS_SESSION_BUS_ADDRESS` if needed):
 
-When using `node-notifier` within a tmux session, it can cause a hang in the system.
-This can be solved by following the steps described in [this comment](https://github.com/julienXX/terminal-notifier/issues/115#issuecomment-104214742)
+  ```sh
+  * * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus node /path/to/app.js
+  ```
 
-There’s even more info [here](https://github.com/mikaelbr/node-notifier/issues/61#issuecomment-163560801)
-<https://github.com/mikaelbr/node-notifier/issues/61#issuecomment-163560801>.
+  With PM2, run it as the desktop user (not root), or set the same variables.
+- **Windows:** services running as `SYSTEM` can't show notifications. Make the
+  service (or PM2) log on as the logged-in user.
 
-### macOS: Custom icon without Terminal icon
+### Electron
 
-Even if you define an icon in the configuration object for `node-notifier`, you will
-see a small Terminal icon in the notification (see the example at the top of this
-document).
+Binaries can't run from inside an `asar` archive. Unpack the `vendor/` folder:
 
-This is the way notifications on macOS work. They always show the icon of the
-parent application initiating the notification. For `node-notifier`, `terminal-notifier`
-is the initiator, and it has the Terminal icon defined as its icon.
-
-To use a custom icon, build a copy of `terminal-notifier` with your icon
-(`make icon ICON=logo.png APP_NAME=my-tool` in the
-[`terminal-notifier`](https://github.com/julienXX/terminal-notifier) repository) and
-point `customPath` to it.
-
-See [Issue #71 for more info](https://github.com/mikaelbr/node-notifier/issues/71)
-<https://github.com/mikaelbr/node-notifier/issues/71>.
-
-### Notifications from cron, PM2 or services
-
-Notifications are shown on the desktop of the logged-in user, so the process must run as that same user, while they are logged in.
-
-**Linux:** cron and some process managers start without the user's session environment, so `notify-send` can't reach the session bus. Set `XDG_RUNTIME_DIR`, and `DBUS_SESSION_BUS_ADDRESS` if that isn't enough. On a standard systemd user session they are:
-
-```sh
-* * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus node /path/to/app.js
-```
-
-With PM2, start it as the desktop user (not root), or set the same variables in its environment.
-
-**Windows:** services running as `SYSTEM` can't show notifications on the user's desktop. Set the service (or PM2) to log on as the logged-in user's account.
-
-See [#226](https://github.com/mikaelbr/node-notifier/issues/226) and [#333](https://github.com/mikaelbr/node-notifier/issues/333).
-
-### Within Electron Packaging
-
-If packaging your Electron app as an `asar`, you will find `node-notifier` will fail to load.
-
-Due to the way asar works, you cannot execute a binary from within an `asar`.
-As a simple solution, when packaging the app into an asar please make sure you
-`--unpack` the `vendor/` folder of `node-notifier`, so the module still has access to
-the notification binaries.
-
-You can do so with the following command:
-
-```bash
+```shell
 asar pack . app.asar --unpack "./node_modules/node-notifier/vendor/**"
 ```
 
-Or if you use `electron-builder` without using asar directly, append `build` object to your `package.json` as below:
+Or with `electron-builder`, in `package.json`:
 
-```bash
-...
-build: {
-  asarUnpack: [
-    './node_modules/node-notifier/**/*',
-  ]
-},
-...
+```json
+"build": {
+  "asarUnpack": ["./node_modules/node-notifier/**/*"]
+}
 ```
 
-### Using with pkg
+### Bundlers (webpack, etc.)
 
-For issues using with the pkg module. Check this issue out: https://github.com/mikaelbr/node-notifier/issues/220#issuecomment-425963752
-
-### Using Webpack
-
-When using `node-notifier` inside of `webpack`, you must add the snippet below to your `webpack.config.js`.
-
-This is necessary because `node-notifier` runs bundled binaries from its `vendor/`
-folder, which it finds relative to its own files (`import.meta.dirname`). When
-webpack bundles the module, those paths no longer point at the binaries, causing
-`node-notifier` to error on certain platforms.
-
-To fix this, keep `node-notifier` out of the bundle so it is loaded from
-`node_modules` at runtime. Add the following to your `webpack.config.js`:
+`node-notifier` finds its bundled binaries relative to its own files, so keep it out
+of the bundle. In webpack:
 
 ```javascript
 externals: {
@@ -572,18 +281,25 @@ externals: {
 }
 ```
 
+## Thanks
+
+`node-notifier` is made possible by
+[`terminal-notifier`](https://github.com/julienXX/terminal-notifier),
+[SnoreToast](https://invent.kde.org/libraries/snoretoast),
+[notifu](http://www.paralint.com/projects/notifu/) and
+[growly](https://github.com/theabraham/growly/).
+
 ## License
 
-This package is licensed using the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
-
-[SnoreToast](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/vendor/snoreToast/LICENSE) and [Notifu](https://raw.githubusercontent.com/mikaelbr/node-notifier/master/vendor/notifu/LICENSE) have licenses in their vendored versions which do not match the MIT license, LGPL-3 and BSD 3-Clause to be specific. We are not lawyers, but have made our best efforts to conform to the terms in those licenses while releasing this package using the license we chose.
-
-The versions, origin and corresponding source of the bundled SnoreToast binaries are listed in [`vendor/snoreToast/README.md`](vendor/snoreToast/README.md).
+[MIT](./LICENSE). The vendored [SnoreToast](./vendor/snoreToast/LICENSE) (LGPL-3),
+[notifu](./vendor/notifu/LICENSE) (BSD 3-Clause) and
+[terminal-notifier](./vendor/terminal-notifier-LICENSE) have their own licenses. See
+[`vendor/snoreToast/README.md`](./vendor/snoreToast/README.md) for the versions and
+source of the bundled SnoreToast binaries.
 
 [npm-url]: https://npmjs.org/package/node-notifier
-[npm-image]: http://img.shields.io/npm/v/node-notifier.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/node-notifier.svg?style=flat
 [size-url]: https://packagephobia.com/result?p=node-notifier
 [size-image]: https://packagephobia.com/badge?p=node-notifier
-[npm-downloads]: http://img.shields.io/npm/dm/node-notifier.svg?style=flat
-[travis-url]: http://travis-ci.org/mikaelbr/node-notifier
-[travis-image]: http://img.shields.io/travis/mikaelbr/node-notifier.svg?style=flat
+[ci-url]: https://github.com/mikaelbr/node-notifier/actions/workflows/test.yml
+[ci-image]: https://github.com/mikaelbr/node-notifier/actions/workflows/test.yml/badge.svg
