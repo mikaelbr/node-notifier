@@ -22,6 +22,8 @@ Internal:
 - Tests import from `vitest` explicitly instead of relying on globals.
 - The bundled `terminal-notifier` is checked against the release checksum in CI (`scripts/vendor-terminal-notifier.sh`).
 
+Thanks to [@Sebastian-Webster](https://github.com/Sebastian-Webster) for the original Apple silicon work in [#441](https://github.com/mikaelbr/node-notifier/pull/441).
+
 ### `v11.0.0`
 
 Even though this is a major version, there are no real breaking changes for most people.
