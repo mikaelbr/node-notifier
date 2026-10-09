@@ -451,6 +451,24 @@ _**Short answer:** update your `appID`._
 If you don't see notifications within WSL2, you might have to change permission of exe vendor files (snoreToast).
 [See issue for more info](https://github.com/mikaelbr/node-notifier/issues/353)
 
+### WSL: Use Linux notifications (`notify-send`)
+
+Under WSL, the default notifier is `WindowsToaster`, which shows the notification in Windows. If you run an X server and a notification daemon and want Linux notifications instead, set `NODE_NOTIFIER_WSL_NOTIFIER=linux`:
+
+```sh
+NODE_NOTIFIER_WSL_NOTIFIER=linux node app.js
+```
+
+The only accepted value is `linux` (lowercase). Any other value keeps the default. The variable only has an effect under WSL, and it is read when `node-notifier` is imported, so set it before the process starts. Setting `process.env` after the import has no effect.
+
+You can also skip the default instance and use `NotifySend` directly:
+
+```js
+import { NotifySend } from 'node-notifier';
+
+new NotifySend().notify({ title: 'Hello', message: 'From WSL' });
+```
+
 ### Use inside tmux session
 
 When using `node-notifier` within a tmux session, it can cause a hang in the system.
