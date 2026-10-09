@@ -408,6 +408,7 @@ notifier.notify(
     wait: false, // Defaults no expire time set. If true expire time of 5 seconds is used
     timeout: 10, // Alias for expire-time, time etc. Time before notify-send expires. Defaults to 10 seconds.
     actions: undefined, // String | Array<String>. Action button label(s). Requires notify-send 0.7.10+
+    transient: false, // Don't keep the notification in the notification list/history (e.g. GNOME Shell)
 
     // .. and other notify-send flags:
     'app-name': 'node-notifier',
