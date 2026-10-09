@@ -63,13 +63,13 @@ function notifyRaw(options, callback) {
   }
 
   if (hasNotifier || this.options.suppressOsdCheck) {
-    doNotification(options, callback);
+    doNotification.call(this, options, callback);
     return this;
   }
 
   try {
     hasNotifier = !!findOnPath(notifier);
-    doNotification(options, callback);
+    doNotification.call(this, options, callback);
   } catch (err) {
     hasNotifier = false;
     return callback(err);
@@ -102,6 +102,10 @@ const allowedArguments = [
 ];
 
 function doNotification(options, callback) {
+  const originalOptions = { ...options };
+  const actions = toActionList(options.actions);
+  delete options.actions;
+
   options = utils.mapToNotifySend(options);
   options.title = options.title || 'Node Notification:';
 
@@ -119,9 +123,58 @@ function doNotification(options, callback) {
       noEscape: true,
       wrapper: ''
     }),
+    // One `--action=NAME=Label` per action, as a single argument so a label
+    // can't be read as an option. notify-send splits on the first `=`, so the
+    // index as NAME keeps labels containing `=` intact, and is what it prints
+    // when the action is chosen.
+    ...actions.map((action, i) => `--action=${i}=${action}`),
     '--',
     ...utils.constructArgumentList({}, { initial, noEscape: true, wrapper: '' })
   ];
 
-  utils.commandWithoutShell(notifier, argsList, callback);
+  if (!actions.length) {
+    utils.commandWithoutShell(notifier, argsList, callback);
+    return;
+  }
+
+  // With actions notify-send waits until an action is chosen, the
+  // notification is closed or `expire-time` has passed.
+  const expireTime = options['expire-time'];
+  const start = Date.now();
+  const actionJackedCallback = utils.actionJackerDecorator(
+    this,
+    originalOptions,
+    callback,
+    (data) => {
+      if (data === 'activate') return 'click';
+      if (data === 'timeout') return 'timeout';
+      return false;
+    }
+  );
+
+  utils.commandWithoutShell(notifier, argsList, (err, stdout) => {
+    if (err instanceof Error) return actionJackedCallback(err, stdout);
+
+    const output = (stdout || '').trim();
+    if (/^\d+$/.test(output) && Number(output) < actions.length) {
+      return actionJackedCallback(err || null, {
+        activationType: 'actionClicked',
+        activationValue: actions[Number(output)]
+      });
+    }
+
+    // notify-send prints "Wait timeout expired" when its own timer runs out,
+    // but the notification daemon may close it at the same moment instead.
+    const timedOut =
+      String(err || '').includes('Wait timeout expired') ||
+      (expireTime > 0 && Date.now() - start >= expireTime);
+    if (timedOut)
+      return actionJackedCallback(null, { activationType: 'timeout' });
+    actionJackedCallback(err || null, { activationType: 'closed' });
+  });
+}
+
+function toActionList(actions) {
+  if (actions === undefined || actions === null) return [];
+  return (Array.isArray(actions) ? actions : [actions]).map(String);
 }

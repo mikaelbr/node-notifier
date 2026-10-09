@@ -77,7 +77,7 @@ notifier.notify(
     message: 'Hello from node, Mr. User!',
     icon: path.join(import.meta.dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons or macOS)
     sound: true, // Only Notification Center or Windows Toasters
-    wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait, notify-send as it does not support the wait option, or macOS without actions or reply
+    wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait, or macOS and notify-send without actions
   },
   function (err, response, metadata) {
     // Response is response from notification
@@ -382,28 +382,44 @@ See full usage on the [project homepage: **`notifu`**](http://www.paralint.com/p
 
 ### Usage: `NotifySend`
 
-**Note:** `notify-send` doesn't support the `wait` flag.
+**Note:** `notify-send` doesn't support the `wait` flag. Only notifications with `actions` wait for the user.
 
 ```javascript
 import { NotifySend } from 'node-notifier';
 
 const notifier = new NotifySend();
 
-notifier.notify({
-  title: 'Foo',
-  message: 'Hello World',
-  icon: path.join(import.meta.dirname, 'coulson.jpg'),
+notifier.notify(
+  {
+    title: 'Foo',
+    message: 'Hello World',
+    icon: path.join(import.meta.dirname, 'coulson.jpg'),
 
-  wait: false, // Defaults no expire time set. If true expire time of 5 seconds is used
-  timeout: 10, // Alias for expire-time, time etc. Time before notify-send expires. Defaults to 10 seconds.
+    wait: false, // Defaults no expire time set. If true expire time of 5 seconds is used
+    timeout: 10, // Alias for expire-time, time etc. Time before notify-send expires. Defaults to 10 seconds.
+    actions: undefined, // String | Array<String>. Action button label(s). Requires notify-send 0.7.10+
 
-  // .. and other notify-send flags:
-  'app-name': 'node-notifier',
-  urgency: undefined,
-  category: undefined,
-  hint: undefined
-});
+    // .. and other notify-send flags:
+    'app-name': 'node-notifier',
+    urgency: undefined,
+    category: undefined,
+    hint: undefined
+  },
+  function (error, response, metadata) {
+    console.log(response, metadata);
+  }
+);
 ```
+
+With `actions`, `notify-send` keeps running until an action is chosen, the
+notification is closed or `timeout` has passed, and then calls the callback. Choosing
+an action emits `click`, and running out of time emits `timeout`. The callback metadata
+contains `activationType` (`actionClicked`, `closed` or `timeout`) and, for actions,
+`activationValue` with the label of the chosen action. See `example/notify-send-actions.js`.
+
+`actions` needs `notify-send` (libnotify) 0.7.10 or newer, for example Ubuntu 24.04 or
+Debian 12, and a notification daemon that supports actions. Older versions of
+`notify-send` fail with an error.
 
 See flags and options on the man page [`notify-send(1)`](http://manpages.ubuntu.com/manpages/gutsy/man1/notify-send.1.html)
 

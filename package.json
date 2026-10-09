@@ -48,6 +48,7 @@
     "example": "node ./example/message.js",
     "example:mac": "node ./example/advanced.js",
     "example:mac:input": "node ./example/macInput.js",
+    "example:linux:actions": "node ./example/notify-send-actions.js",
     "example:windows": "node ./example/toaster.js",
     "example:windows:actions": "node ./example/toaster-with-actions.js",
     "example:windows:custom-path": "cross-env DEBUG=notifier node ./example/toaster-custom-path.js",
