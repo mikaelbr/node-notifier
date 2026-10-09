@@ -96,8 +96,9 @@ function notifyRaw(options, callback) {
 
     if (err && err.code === -1) {
       callback(err, result);
+    } else {
+      callback(null, result);
     }
-    callback(null, result);
 
     // https://github.com/mikaelbr/node-notifier/issues/334
     // Due to an issue with snoretoast not using stdio and pipe

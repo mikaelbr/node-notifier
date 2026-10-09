@@ -136,6 +136,25 @@ describe('WindowsToaster', function () {
       });
     }));
 
+  it('should only call callback once with error if snoretoast fails', () =>
+    new Promise((done) => {
+      utils.fileCommand = function (notifier, argsList, callback) {
+        callback(Object.assign(new Error('failed'), { code: -1 }));
+      };
+      const notifier = new Notify();
+      const calls = [];
+
+      notifier.notify({ message: 'Heya' }, function (err) {
+        calls.push(err);
+      });
+
+      setTimeout(() => {
+        expect(calls).toHaveLength(1);
+        expect(calls[0].message).toBe('failed');
+        done();
+      }, 10);
+    }));
+
   it('should pass only close', () =>
     new Promise((done) => {
       utils.fileCommand = function (notifier, argsList, callback) {
