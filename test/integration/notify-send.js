@@ -47,6 +47,14 @@ describe.runIf(os.type() === 'Linux')('notify-send (integration)', () => {
       body: message
     });
   });
+  it('is accepted by notify-send with transient and hint', async () => {
+    await notify({
+      message: `transient ${crypto.randomUUID()}`,
+      transient: true,
+      hint: 'string:category:test'
+    });
+  });
+
   it('waits for actions and reports when nobody responds', async () => {
     const metadata = await new Promise((resolve, reject) => {
       new NotifySend().notify(

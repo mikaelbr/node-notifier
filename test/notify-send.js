@@ -205,6 +205,76 @@ describe('notify-send', function () {
       notifier.notify({ title: 'title', message: 'body', actions: 'OK' });
     }));
 
+  it('should pass transient as a hint argument', () =>
+    new Promise((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--hint=int:transient:1',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', transient: true });
+    }));
+
+  it('should pass transient alongside a user supplied hint', () =>
+    new Promise((done) => {
+      const expected = [
+        '--hint',
+        'string:x-canonical-private-synchronous:volume',
+        '--expire-time',
+        '10000',
+        '--hint=int:transient:1',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        hint: 'string:x-canonical-private-synchronous:volume',
+        transient: true
+      });
+    }));
+
+  it('should pass transient before -- together with actions', () =>
+    new Promise((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--action=0=OK',
+        '--hint=int:transient:1',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        actions: 'OK',
+        transient: true
+      });
+    }));
+
+  it('should not pass transient by default or when false', () =>
+    new Promise((done) => {
+      const expected = ['--expire-time', '10000', '--', 'title', 'body'];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', transient: false });
+    }));
+
   it('should not pass --wait for wait: true', () =>
     new Promise((done) => {
       const expected = ['--expire-time', '5000', '--', 'title', 'body'];

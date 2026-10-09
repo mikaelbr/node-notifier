@@ -104,7 +104,9 @@ const allowedArguments = [
 function doNotification(options, callback) {
   const originalOptions = { ...options };
   const actions = toActionList(options.actions);
+  const transient = options.transient === true;
   delete options.actions;
+  delete options.transient;
 
   options = utils.mapToNotifySend(options);
   options.title = options.title || 'Node Notification:';
@@ -128,6 +130,9 @@ function doNotification(options, callback) {
     // index as NAME keeps labels containing `=` intact, and is what it prints
     // when the action is chosen.
     ...actions.map((action, i) => `--action=${i}=${action}`),
+    // Its own `--hint` argument, so it works alongside a user supplied `hint`.
+    // Transient notifications aren't kept in the notification list (GNOME).
+    ...(transient ? ['--hint=int:transient:1'] : []),
     '--',
     ...utils.constructArgumentList({}, { initial, noEscape: true, wrapper: '' })
   ];

@@ -18,6 +18,7 @@ Breaking changes:
 Features:
 
 - Linux: adds `actions` to `NotifySend`, using the action buttons in `notify-send` (libnotify) 0.7.10+ ([#445](https://github.com/mikaelbr/node-notifier/pull/445)). The notification waits for the user, choosing an action emits `click` with the label as `metadata.activationValue`, and running out of time emits `timeout`, the same as macOS.
+- Linux: adds `transient` to `NotifySend`. `transient: true` passes `--hint=int:transient:1`, so the notification isn't kept in the notification list (e.g. GNOME Shell), and can be combined with `hint` ([#188](https://github.com/mikaelbr/node-notifier/issues/188)).
 
 Fixes:
 
