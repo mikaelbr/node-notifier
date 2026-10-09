@@ -15,14 +15,19 @@ Breaking changes:
   - Metadata no longer has `deliveredAt`/`activationAt`.
   - macOS asks for notification permission again.
 
+Fixes:
+
+- Windows: updates the bundled 64-bit SnoreToast to 0.9.1, so clicks and action buttons are reported back when using a custom `appID` ([#326](https://github.com/mikaelbr/node-notifier/issues/326), [#332](https://github.com/mikaelbr/node-notifier/issues/332), [#375](https://github.com/mikaelbr/node-notifier/pull/375)). The binary is KDE's own build of the official release. The 32-bit binary stays on 0.7.0, as KDE publishes no 32-bit build. Note that the new binary is not code-signed.
+
 Internal:
 
 - Notifiers are now classes extending `EventEmitter` (they can still be called without `new`).
 - Uses a `files` allowlist instead of `.npmignore`, and drops the outdated `nexe` example build scripts.
 - Tests import from `vitest` explicitly instead of relying on globals.
 - The bundled `terminal-notifier` is checked against the release checksum in CI (`scripts/vendor-terminal-notifier.sh`).
+- The bundled 64-bit SnoreToast is checked against KDE's build checksum in CI (`scripts/vendor-snoretoast.sh`).
 
-Thanks to [@Sebastian-Webster](https://github.com/Sebastian-Webster) for the original Apple silicon work in [#441](https://github.com/mikaelbr/node-notifier/pull/441).
+Thanks to [@Sebastian-Webster](https://github.com/Sebastian-Webster) for the original Apple silicon work in [#441](https://github.com/mikaelbr/node-notifier/pull/441), and to [@DuBistKomisch](https://github.com/DuBistKomisch) for finding and fixing the SnoreToast `appID` issue in [#375](https://github.com/mikaelbr/node-notifier/pull/375) and upstream.
 
 ### `v11.0.0`
 
