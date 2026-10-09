@@ -10,8 +10,8 @@ nc.notify(
     message: 'Are they cool?',
     sound: 'Funk',
     // case sensitive
-    closeLabel: 'Absolutely not',
-    actions: trueAnswer
+    actions: [trueAnswer, 'Absolutely not'],
+    timeout: 30
   },
   (err, response, metadata) => {
     if (err) throw err;
@@ -27,7 +27,8 @@ nc.notify(
         message: 'Do you want to reply to them?',
         sound: 'Funk',
         // case sensitive
-        reply: true
+        reply: true,
+        timeout: 30
       },
       (err, response, metadata) => {
         if (err) throw err;

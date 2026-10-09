@@ -13,7 +13,7 @@ const notifier = path.join(
 );
 
 const errorMessageOsX =
-  'You need Mac OS X 10.8 or above to use NotificationCenter,' +
+  'You need macOS 10.14 or above to use NotificationCenter,' +
   ' or use Growl fallback with constructor option {withFallback: true}.';
 
 class NotificationCenter extends EventEmitter {
@@ -94,23 +94,34 @@ function notifyRaw(options, callback) {
     return this;
   }
 
-  const argsList = utils.constructArgumentList(options);
-  if (utils.isMountainLion()) {
+  const argsList = constructArgumentList(options);
+  if (utils.isMojaveOrLater()) {
     let finished = false;
     let cleared = false;
     const clear = () => {
       cleared = true;
       child.kill();
     };
-    const child = utils.fileCommandJson(
+    const child = utils.fileCommand(
       this.options.customPath || notifier,
       argsList,
-      (err, data) => {
+      (err, stdout) => {
         finished = true;
         this._activeNotifications.delete(clear);
         // Being killed by clearAll is expected, not an error.
         if (cleared) return actionJackedCallback(null);
-        actionJackedCallback(err, data);
+
+        const output = (stdout || '').trim();
+        // terminal-notifier exits with 6 when nobody responded in time.
+        if (err?.code === 6 && output === '@TIMEOUT') err = null;
+        if (err instanceof Error) return actionJackedCallback(err, stdout);
+
+        // Otherwise `err` holds any warnings terminal-notifier wrote to stderr.
+        const response =
+          options.list || options.remove
+            ? stdout
+            : parseResponse(output, options);
+        actionJackedCallback(err || null, response);
       }
     );
     if (child && !finished) this._activeNotifications.add(clear);
@@ -123,4 +134,31 @@ function notifyRaw(options, callback) {
 
   callback(new Error(errorMessageOsX));
   return this;
+}
+
+// Action titles are read by terminal-notifier straight from argv, so unlike the
+// other values they can't be quoted. One `-action` per title, since it splits
+// each value on commas.
+function constructArgumentList(options) {
+  const { actions, ...rest } = options;
+  const args = utils.constructArgumentList(rest);
+  for (const action of actions || []) args.push('-action', String(action));
+  return args;
+}
+
+// terminal-notifier prints a single line for actions and reply: the chosen
+// action title, the reply text, or one of the @-markers below. Map it to the
+// metadata shape earlier versions emitted as JSON.
+function parseResponse(output, options) {
+  if (!output) return {};
+  if (output === '@TIMEOUT') return { activationType: 'timeout' };
+  if (output === '@CLOSED') return { activationType: 'closed' };
+  if (output === '@ACTIONCLICKED') return { activationType: 'contentsClicked' };
+  if (options.actions?.includes(output)) {
+    return { activationType: 'actionClicked', activationValue: output };
+  }
+  if (options.reply !== undefined) {
+    return { activationType: 'replied', activationValue: output };
+  }
+  return {};
 }

@@ -32,15 +32,15 @@ describe.runIf(os.type() === 'Darwin' && hasNotificationCenter())(
       expect(metadata).toEqual({});
     });
 
-    it('reports delivery and timeout back from Notification Center', async () => {
+    it('reports a timeout when nobody responds to an action', async () => {
       const { response, metadata } = await notify({
         title: 'node-notifier',
         message: 'integration test (timeout)',
+        actions: ['OK'],
         timeout: 1
       });
       expect(response).toBe('timeout');
-      expect(metadata.activationType).toBe('timeout');
-      expect(metadata.deliveredAt).toEqual(expect.any(String));
+      expect(metadata).toEqual({ activationType: 'timeout' });
     });
   }
 );

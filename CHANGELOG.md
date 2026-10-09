@@ -7,6 +7,13 @@ Breaking changes:
 
 - `node-notifier` is now ES modules only (`"type": "module"`). Use `import notifier from 'node-notifier'`, or named exports like `import { notify, NotificationCenter } from 'node-notifier'`. `require('node-notifier')` keeps working through Node's `require(esm)` and returns the same notifier instance as before, and `require('node-notifier/notifiers/<name>')` still returns the notifier class.
 - The package now has an `exports` map. Only the root and `node-notifier/notifiers/*` can be imported; internal files such as `node-notifier/lib/utils` are no longer reachable.
+- `NotificationCenter` now bundles the official [`terminal-notifier` 3.0.0](https://github.com/julienXX/terminal-notifier/releases/tag/3.0.0), a universal binary that runs natively on Apple silicon and no longer needs Rosetta ([#361](https://github.com/mikaelbr/node-notifier/issues/361), based on [#441](https://github.com/mikaelbr/node-notifier/pull/441)). This changes macOS behaviour:
+  - Requires macOS 10.14 or later. Older versions fall back to Growl with `withFallback: true`.
+  - Only notifications with `actions` or `reply` wait for the user. Other notifications call back right away, without `click` or `timeout` events, and `wait`/`timeout` have no effect on them.
+  - `icon`, `sender`, `closeLabel` and `dropdownLabel` are no longer supported and are ignored. Multiple `actions` are shown as buttons instead of a dropdown.
+  - `contentImage` only accepts local files.
+  - Callback metadata only contains `activationType` and `activationValue`; `deliveredAt` and `activationAt` are gone.
+  - macOS asks for notification permission again, as the bundle identifier changed to `fr.julienxx.oss.terminal-notifier`.
 
 Internal:
 

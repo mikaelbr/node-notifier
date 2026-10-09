@@ -24,3 +24,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - run: pnpm test
+
+  vendor:
+    name: Verify vendored terminal-notifier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/vendor-terminal-notifier.sh --check

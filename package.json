@@ -4,7 +4,7 @@
   "description": "A Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
   "keywords": [
     "notification center",
-    "mac os x 10.8",
+    "macos",
     "notify",
     "terminal-notifier",
     "notify-send",

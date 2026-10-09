@@ -42,7 +42,7 @@ jobs:
           sleep 2
           pgrep -fl NotificationCenter || echo "NotificationCenter not running"
           # The first notification after startup is slow and can emit stray output, so warm it up
-          ./vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier -title warmup -message warmup -timeout 1 -json true || true
+          ./vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier -title warmup -message warmup || true
 
       - name: Run integration tests (macOS, Windows)
         if: runner.os != 'Linux'
