@@ -6,6 +6,7 @@
   "scripts": {
     "pretest": "pnpm run lint",
     "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.mjs",
     "example": "node ./example/message.js",
     "example:mac": "node ./example/advanced.js",
     "example:mac:input": "node ./example/macInput.js",
