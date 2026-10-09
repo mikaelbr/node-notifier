@@ -4,7 +4,7 @@
   "description": "A Node.js module for sending notifications on native Mac, Windows (post and pre 8) and Linux (or Growl as fallback)",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm run lint",
+    "pretest": "pnpm run lint",
     "test": "jest",
     "example": "node ./example/message.js",
     "example:mac": "node ./example/advanced.js",
@@ -14,7 +14,7 @@
     "example:windows:custom-path": "cross-env DEBUG=notifier node ./example/toaster-custom-path.js",
     "copy-resources": "copyfiles -u 2 ./vendor/snoreToast/snoretoast-x64.exe ./dist/example/resources/ && copyfiles -u 1 ./example/coulson.jpg ./dist/example/resources/",
     "preexample:windows:nexe-custom-path": "rimraf dist",
-    "example:windows:nexe-custom-path": "nexe -t windows-x64-14.15.3 -i ./example/toaster-custom-path.js -o ./dist/toaster-custom-path.exe && npm run copy-resources",
+    "example:windows:nexe-custom-path": "nexe -t windows-x64-14.15.3 -i ./example/toaster-custom-path.js -o ./dist/toaster-custom-path.exe && pnpm run copy-resources",
     "postexample:windows:nexe-custom-path": "cross-env DEBUG=notifier ./dist/toaster-custom-path.exe",
     "lint": "eslint example/*.js lib/*.js notifiers/*.js test/**/*.js index.js",
     "prepare": "husky install"
@@ -80,5 +80,6 @@
   "directories": {
     "example": "example",
     "test": "test"
-  }
+  },
+  "packageManager": "pnpm@12.10.1+sha512.ba40a37eb1a370d60fea8c4cf1d364c13bcccef518e98ad2bcee954f539d38da37458e58261a3fa55e06523450ea0ffff9f497b135be41f2c15c1642bacace6c"
 }

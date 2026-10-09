@@ -16,7 +16,6 @@ node-notifier debug info (fileCommandJson):
 [notifier options] -message "Hello" -timeout "5" -json "true"
 ```
 
-
 ## Building
 
 Fork, then clone the repo:
@@ -25,22 +24,23 @@ Fork, then clone the repo:
 git clone https://github.com/your-username/node-notifier.git
 ```
 
-Install dependencies:
+Install dependencies (the repo uses pnpm via [Corepack](https://github.com/nodejs/corepack)):
 
 ```shell
-npm install
+corepack enable
+pnpm install
 ```
 
 Make sure the tests pass:
 
 ```shell
-npm test
+pnpm test
 ```
 
 Make your change. Add tests for your change. Make the tests pass:
 
 ```shell
-npm test
+pnpm test
 ```
 
 Push to your fork and [submit a pull request][pr].
