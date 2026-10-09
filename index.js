@@ -17,7 +17,11 @@ function selectNotifier() {
     case 'Windows_NT':
       return utils.isLessThanWin8() ? WindowsBalloon : WindowsToaster;
     case 'WSL':
-      return WindowsToaster;
+      // Opt in to the Linux notifier, e.g. when running an X server
+      // with a notification daemon. Read once, when this module loads.
+      return process.env.NODE_NOTIFIER_WSL_NOTIFIER === 'linux'
+        ? NotifySend
+        : WindowsToaster;
     default:
       return /BSD$/.test(os.type()) ? NotifySend : Growl;
   }
