@@ -11,8 +11,6 @@ nc.notify(
     message: "If I come out, will you shoot me? 'Cause then I won't come out.",
     sound: 'Funk',
     // case sensitive
-    wait: true,
-    icon: image,
     contentImage: image,
     open: `file://${image}`
   },

@@ -48,14 +48,8 @@ describe('utils', function () {
       ).toEqual(expected);
     });
 
-    it('should map icon for notification center', function () {
-      const expected = {
-        title: 'Foo',
-        message: 'Bar',
-        appIcon: 'foobar',
-        timeout: 10,
-        json: true
-      };
+    it('should drop icon for notification center', function () {
+      const expected = { title: 'Foo', message: 'Bar' };
 
       expect(
         _.mapToMac({ title: 'Foo', message: 'Bar', icon: 'foobar' })

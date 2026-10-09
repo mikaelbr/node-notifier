@@ -34,7 +34,7 @@ notifier.notify({
 
 ## Requirements
 
-- **macOS**: >= 10.8 for native notifications, or Growl if earlier.
+- **macOS**: >= 10.14 for native notifications, or Growl if earlier.
 - **Linux**: `notify-osd` or `libnotify-bin` installed (Ubuntu should have this by default)
 - **Windows**: >= 8, or task bar balloons for Windows < 8. Growl as fallback. Growl takes precedence over Windows balloons.
 - **General Fallback**: Growl
@@ -75,13 +75,13 @@ notifier.notify(
   {
     title: 'My awesome title',
     message: 'Hello from node, Mr. User!',
-    icon: path.join(import.meta.dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
+    icon: path.join(import.meta.dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons or macOS)
     sound: true, // Only Notification Center or Windows Toasters
-    wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
+    wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait, notify-send as it does not support the wait option, or macOS without actions or reply
   },
   function (err, response, metadata) {
     // Response is response from notification
-    // Metadata contains activationType, activationAt, deliveredAt
+    // Metadata contains activationType, and activationValue for actions or replies
   }
 );
 
@@ -143,7 +143,7 @@ new nn.Growl(options).notify(options);
 
 Same usage and parameter setup as [**`terminal-notifier`**](https://github.com/julienXX/terminal-notifier).
 
-Native Notification Center requires macOS version 10.8 or higher. If you have
+Native Notification Center requires macOS version 10.14 or higher. If you have
 an earlier version, Growl will be the fallback. If Growl isn't installed, an
 error will be returned in the callback.
 
@@ -167,7 +167,7 @@ but they aren't documented.
 import { NotificationCenter } from 'node-notifier';
 
 const notifier = new NotificationCenter({
-  withFallback: false, // Use Growl Fallback if <= 10.8
+  withFallback: false, // Use Growl Fallback if < 10.14
   customPath: undefined // Relative/Absolute path to binary if you want to use your own fork of terminal-notifier
 });
 
@@ -177,17 +177,15 @@ notifier.notify(
     subtitle: undefined,
     message: undefined,
     sound: false, // Case Sensitive string for location of sound file, or use one of macOS' native sounds (see below)
-    icon: 'Terminal Icon', // Absolute Path to Triggering Icon
-    contentImage: undefined, // Absolute Path to Attached Image (Content Image)
+    contentImage: undefined, // Absolute Path to Attached Image (Content Image). Local files only
     open: undefined, // URL to open on Click
-    wait: false, // Wait for User Action against Notification or times out. Same as timeout = 5 seconds
+    group: undefined, // String. Notifications with the same group replace each other
 
-    // New in latest version. See `example/macInput.js` for usage
-    timeout: 5, // Takes precedence over wait if both are defined.
-    closeLabel: undefined, // String. Label for cancel button
-    actions: undefined, // String | Array<String>. Action label or list of labels in case of dropdown
-    dropdownLabel: undefined, // String. Label to be used if multiple actions
-    reply: false // Boolean. If notification should take input. Value passed as third argument in callback and event emitter.
+    // See `example/macInput.js` for usage
+    actions: undefined, // String | Array<String>. Action button label(s)
+    reply: false, // Boolean | String. Adds a text field, a string is used as placeholder. Value passed as third argument in callback and event emitter.
+    wait: false, // Same as timeout = 5 seconds
+    timeout: 10 // Seconds to wait for a response to actions or reply. Takes precedence over wait if both are defined.
   },
   function (error, response, metadata) {
     console.log(response, metadata);
@@ -197,13 +195,18 @@ notifier.notify(
 
 ---
 
-**Note:** The `wait` option is shorthand for `timeout: 5`. This just sets a timeout
-for 5 seconds. It does _not_ make the notification sticky!
+**Note:** Only notifications with `actions` or `reply` wait for the user. Other
+notifications are sent and the callback is called right away, so `click` and
+`timeout` events are only emitted for notifications with `actions` or `reply`.
+Clicking the notification itself is reported as a `click`, unless `open`,
+`execute` or `activate` is set, in which case that is run instead.
 
-As of Version 6.0 there is a default `timeout` set of `10` to ensure that the application closes properly. In order to remove the `timeout` and have an instantly closing notification (does not support actions), set `timeout` to `false`. If you are using `action` it is recommended to set `timeout` to a high value to ensure the user has time to respond.
+For those notifications `timeout` (default `10`) is how many seconds to wait for a
+response before the notification is withdrawn and `timeout` is reported. `wait` is
+shorthand for `timeout: 5`. Set `timeout` to `false` to wait until the user responds.
 
-_Exception:_ If `reply` is defined, it's recommended to set `timeout` to a either
-high value, or to nothing at all.
+The callback metadata contains `activationType` (`contentsClicked`, `actionClicked`,
+`replied`, `closed` or `timeout`) and, for actions and replies, `activationValue`.
 
 While a notification waits for its timeout, the `terminal-notifier` process keeps
 your application running. Call `clearAll()` to stop waiting on every notification
@@ -221,7 +224,8 @@ and does not affect notifications sent through the Growl fallback.
 
 ---
 
-**For macOS notifications: `icon`, `contentImage`, and all forms of `reply`/`actions` require macOS 10.9.**
+**For macOS notifications: `icon`, `sender`, `closeLabel` and `dropdownLabel` are
+not supported by `terminal-notifier` 3 and are ignored.** See [custom icon](#macos-custom-icon-without-terminal-icon).
 
 Sound can be one of these: `Basso`, `Blow`, `Bottle`, `Frog`, `Funk`, `Glass`,
 `Hero`, `Morse`, `Ping`, `Pop`, `Purr`, `Sosumi`, `Submarine`, `Tink`.
@@ -243,6 +247,17 @@ If `sound` is simply `true`, `Bottle` is used.
 fork/custom version of **`terminal-notifier`**.
 
 **Example:** `./vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier`
+
+**Bundled `terminal-notifier`**
+
+The bundled `terminal-notifier.app` is the unmodified official
+[`terminal-notifier` 3.0.0 release](https://github.com/julienXX/terminal-notifier/releases/tag/3.0.0),
+a universal binary for Intel and Apple silicon. CI checks it against the release's
+pinned SHA-256 checksum with `./scripts/vendor-terminal-notifier.sh --check`, and the
+same script is used to update it.
+
+Notification permission is granted per app, so macOS asks for it again the first
+time `terminal-notifier` 3 sends a notification.
 
 **Spotlight clarification**
 
@@ -438,8 +453,10 @@ This is the way notifications on macOS work. They always show the icon of the
 parent application initiating the notification. For `node-notifier`, `terminal-notifier`
 is the initiator, and it has the Terminal icon defined as its icon.
 
-To define your custom icon, you need to fork `terminal-notifier` and build your
-custom version with your icon.
+To use a custom icon, build a copy of `terminal-notifier` with your icon
+(`make icon ICON=logo.png APP_NAME=my-tool` in the
+[`terminal-notifier`](https://github.com/julienXX/terminal-notifier) repository) and
+point `customPath` to it.
 
 See [Issue #71 for more info](https://github.com/mikaelbr/node-notifier/issues/71)
 <https://github.com/mikaelbr/node-notifier/issues/71>.

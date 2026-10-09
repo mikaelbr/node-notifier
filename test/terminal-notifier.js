@@ -8,22 +8,22 @@ import fs from 'node:fs';
 import * as testUtils from './_test-utils.js';
 
 let notifier = null;
-const originalUtils = utils.fileCommandJson;
-const originalMacVersion = utils.isMountainLion;
+const originalUtils = utils.fileCommand;
+const originalMacVersion = utils.isMojaveOrLater;
 const originalType = os.type;
 
 describe('Mac fallback', function () {
-  const original = utils.isMountainLion;
+  const original = utils.isMojaveOrLater;
   const originalMac = utils.isMac;
 
   afterEach(function () {
-    utils.isMountainLion = original;
+    utils.isMojaveOrLater = original;
     utils.isMac = originalMac;
   });
 
-  it('should default to Growl notification if older Mac OSX than 10.8', () =>
+  it('should default to Growl notification if older macOS than 10.14', () =>
     new Promise((done) => {
-      utils.isMountainLion = function () {
+      utils.isMojaveOrLater = function () {
         return false;
       };
       utils.isMac = function () {
@@ -38,7 +38,7 @@ describe('Mac fallback', function () {
 
   it('should not fallback to Growl notification if withFallback is false', () =>
     new Promise((done) => {
-      utils.isMountainLion = function () {
+      utils.isMojaveOrLater = function () {
         return false;
       };
       utils.isMac = function () {
@@ -59,7 +59,7 @@ describe('terminal-notifier', function () {
       return 'Darwin';
     };
 
-    utils.isMountainLion = function () {
+    utils.isMojaveOrLater = function () {
       return true;
     };
   });
@@ -70,7 +70,7 @@ describe('terminal-notifier', function () {
 
   afterEach(function () {
     os.type = originalType;
-    utils.isMountainLion = originalMacVersion;
+    utils.isMojaveOrLater = originalMacVersion;
   });
 
   // Simulate async operation, move to end of message queue.
@@ -85,13 +85,13 @@ describe('terminal-notifier', function () {
 
   describe('#notify()', function () {
     beforeEach(function () {
-      utils.fileCommandJson = asyncify(function (n, o, cb) {
+      utils.fileCommand = asyncify(function (n, o, cb) {
         cb(null, '');
       });
     });
 
     afterEach(function () {
-      utils.fileCommandJson = originalUtils;
+      utils.fileCommand = originalUtils;
     });
 
     it('should notify with a message', () =>
@@ -114,7 +114,7 @@ describe('terminal-notifier', function () {
 
     it('should be able to list all notifications', () =>
       new Promise((done) => {
-        utils.fileCommandJson = asyncify(function (n, o, cb) {
+        utils.fileCommand = asyncify(function (n, o, cb) {
           cb(
             null,
             fs
@@ -133,7 +133,7 @@ describe('terminal-notifier', function () {
 
     it('should be able to remove all messages', () =>
       new Promise((done) => {
-        utils.fileCommandJson = asyncify(function (n, o, cb) {
+        utils.fileCommand = asyncify(function (n, o, cb) {
           cb(
             null,
             fs
@@ -147,7 +147,7 @@ describe('terminal-notifier', function () {
         notifier.notify({ remove: 'ALL' }, function (_, response) {
           expect(response).toBeTruthy();
 
-          utils.fileCommandJson = asyncify(function (n, o, cb) {
+          utils.fileCommand = asyncify(function (n, o, cb) {
             cb(null, '');
           });
 
@@ -163,15 +163,15 @@ describe('terminal-notifier', function () {
     let original;
 
     beforeEach(function () {
-      original = utils.fileCommandJson;
+      original = utils.fileCommand;
     });
 
     afterEach(function () {
-      utils.fileCommandJson = original;
+      utils.fileCommand = original;
     });
 
     function expectArgsListToBe(expected, done) {
-      utils.fileCommandJson = asyncify(function (notifier, argsList, callback) {
+      utils.fileCommand = asyncify(function (notifier, argsList, callback) {
         expect(argsList).toEqual(expected);
         callback();
         done();
@@ -186,11 +186,7 @@ describe('terminal-notifier', function () {
           '-message',
           '"body"',
           '-tullball',
-          '"notValid"',
-          '-timeout',
-          '"10"',
-          '-json',
-          '"true"'
+          '"notValid"'
         ];
 
         expectArgsListToBe(expected, done);
@@ -207,16 +203,12 @@ describe('terminal-notifier', function () {
 
     it('should validate and transform sound to default sound if Windows sound is selected', () =>
       new Promise((done) => {
-        utils.fileCommandJson = asyncify(
-          function (notifier, argsList, callback) {
-            expect(testUtils.getOptionValue(argsList, '-title')).toBe('"Heya"');
-            expect(testUtils.getOptionValue(argsList, '-sound')).toBe(
-              '"Bottle"'
-            );
-            callback();
-            done();
-          }
-        );
+        utils.fileCommand = asyncify(function (notifier, argsList, callback) {
+          expect(testUtils.getOptionValue(argsList, '-title')).toBe('"Heya"');
+          expect(testUtils.getOptionValue(argsList, '-sound')).toBe('"Bottle"');
+          callback();
+          done();
+        });
         const notifier = new NotificationCenter();
         notifier.notify({
           title: 'Heya',
@@ -225,19 +217,21 @@ describe('terminal-notifier', function () {
         });
       }));
 
-    it('should convert list of actions to flat list', () =>
+    it('should pass each action unquoted as its own argument', () =>
       new Promise((done) => {
         const expected = [
           '-title',
           '"title \\"message\\""',
           '-message',
           '"body \\"message\\""',
-          '-actions',
-          '"foo","bar","baz \\"foo\\" bar"',
           '-timeout',
           '"10"',
-          '-json',
-          '"true"'
+          '-action',
+          'foo',
+          '-action',
+          'bar',
+          '-action',
+          'baz "foo" bar'
         ];
 
         expectArgsListToBe(expected, done);
@@ -259,18 +253,20 @@ describe('terminal-notifier', function () {
           '"Title"',
           '-message',
           '"Message"',
+          '-reply',
+          '""',
           '-timeout',
-          '"5"',
-          '-json',
-          '"true"'
+          '"5"'
         ];
 
         expectArgsListToBe(expected, done);
         const notifier = new NotificationCenter();
-        notifier.isNotifyChecked = true;
-        notifier.hasNotifier = true;
-
-        notifier.notify({ title: 'Title', message: 'Message', wait: true });
+        notifier.notify({
+          title: 'Title',
+          message: 'Message',
+          reply: true,
+          wait: true
+        });
       }));
 
     it('should let timeout set precedence over wait', () =>
@@ -280,20 +276,18 @@ describe('terminal-notifier', function () {
           '"Title"',
           '-message',
           '"Message"',
+          '-reply',
+          '""',
           '-timeout',
-          '"10"',
-          '-json',
-          '"true"'
+          '"10"'
         ];
 
         expectArgsListToBe(expected, done);
         const notifier = new NotificationCenter();
-        notifier.isNotifyChecked = true;
-        notifier.hasNotifier = true;
-
         notifier.notify({
           title: 'Title',
           message: 'Message',
+          reply: true,
           wait: true,
           timeout: 10
         });
@@ -306,19 +300,60 @@ describe('terminal-notifier', function () {
           '"Title"',
           '-message',
           '"Message"',
-          '-json',
-          '"true"'
+          '-action',
+          'OK'
         ];
 
         expectArgsListToBe(expected, done);
         const notifier = new NotificationCenter();
-        notifier.isNotifyChecked = true;
-        notifier.hasNotifier = true;
-
         notifier.notify({
           title: 'Title',
           message: 'Message',
+          actions: 'OK',
           timeout: false
+        });
+      }));
+
+    it('should not pass a timeout without actions or reply', () =>
+      new Promise((done) => {
+        const expected = ['-title', '"Title"', '-message', '"Message"'];
+
+        expectArgsListToBe(expected, done);
+        const notifier = new NotificationCenter();
+        notifier.notify({
+          title: 'Title',
+          message: 'Message',
+          wait: true,
+          timeout: 30
+        });
+      }));
+
+    it('should pass reply placeholder as is', () =>
+      new Promise((done) => {
+        const expected = ['-message', '"Message"', '-reply', '"Say hi"'];
+
+        expectArgsListToBe(expected, done);
+        const notifier = new NotificationCenter();
+        notifier.notify({
+          message: 'Message',
+          reply: 'Say hi',
+          timeout: false
+        });
+      }));
+
+    it('should drop options terminal-notifier no longer supports', () =>
+      new Promise((done) => {
+        const expected = ['-message', '"Message"'];
+
+        expectArgsListToBe(expected, done);
+        const notifier = new NotificationCenter();
+        notifier.notify({
+          message: 'Message',
+          icon: '/tmp/icon.png',
+          appIcon: '/tmp/icon.png',
+          sender: 'com.apple.Terminal',
+          closeLabel: 'Close',
+          dropdownLabel: 'Choose'
         });
       }));
 
@@ -330,11 +365,7 @@ describe('terminal-notifier', function () {
           '-message',
           '"body \\"message\\""',
           '-tullball',
-          '"notValid"',
-          '-timeout',
-          '"10"',
-          '-json',
-          '"true"'
+          '"notValid"'
         ];
 
         expectArgsListToBe(expected, done);
@@ -348,6 +379,120 @@ describe('terminal-notifier', function () {
           tullball: 'notValid'
         });
       }));
+  });
+
+  describe('responses', function () {
+    afterEach(function () {
+      utils.fileCommand = originalUtils;
+    });
+
+    function respond(options, err, stdout) {
+      utils.fileCommand = asyncify(function (n, o, cb) {
+        cb(err, stdout);
+      });
+      const events = [];
+      const notifier = new NotificationCenter();
+      for (const event of ['click', 'timeout', 'replied']) {
+        notifier.on(event, () => events.push(event));
+      }
+      return new Promise((resolve) => {
+        notifier.notify(options, (err, response, metadata) =>
+          resolve({ err, response, metadata, events })
+        );
+      });
+    }
+
+    it('should report the chosen action', async function () {
+      const result = await respond(
+        { message: 'Hi', actions: ['Yes', 'No'] },
+        '',
+        'No\n'
+      );
+      expect(result.err).toBeNull();
+      expect(result.response).toBe('activate');
+      expect(result.metadata).toEqual({
+        activationType: 'actionClicked',
+        activationValue: 'No'
+      });
+      expect(result.events).toEqual(['click']);
+    });
+
+    it('should report a click on the notification body', async function () {
+      const result = await respond(
+        { message: 'Hi', actions: ['Yes'] },
+        '',
+        '@ACTIONCLICKED\n'
+      );
+      expect(result.metadata).toEqual({ activationType: 'contentsClicked' });
+      expect(result.events).toEqual(['click']);
+    });
+
+    it('should report a reply', async function () {
+      const result = await respond(
+        { message: 'Hi', reply: true },
+        '',
+        'Hello there\n'
+      );
+      expect(result.response).toBe('replied');
+      expect(result.metadata).toEqual({
+        activationType: 'replied',
+        activationValue: 'Hello there'
+      });
+      expect(result.events).toEqual(['replied']);
+    });
+
+    it('should report a closed notification', async function () {
+      const result = await respond(
+        { message: 'Hi', reply: true },
+        '',
+        '@CLOSED\n'
+      );
+      expect(result.response).toBe('closed');
+      expect(result.metadata).toEqual({ activationType: 'closed' });
+      expect(result.events).toEqual([]);
+    });
+
+    it('should report a timeout without an error', async function () {
+      const error = Object.assign(new Error('Command failed'), { code: 6 });
+      const result = await respond(
+        { message: 'Hi', actions: ['OK'], timeout: 1 },
+        error,
+        '@TIMEOUT\n'
+      );
+      expect(result.err).toBeNull();
+      expect(result.response).toBe('timeout');
+      expect(result.metadata).toEqual({ activationType: 'timeout' });
+      expect(result.events).toEqual(['timeout']);
+    });
+
+    it('should reject action titles that look like flags', async function () {
+      const spawned = vi.fn();
+      utils.fileCommand = spawned;
+      const result = await new Promise((resolve) =>
+        new NotificationCenter().notify(
+          { message: 'Hi', actions: ['OK', '-help'] },
+          (err) => resolve(err)
+        )
+      );
+      expect(result).toBeInstanceOf(Error);
+      expect(spawned).not.toHaveBeenCalled();
+    });
+
+    it('should pass other failures as errors', async function () {
+      const error = Object.assign(new Error('Command failed'), { code: 3 });
+      const result = await respond({ message: 'Hi' }, error, '');
+      expect(result.err).toBe(error);
+    });
+
+    it('should pass warnings from stderr along with the response', async function () {
+      const result = await respond(
+        { message: 'Hi', contentImage: 'https://example.com/a.png' },
+        '[!] -contentImage only accepts local file paths.\n',
+        ''
+      );
+      expect(result.err).toMatch(/contentImage/);
+      expect(result.metadata).toEqual({});
+    });
   });
 
   describe('#clearAll()', function () {
@@ -370,7 +515,7 @@ describe('terminal-notifier', function () {
           if (!p.running) return;
           p.running = false;
           setTimeout(function () {
-            cb(err || null, data || {});
+            cb(err || null, data || '');
           }, 0);
         }
       };
@@ -379,7 +524,7 @@ describe('terminal-notifier', function () {
 
     beforeEach(function () {
       processes = [];
-      utils.fileCommandJson = function (n, o, cb) {
+      utils.fileCommand = function (n, o, cb) {
         const p = fakeProcess(cb);
         processes.push(p);
         return p;
@@ -387,7 +532,7 @@ describe('terminal-notifier', function () {
     });
 
     afterEach(function () {
-      utils.fileCommandJson = originalUtils;
+      utils.fileCommand = originalUtils;
     });
 
     function tick() {
@@ -461,7 +606,7 @@ describe('terminal-notifier', function () {
     });
 
     it('should stop a real waiting process', async function () {
-      utils.fileCommandJson = originalUtils;
+      utils.fileCommand = originalUtils;
       const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'node-notifier-'));
       const script = path.join(dir, 'terminal-notifier');
       fs.writeFileSync(script, '#!/bin/sh\nexec sleep 30\n', { mode: 0o755 });
