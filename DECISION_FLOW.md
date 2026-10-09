@@ -16,3 +16,7 @@ active).
 See flow chart to see how the reporter is chosen.
 
 ![Flow Chart](./node-notifier_flow.png)
+
+Under WSL, Windows Toaster is used, unless the environment
+variable `NODE_NOTIFIER_WSL_NOTIFIER=linux` is set, in which
+case notify-send is used.

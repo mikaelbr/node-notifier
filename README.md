@@ -315,6 +315,7 @@ notifier.notify(
     id: undefined, // Number. ID to use for closing notification.
     appID: undefined, // String. App.ID and app Name. Defaults to no value, causing SnoreToast text to be visible.
     remove: undefined, // Number. Refer to previously created notification to close.
+    duration: undefined, // 'short' (~7s, default) | 'long' (~25s). How long the toast stays on screen. x64 only with the bundled binary.
     install: undefined, // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
     application: undefined // String. Absolute path to an executable to start when the notification is clicked and node-notifier is no longer listening (e.g. from the action center).
   },
@@ -323,6 +324,14 @@ notifier.notify(
   }
 );
 ```
+
+**Note:** `wait` and `timeout` don't change how long a Windows toast stays on
+screen. Use `duration` instead: Windows only offers `'short'` (about 7 seconds)
+or `'long'` (about 25 seconds), and the user's own Windows settings can change
+this. A toast can't stay on screen indefinitely. After it hides it is still
+listed in the Action Center. `duration` is x64 only with the bundled binary, as
+the bundled 32-bit SnoreToast (0.7.0) lacks `-d`. On other architectures it is
+dropped, unless you set `customPath` to a SnoreToast 0.8.0 or newer.
 
 ### Usage: `Growl`
 
@@ -451,6 +460,24 @@ _**Short answer:** update your `appID`._
 
 If you don't see notifications within WSL2, you might have to change permission of exe vendor files (snoreToast).
 [See issue for more info](https://github.com/mikaelbr/node-notifier/issues/353)
+
+### WSL: Use Linux notifications (`notify-send`)
+
+Under WSL, the default notifier is `WindowsToaster`, which shows the notification in Windows. If you run an X server and a notification daemon and want Linux notifications instead, set `NODE_NOTIFIER_WSL_NOTIFIER=linux`:
+
+```sh
+NODE_NOTIFIER_WSL_NOTIFIER=linux node app.js
+```
+
+The only accepted value is `linux` (lowercase). Any other value keeps the default. The variable only has an effect under WSL, and it is read when `node-notifier` is imported, so set it before the process starts. Setting `process.env` after the import has no effect.
+
+You can also skip the default instance and use `NotifySend` directly:
+
+```js
+import { NotifySend } from 'node-notifier';
+
+new NotifySend().notify({ title: 'Hello', message: 'From WSL' });
+```
 
 ### Use inside tmux session
 
