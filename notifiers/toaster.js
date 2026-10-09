@@ -128,6 +128,13 @@ function notifyRaw(options, callback) {
     return this;
   }
 
+  // Arguments are passed as-is, so an application starting with "-" could be
+  // read by SnoreToast as a flag.
+  if (String(options.application ?? '').startsWith('-')) {
+    callback(new Error('Application can not start with "-".'));
+    return this;
+  }
+
   if (!utils.isWin8() && !utils.isWSL() && this.options.withFallback) {
     fallback = fallback || new Balloon(this.options);
     return fallback.notify(options, callback);

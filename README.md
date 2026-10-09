@@ -316,7 +316,8 @@ notifier.notify(
     appID: undefined, // String. App.ID and app Name. Defaults to no value, causing SnoreToast text to be visible.
     remove: undefined, // Number. Refer to previously created notification to close.
     duration: undefined, // 'short' (~7s, default) | 'long' (~25s). How long the toast stays on screen. x64 only with the bundled binary.
-    install: undefined // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
+    install: undefined, // String (path, application, app id).  Creates a shortcut <path> in the start menu which point to the executable <application>, appID used for the notifications.
+    application: undefined // String. Absolute path to an executable to start when the notification is clicked and node-notifier is no longer listening (e.g. from the action center).
   },
   function (error, response) {
     console.log(response);
