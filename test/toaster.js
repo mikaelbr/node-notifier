@@ -20,7 +20,7 @@ describe('WindowsToaster', function () {
     os.type = function () {
       return 'Windows_NT';
     };
-    utils.createNamedPipe = () => Promise.resolve(Buffer.from('12345'));
+    utils.createNamedPipe = () => Promise.resolve([]);
     vi.spyOn(crypto, 'randomUUID').mockReturnValue('123456789');
   });
 

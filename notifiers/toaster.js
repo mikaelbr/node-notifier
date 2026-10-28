@@ -65,7 +65,7 @@ function notifyRaw(options, callback) {
   options = utils.clone(options || {});
   callback = callback || noop;
   const is64Bit = os.arch() === 'x64';
-  let resultBuffer;
+  let resultChunks = [];
   const server = {
     namedPipe: getPipeName()
   };
@@ -92,7 +92,7 @@ function notifyRaw(options, callback) {
     ButtonPressed   :  4
     TextEntered     :  5
     */
-    const result = parseResult(resultBuffer?.toString('utf16le'));
+    const result = parseResult(Buffer.concat(resultChunks).toString('utf16le'));
 
     // parse action
     if (result.action === 'buttonClicked' && result.button) {
@@ -146,7 +146,7 @@ function notifyRaw(options, callback) {
 
   // Add pipeName option, to get the output
   utils.createNamedPipe(server).then((out) => {
-    resultBuffer = out;
+    resultChunks = out;
     options.pipeName = server.namedPipe;
 
     const customPath = options.customPath || this.options.customPath;

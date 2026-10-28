@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import path from 'node:path';
 import fs from 'node:fs';
 import net from 'node:net';
+import os from 'node:os';
 import _ from '../lib/utils.js';
 
 describe('utils', function () {
@@ -115,6 +116,34 @@ describe('utils', function () {
         path: '\\\\.\\pipe\\notifierPipe-123',
         exclusive: true
       });
+    });
+
+    it('should keep all output, split across chunks', async function () {
+      const server = {
+        namedPipe:
+          process.platform === 'win32'
+            ? `\\\\.\\pipe\\notifierPipe-test-${process.pid}`
+            : path.join(os.tmpdir(), `notifierPipe-test-${process.pid}`)
+      };
+      const chunks = await _.createNamedPipe(server);
+      const closed = new Promise((resolve) =>
+        server.instance.once('close', resolve)
+      );
+      const output = Buffer.from(
+        `action=buttonClicked;button=Ja;text=blåbær${'!'.repeat(1024)};`,
+        'utf16le'
+      );
+
+      const client = net.connect(server.namedPipe, () => {
+        // Split inside a character, as a UTF-16LE character is two bytes.
+        client.write(output.subarray(0, 41));
+        client.end(output.subarray(41));
+      });
+      await closed;
+
+      expect(Buffer.concat(chunks).toString('utf16le')).toBe(
+        output.toString('utf16le')
+      );
     });
   });
 
