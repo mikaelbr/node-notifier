@@ -17,7 +17,18 @@ npm install node-notifier
 Requires Node.js 22.22+, 24.15+ or 26+. The package is ES modules only, but
 `require('node-notifier')` still works through Node's `require(esm)` support.
 
-Looking for a CLI? See [node-notifier-cli](https://github.com/mikaelbr/node-notifier-cli).
+### CLI
+
+Need notifications from the terminal or a shell script? Use
+[node-notifier-cli](https://github.com/mikaelbr/node-notifier-cli), no install
+needed:
+
+```shell
+npx node-notifier-cli -t "Hello" -m "My message"
+```
+
+See the [node-notifier-cli README](https://github.com/mikaelbr/node-notifier-cli#readme)
+for all options.
 
 ## Usage
 
