@@ -1,7 +1,7 @@
 # Changelog
 
 
-### Unreleased
+### v12.0.0
 
 Breaking changes:
 
