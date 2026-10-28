@@ -61,11 +61,11 @@
     "is-wsl": "^3.1.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.15",
+    "@biomejs/biome": "2.6.3",
     "cross-env": "^10.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.5"
   },
   "lint-staged": {
     "*.{js,json,css}": [
