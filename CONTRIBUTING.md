@@ -7,7 +7,7 @@ node-notifier love getting pull requests and other help. Here's a quick guide.
 If you want to see what command is run, execute the node program with the environmental variable `DEBUG="notifier"`, e.g.:
 
 ```
-DEBUG="notifier" node index.js
+DEBUG="notifier" node example/message.ts
 ```
 
 ```
@@ -31,17 +31,18 @@ corepack enable
 pnpm install
 ```
 
-Make sure the tests pass:
+The source is TypeScript in `src/`. Node runs it directly through its built-in
+type stripping, so the examples in `example/` and the tests need no build step.
 
 ```shell
-pnpm test
+pnpm test        # vitest, including type tests in test/*.test-d.ts
+pnpm lint        # biome
+pnpm typecheck   # tsc
+pnpm build       # tsdown -> dist/, also run on pack/publish
+node example/message.ts
 ```
 
-Make your change. Add tests for your change. Make the tests pass:
-
-```shell
-pnpm test
-```
+Make your change. Add tests for your change. Make the checks above pass.
 
 Push to your fork and [submit a pull request][pr].
 

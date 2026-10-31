@@ -17,6 +17,10 @@ npm install node-notifier
 Requires Node.js 22.22+, 24.15+ or 26+. The package is ES modules only, but
 `require('node-notifier')` still works through Node's `require(esm)` support.
 
+TypeScript types are included, so `@types/node-notifier` is no longer needed
+(uninstall it if you have it). Each notifier has its own options type, e.g.
+`NotificationCenterNotification` or `NotifySendNotification`.
+
 ### CLI
 
 Need notifications from the terminal or a shell script? Use
@@ -120,7 +124,7 @@ notifier.notify(
   (`make icon ICON=logo.png APP_NAME=my-tool`) and point `customPath` to it.
 - macOS asks for notification permission the first time a notification is sent.
 
-See [`example/macInput.js`](./example/macInput.js) for actions and reply.
+See [`example/macInput.ts`](./example/macInput.ts) for actions and reply.
 
 ## `WindowsToaster` (Windows 8+)
 
@@ -157,7 +161,7 @@ notifier.notify(
 - Toasts always wait for the user. `wait` and `timeout` don't change how long a
   toast is shown, use `duration`. After that it stays in the Action Center.
 - Choosing an action emits an event named after the lower-cased label. See
-  [`example/toaster-with-actions.js`](./example/toaster-with-actions.js).
+  [`example/toaster-with-actions.ts`](./example/toaster-with-actions.ts).
 - On 32-bit Windows the bundled SnoreToast is 0.7.0: `duration` is ignored, and
   clicks with a custom `appID` aren't reported. Use `customPath` with a newer
   SnoreToast to get both.
@@ -208,7 +212,7 @@ new NotifySend().notify(
 
 - Only notifications with `actions` wait for the user. Choosing an action emits
   `click` with the label in `metadata.activationValue`, running out of time emits
-  `timeout`. See [`example/notify-send-actions.js`](./example/notify-send-actions.js).
+  `timeout`. See [`example/notify-send-actions.ts`](./example/notify-send-actions.ts).
 - `actions` needs libnotify 0.7.10+ (e.g. Ubuntu 24.04, Debian 12) and a
   notification daemon that supports actions.
 - See [`notify-send(1)`](https://man.archlinux.org/man/notify-send.1) for all flags.
