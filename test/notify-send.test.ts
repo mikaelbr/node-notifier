@@ -1,0 +1,394 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import Notify from '../src/notifiers/notifysend.ts';
+import utils from '../src/lib/utils.ts';
+import type { ChildProcess } from 'node:child_process';
+import os from 'node:os';
+import type { CommandCallback } from '../src/lib/utils.ts';
+import type {
+  NotificationMetadata,
+  NotifySendNotification
+} from '../src/types.ts';
+
+// Replaces running notify-send, which returns the child process.
+function mockCommand(
+  fn: (notifier: string, argsList: string[], callback: CommandCallback) => void
+) {
+  utils.commandWithoutShell = (notifier, argsList, callback) => {
+    fn(notifier, argsList, callback);
+    return {} as ChildProcess;
+  };
+}
+
+describe('notify-send', function () {
+  const original = utils.commandWithoutShell;
+  const originalType = os.type;
+
+  beforeEach(function () {
+    os.type = function () {
+      return 'Linux';
+    };
+  });
+
+  afterEach(function () {
+    utils.commandWithoutShell = original;
+    os.type = originalType;
+  });
+
+  function expectArgsListToBe(expected: string[], done: () => void) {
+    mockCommand((notifier, argsList) => {
+      expect(argsList).toEqual(expected);
+      done();
+    });
+  }
+
+  it('should pass on title and body', () =>
+    new Promise<void>((done) => {
+      const expected = ['--expire-time', '10000', '--', 'title', 'body'];
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body' });
+    }));
+
+  it('should pass have default title', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--',
+        'Node Notification:',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ message: 'body' });
+    }));
+
+  it('should throw error if no message is passed', () =>
+    new Promise<void>((done) => {
+      mockCommand((notifier, argsList) => {
+        expect(argsList).toBeUndefined();
+      });
+
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({}, function (err) {
+        expect(err?.message).toBe('Message is required.');
+        done();
+      });
+    }));
+
+  it('should escape message input', () =>
+    new Promise<void>((done) => {
+      const excapedNewline = process.platform === 'win32' ? '\\r\\n' : '\\n';
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--',
+        'Node Notification:',
+        'some' + excapedNewline + ' "me\'ss`age`"'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ message: 'some\n "me\'ss`age`"' });
+    }));
+
+  it('should escape array items as normal items', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--app-name',
+        'foo`touch exploit`',
+        '--category',
+        'foo`touch exploit`',
+        '--expire-time',
+        '10000',
+        '--',
+        'Hacked',
+        '`touch HACKED`'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      const options = JSON.parse(
+        `{
+        "title": "Hacked",
+        "message":["\`touch HACKED\`"],
+        "app-name": ["foo\`touch exploit\`"],
+        "category": ["foo\`touch exploit\`"]
+      }`
+      );
+      notifier.notify(options);
+    }));
+
+  it('should send additional parameters as --"keyname"', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--icon',
+        'icon-string',
+        '--expire-time',
+        '10000',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', icon: 'icon-string' });
+    }));
+
+  it('should remove extra options that are not supported by notify-send', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--icon',
+        'icon-string',
+        '--expire-time',
+        '1000',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        icon: 'icon-string',
+        time: 1,
+        tullball: 'notValid'
+      } as NotifySendNotification);
+    }));
+
+  it('should pass values starting with a dash as positional arguments', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--',
+        '--title',
+        '-u critical'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: '--title', message: '-u critical' });
+    }));
+
+  it('should not fail on an option named hasOwnProperty', () =>
+    new Promise<void>((done) => {
+      const expected = ['--expire-time', '10000', '--', 'title', 'body'];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        hasOwnProperty: 'x'
+      } as unknown as NotifySendNotification);
+    }));
+  it('should pass each action as a single named --action argument', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--action=0=Yes',
+        '--action=1=a=b',
+        '--action=2=--wait',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        actions: ['Yes', 'a=b', '--wait']
+      });
+    }));
+
+  it('should accept a single action as a string', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--action=0=OK',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', actions: 'OK' });
+    }));
+
+  it('should pass transient as a hint argument', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--hint=int:transient:1',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', transient: true });
+    }));
+
+  it('should pass transient alongside a user supplied hint', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--hint',
+        'string:x-canonical-private-synchronous:volume',
+        '--expire-time',
+        '10000',
+        '--hint=int:transient:1',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        hint: 'string:x-canonical-private-synchronous:volume',
+        transient: true
+      });
+    }));
+
+  it('should pass transient before -- together with actions', () =>
+    new Promise<void>((done) => {
+      const expected = [
+        '--expire-time',
+        '10000',
+        '--action=0=OK',
+        '--hint=int:transient:1',
+        '--',
+        'title',
+        'body'
+      ];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({
+        title: 'title',
+        message: 'body',
+        actions: 'OK',
+        transient: true
+      });
+    }));
+
+  it('should not pass transient by default or when false', () =>
+    new Promise<void>((done) => {
+      const expected = ['--expire-time', '10000', '--', 'title', 'body'];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', transient: false });
+    }));
+
+  it('should not pass --wait for wait: true', () =>
+    new Promise<void>((done) => {
+      const expected = ['--expire-time', '5000', '--', 'title', 'body'];
+
+      expectArgsListToBe(expected, done);
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.notify({ title: 'title', message: 'body', wait: true });
+    }));
+
+  function respondWith(stderr: Error | string, stdout: string) {
+    mockCommand((notifier, argsList, callback) => {
+      callback(stderr, stdout);
+    });
+  }
+
+  it('should report the chosen action and emit click', () =>
+    new Promise<void>((done) => {
+      respondWith('', '1\n');
+      const notifier = new Notify({ suppressOsdCheck: true });
+      let clicked: NotificationMetadata | undefined;
+      notifier.on('click', (emitter, options, metadata) => {
+        clicked = metadata;
+      });
+      notifier.on('cancel', () => {
+        throw new Error('Should not emit events named after actions');
+      });
+
+      notifier.notify(
+        { message: 'body', actions: ['OK', 'Cancel'] },
+        (err, response, metadata) => {
+          expect(err).toBeNull();
+          expect(response).toBe('activate');
+          expect(metadata).toEqual({
+            activationType: 'actionClicked',
+            activationValue: 'Cancel'
+          });
+          setImmediate(() => {
+            expect(clicked).toEqual(metadata);
+            done();
+          });
+        }
+      );
+    }));
+
+  it('should ignore output that is not one of the actions', () =>
+    new Promise<void>((done) => {
+      respondWith('', '7\n');
+      const notifier = new Notify({ suppressOsdCheck: true });
+      notifier.on('click', () => {
+        throw new Error('Should not emit click');
+      });
+
+      notifier.notify(
+        { message: 'body', actions: ['OK'] },
+        (err, response, metadata) => {
+          expect(err).toBeNull();
+          expect(metadata).toEqual({ activationType: 'closed' });
+          done();
+        }
+      );
+    }));
+
+  it('should report timeout when notify-send stops waiting', () =>
+    new Promise<void>((done) => {
+      respondWith('Wait timeout expired\n', '');
+      const notifier = new Notify({ suppressOsdCheck: true });
+      let timedOut = false;
+      notifier.on('timeout', () => {
+        timedOut = true;
+      });
+
+      notifier.notify(
+        { message: 'body', actions: ['OK'] },
+        (err, response, metadata) => {
+          expect(err).toBeNull();
+          expect(response).toBe('timeout');
+          expect(metadata).toEqual({ activationType: 'timeout' });
+          setImmediate(() => {
+            expect(timedOut).toBe(true);
+            done();
+          });
+        }
+      );
+    }));
+
+  it('should pass on errors from notify-send', () =>
+    new Promise<void>((done) => {
+      const error = new Error('Unknown option --action=0=OK');
+      respondWith(error, '');
+      const notifier = new Notify({ suppressOsdCheck: true });
+
+      notifier.notify({ message: 'body', actions: ['OK'] }, (err) => {
+        expect(err).toBe(error);
+        done();
+      });
+    }));
+});

@@ -26,7 +26,28 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
       - run: pnpm test
+      - name: Smoke test packed package (import, require and types)
+        run: |
+          pnpm pack --out package.tgz
+          mkdir -p ../smoke && cd ../smoke
+          npm init -y > /dev/null
+          npm install ../${{ github.event.repository.name }}/package.tgz typescript@7 @types/node@22
+          node --input-type=module -e "
+            import fs from 'node:fs';
+            import notifier, { NotificationCenter } from 'node-notifier';
+            import NC from 'node-notifier/notifiers/notificationcenter';
+            import { vendorPath } from './node_modules/node-notifier/dist/lib/vendor.js';
+            if (typeof notifier.notify !== 'function' || NC !== NotificationCenter) process.exit(1);
+            for (const f of ['notifu/notifu.exe', 'snoreToast/snoretoast-x64.exe', 'mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier'])
+              if (!fs.existsSync(vendorPath(f))) { console.error('missing vendor/' + f); process.exit(1); }
+          "
+          node -e "const n = require('node-notifier'); if (n.WindowsToaster !== require('node-notifier/notifiers/toaster')) process.exit(1)"
+          echo "import notifier, { NotifySend, type NotifySendNotification } from 'node-notifier'; const o: NotifySendNotification = { urgency: 'low' }; new NotifySend().notify(o); notifier.notify('hi');" > index.mts
+          echo '{"compilerOptions":{"module":"nodenext","strict":true,"noEmit":true,"types":["node"]}}' > tsconfig.json
+          npx tsc -p .
 
   vendor:
     name: Verify vendored binaries

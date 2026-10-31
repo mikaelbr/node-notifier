@@ -1,5 +1,17 @@
 # Changelog
 
+### Unreleased
+
+Features:
+
+- Rewritten in TypeScript, and types are now included in the package. `@types/node-notifier` is no longer needed. Each notifier has typed options (`NotificationCenterNotification`, `WindowsToasterNotification`, `WindowsBalloonNotification`, `NotifySendNotification`, `GrowlNotification`), and the notifier classes can be used as types, e.g. `const nc: NotificationCenter = new NotificationCenter()`.
+
+Internal:
+
+- Built with [tsdown](https://tsdown.dev) into `dist/`, which is what's published together with `vendor/`. The public entry points (`node-notifier` and `node-notifier/notifiers/*`) are unchanged.
+- Tests and examples are TypeScript, and CI typechecks and smoke tests the packed package with `import`, `require` and TypeScript.
+- `pnpm test` no longer runs the linter first. Use `pnpm lint`.
+
 
 ### v12.0.0
 
